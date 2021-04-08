@@ -1,5 +1,7 @@
 
 
 
+void sonido(int nota){
 
-sadaskjdhkjashdkjashkjdhaskjdhkjashdkjhaskjhdkjashdkahsjk
+	// Sonar nota;
+}
