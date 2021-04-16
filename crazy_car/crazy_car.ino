@@ -63,13 +63,14 @@ void setup() {
   FillRect(0, 0, 319, 206, 0xdf5f);
   String text1 = "Bienvenido a";
   String text2 = "Crazy Cars!";
-  String text3 = "Jugadores: 1  2";
-    
+  String text3 = "Jugadores:   1   2";
+  String text4 = "Comenzar!!";    
   //LCD_Bitmap(unsigned int x, unsigned int y, unsigned int width, unsigned int height, unsigned char bitmap[]);
   LCD_Bitmap(0, 120, 320, 120, cover);
   LCD_Print(text1, 60, 0, 2, 0xffff, 0xdf5f);
   LCD_Print(text2, 70, 20, 2, 0xffff, 0xdf5f);
   LCD_Print(text3, 10, 50, 2, 0xffff, 0xdf5f);
+  LCD_Print(text4, 80, 100, 2, 0xffff, 0xdf5f);
 
 }
 //***************************************************************************************************************************************
