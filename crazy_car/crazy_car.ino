@@ -42,13 +42,13 @@ String text3_3 = "1    2";
 String text4 = "Comenzar!!";
 
 int DPINS[] = {PB_0, PB_1, PB_2, PB_3, PB_4, PB_5, PB_6, PB_7};
-int arrow_x = 50;
-int arrow_y = 55;
-int FLAGC = 0;
-int FLAG = 0;
-int arrow = 0;
-int confirmation = 0;
-int jump = 0;
+uint8_t arrow_x = 50;
+uint8_t arrow_y = 55;
+uint8_t FLAGC = 0;
+uint8_t FLAG = 0;
+uint8_t arrow = 0;
+uint8_t confirmation = 0;
+uint8_t jump = 0;
 //***************************************************************************************************************************************
 // Functions Prototypes
 //***************************************************************************************************************************************
@@ -67,9 +67,13 @@ void LCD_Bitmap(unsigned int x, unsigned int y, unsigned int width, unsigned int
 void LCD_Sprite(int x, int y, int width, int height, unsigned char bitmap[], int columns, int index, char flip, char offset);
 
 void Seleccion_de_Jugadores(void);
+void Pantalla_de_Inicio(void);
 
 extern uint8_t cover[];
 extern uint8_t flecha[];
+extern uint8_t player1L[];
+extern uint8_t player2L[];
+extern uint8_t ycar[];
 //***************************************************************************************************************************************
 // Inicialización
 //***************************************************************************************************************************************
@@ -97,29 +101,59 @@ void setup() {
 // Loop Infinito
 //***************************************************************************************************************************************
 void loop() {
-  if (confirmation == 1) {
+  if (confirmation == 0) {
+    Pantalla_de_Inicio();
+  }
+  else if (confirmation == 1) {
     Seleccion_de_Jugadores();
   }
-  else {
-    if (digitalRead(PUSHC) == 1) {
-      FLAGC = 1;
-      delay(50);
+  else if (confirmation == 2) {
+    switch (jump) {
+      case 0:
+        FillRect(0, 0, 320, 240, 0xdf5f);
+        jump++;
+        break;
+      case 1:
+        break;
     }
-    else {
-      if (FLAGC == 1) {
-        FLAGC = 0;
-        confirmation = 1;
-      }
+    LCD_Print("Escoja su vehiculo", 20, 20, 2, 0xffff, 0xdf5f);
+    LCD_Bitmap(80, 120, 40, 40, ycar);
+
+  }
+  else if (confirmation == 3) {
+    switch (jump) {
+      case 0:
+        FillRect(0, 0, 320, 240, 0xdf5f);
+        jump++;
+        break;
+      case 1:
+        break;
     }
-    LCD_Bitmap(40, 90, 40, 30, flecha);
-    delay(150);
-    FillRect(40, 90, 40, 30, 0xdf5f);
-    delay(150);
+    LCD_Print("Escoja su vehiculo", 20, 20, 2, 0xffff, 0xdf5f);
+    LCD_Print("Jugador 1 Jugador 2", 10, 50, 2, 0xffff, 0xdf5f);
+    LCD_Bitmap(80, 120, 40, 40, ycar);
   }
 }
 //***************************************************************************************************************************************
-// Función para inicializar LCD
+// Funciones de Juego
 //***************************************************************************************************************************************
+void Pantalla_de_Inicio(void) {
+  if (digitalRead(PUSHC) == 1) {
+    FLAGC = 1;
+    delay(50);
+  }
+  else {
+    if (FLAGC == 1) {
+      FLAGC = 0;
+      confirmation = 1;
+    }
+  }
+  LCD_Bitmap(40, 90, 40, 30, flecha);
+  delay(150);
+  FillRect(40, 90, 40, 30, 0xdf5f);
+  delay(150);
+}
+
 void Seleccion_de_Jugadores(void) {
   switch (jump) {
     case 0:
@@ -132,7 +166,6 @@ void Seleccion_de_Jugadores(void) {
       break;
     case 1:
       break;
-
   }
   //ANTIREBOTE DEL BOTON DE INICIO
   if (digitalRead(PUSHS) == 0) {
@@ -160,6 +193,23 @@ void Seleccion_de_Jugadores(void) {
   delay(150);
   FillRect(arrow_x, arrow_y, 40, 30, 0xdf5f);
   delay(150);
+
+  if (digitalRead(PUSHC) == 1) {
+    FLAGC = 1;
+    delay(50);
+  }
+  else {
+    if (FLAGC == 1) {
+      FLAGC = 0;
+      jump = 0;
+      if (arrow_x == 50) {
+        confirmation = 2;
+      }
+      else {
+        confirmation = 3;
+      }
+    }
+  }
 }
 
 //***************************************************************************************************************************************
