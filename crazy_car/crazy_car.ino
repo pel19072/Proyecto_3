@@ -73,7 +73,7 @@ extern uint8_t cover[];
 extern uint8_t flecha[];
 extern uint8_t player1L[];
 extern uint8_t player2L[];
-extern uint8_t ycar[];
+extern uint8_t gcar[];
 //***************************************************************************************************************************************
 // Inicialización
 //***************************************************************************************************************************************
@@ -117,7 +117,7 @@ void loop() {
         break;
     }
     LCD_Print("Escoja su vehiculo", 20, 20, 2, 0xffff, 0xdf5f);
-    LCD_Bitmap(80, 120, 40, 40, ycar);
+    LCD_Bitmap(50, 70, 40, 40, gcar);
 
   }
   else if (confirmation == 3) {
@@ -131,7 +131,8 @@ void loop() {
     }
     LCD_Print("Escoja su vehiculo", 20, 20, 2, 0xffff, 0xdf5f);
     LCD_Print("Jugador 1 Jugador 2", 10, 50, 2, 0xffff, 0xdf5f);
-    LCD_Bitmap(80, 120, 40, 40, ycar);
+    LCD_Bitmap(50, 70, 40, 40, gcar);
+    LCD_Bitmap(220, 70, 40, 40, gcar);
   }
 }
 //***************************************************************************************************************************************
