@@ -190,7 +190,7 @@ void loop() {
           FLAG = 0;
         if (xpos > 0){
           for (int x = 0; x<5;x++){
-            LCD_Sprite(15+xpos, 201, 41, 39, player1L, 5, x, 0, 0);
+            LCD_Sprite(15+xpos, 201, 41, 39, player1L, 5, x, 1, 0);
           }
           FillRect(15+xpos, 201, 41, 39,    0x9492);
           xpos = xpos - 50;
