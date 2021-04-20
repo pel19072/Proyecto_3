@@ -49,6 +49,7 @@ uint8_t FLAG = 0;
 uint8_t arrow = 0;
 uint8_t confirmation = 0;
 uint8_t jump = 0;
+uint8_t player = 0;
 //***************************************************************************************************************************************
 // Functions Prototypes
 //***************************************************************************************************************************************
@@ -120,8 +121,28 @@ void loop() {
         break;
     }
     LCD_Print("Escoja su vehiculo", 20, 20, 2, 0xffff, 0xdf5f);
+    if (player == 0){
     LCD_Sprite(110, 110, 41, 39, player1L, 5, 0, 0, 0);
-    LCD_Sprite(110, 180, 41, 39, player2L, 5, 0, 0, 0);
+      if (digitalRead(PUSHS) == 0){
+        FLAGC = 1;
+      }else{
+        if (FLAGC == 1){
+          FLAGC = 0;
+          player = 1;
+        }
+      }
+    }else{
+      LCD_Sprite(110, 180, 41, 39, player2L, 5, 0, 0, 0);
+       if (digitalRead(PUSHS) == 0){
+        FLAGC = 1;
+      }else{
+        if (FLAGC == 1){
+          FLAGC = 0;
+          player = 0;
+        }
+      }
+    }
+    
 
   }
   else if (confirmation == 3) {
