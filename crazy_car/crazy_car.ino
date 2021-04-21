@@ -72,7 +72,7 @@ void LCD_Sprite(int x, int y, int width, int height, unsigned char bitmap[], int
 void Seleccion_de_Jugadores(void);
 void Pantalla_de_Inicio(void);
 void seleccion_de_carro(void);
-extern uint8_t eleccion (void);
+void eleccion (uint8_t pl, uint8_t x, uint8_t y, int index, char flip, char offset);
 
 extern uint8_t cover[];
 extern uint8_t flecha[];
@@ -161,7 +161,8 @@ void loop() {
         LCD_Bitmap(110, y*20, 100, 20, street);
         LCD_Bitmap(210, y*20, 100, 20, street);
       }
-      LCD_Sprite(15, 201, 41, 39, player1L, 5, 0, 0, 0);
+      eleccion (player, 15, 201, 0, 0, 0);
+      //LCD_Sprite(15, 201, 41, 39, player1L, 5, 0, 0, 0);
     while (choque == 0){
       if (digitalRead(PUSHC) == 0){
         FLAGC = 1;
@@ -171,15 +172,18 @@ void loop() {
           FLAGC = 0;
           if (xpos <= 200){
             for (int x = 0; x<5;x++){
-              LCD_Sprite(15+xpos, 201, 41, 39, player1L, 5, x, 0, 0);
+              eleccion (player, 15+xpos, 201, x, 0, 0);
+              //LCD_Sprite(15+xpos, 201, 41, 39, player1L, 5, x, 0, 0);
             }
-            FillRect(15+xpos, 201, 41, 39,    0x9492);
+            FillRect(15+xpos, 201, 41, 39,0x9492);
             xpos = xpos + 50;
-            LCD_Sprite(15+xpos, 201, 41, 39, player1L, 5, 0, 0, 0);
+            eleccion (player, 15+xpos, 201, 0, 0, 0);
+            //LCD_Sprite(15+xpos, 201, 41, 39, player1L, 5, 0, 0, 0);
           }else{
             FillRect(15+xpos, 201, 41, 39,    0x9492);
             xpos = 0;
-            LCD_Sprite(15, 201, 41, 39, player1L, 5, 0, 0, 0);
+            eleccion (player, 15, 201, 0, 0, 0);
+            //LCD_Sprite(15, 201, 41, 39, player1L, 5, 0, 0, 0);
           }
         }
       }
@@ -190,15 +194,18 @@ void loop() {
           FLAG = 0;
         if (xpos > 0){
           for (int x = 0; x<5;x++){
-            LCD_Sprite(15+xpos, 201, 41, 39, player1L, 5, x, 1, 0);
+            eleccion (player, 15+xpos, 201, x, 1, 0);
+            //LCD_Sprite(15+xpos, 201, 41, 39, player1L, 5, x, 1, 0);
           }
           FillRect(15+xpos, 201, 41, 39,    0x9492);
           xpos = xpos - 50;
-          LCD_Sprite(15+xpos, 201, 41, 39, player1L, 5, 0, 0, 0);
+          eleccion (player, 15+xpos, 201, 0, 0, 0);
+          //LCD_Sprite(15+xpos, 201, 41, 39, player1L, 5, 0, 0, 0);
         }else{
           FillRect(15, 201, 41, 39,    0x9492);
           xpos = 250;
-          LCD_Sprite(265, 201, 41, 39, player1L, 5, 0, 0, 0);
+          eleccion (player, 265, 201, 0, 0, 0);
+          //LCD_Sprite(265, 201, 41, 39, player1L, 5, 0, 0, 0);
           }
         }
       }
@@ -325,13 +332,13 @@ void seleccion_de_carro(void){
     }
     
 }
-/*extern uint8_t eleccion (void){
-        if (player == 2){
-          return player1L;
-        }else if (player == 3){
-          return player2L;
+void eleccion (uint8_t pl, int x2, int y2,int index1, char flip1, char offset1){
+        if (pl == 2){
+          LCD_Sprite(x2, y2, 41, 39, player1L, 5, index1, flip1, offset1);
+        }else if (pl == 3){
+          LCD_Sprite(x2, y2, 41, 39, player2L, 5, index1, flip1, offset1);
         }
-      }*/
+}
 //****************************************************************************************************************************************
 // Función para inicializar LCD
 //***************************************************************************************************************************************
