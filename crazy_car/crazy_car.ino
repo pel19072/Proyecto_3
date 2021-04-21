@@ -32,6 +32,10 @@
 
 #define PUSHS PE_3
 #define PUSHC PF_1
+#define PUSHJ1 PA_5
+#define PUSHC1 PA_6
+#define PUSHJ2 PA_7
+#define PUSHC2 PE_2
 
 String text1 = "Bienvenido a";
 String text2 = "Crazy Cars!";
@@ -83,6 +87,10 @@ extern uint8_t ycar[];
 void setup() {
   pinMode(PUSHS, INPUT_PULLUP);
   pinMode(PUSHC, INPUT_PULLUP);
+  pinMode(PUSHJ1, INPUT_PULLUP);
+  pinMode(PUSHC1, INPUT_PULLUP);
+  pinMode(PUSHJ2, INPUT_PULLUP);
+  pinMode(PUSHC2, INPUT_PULLUP);
 
   SysCtlClockSet(SYSCTL_SYSDIV_2_5 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN | SYSCTL_XTAL_16MHZ);
   Serial.begin(9600);
