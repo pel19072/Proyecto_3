@@ -86,6 +86,7 @@ void Seleccion_de_Jugadores(void);
 void Pantalla_de_Inicio(void);
 void seleccion_de_carro(void);
 void Generar_Carretera(void);
+void Generar_Color(uint8_t x);
 void eleccion (uint8_t pl, uint8_t x, uint8_t y, int index, char flip, char offset);
 
 extern uint8_t cover[];
@@ -152,148 +153,28 @@ void loop() {
     eleccion (player, 15, 201, 0, 0, 0);
     while (choque == 0) {
       int obstacle = rand() % 7;
-      int color_obs = rand() % 3;
+      
       if (appear % 50000 == 0) {
         switch (obstacle) {
           case 0:
             break;
           case 1:
-            for (int i = 0; i < 2; i++)
-            {
-              if (carriles[0][i] == 0) {
-                carriles[0][i] = 15;
-                switch (color_obs) {
-                  case 0:
-                    carriles[1][i] = 0;
-                    break;
-                  case 1:
-                    carriles[1][i] = 1;
-                    break;
-                  case 2:
-                    carriles[1][i] = 2;
-                    break;
-                  case 3:
-                    carriles[1][i] = 3;
-                    break;
-                }
-                break;
-              }
-            }
+            Generar_Color(15);
             break;
           case 2:
-            for (int i = 0; i < 2; i++)
-            {
-              if (carriles[0][i] == 0) {
-                carriles[0][i] = 65;
-                switch (color_obs) {
-                  case 0:
-                    carriles[1][i] = 0;
-                    break;
-                  case 1:
-                    carriles[1][i] = 1;
-                    break;
-                  case 2:
-                    carriles[1][i] = 2;
-                    break;
-                  case 3:
-                    carriles[1][i] = 3;
-                    break;
-                }
-                break;
-              }
-            }
+            Generar_Color(65);
             break;
           case 3:
-            for (int i = 0; i < 2; i++)
-            {
-              if (carriles[0][i] == 0) {
-                carriles[0][i] = 115;
-                switch (color_obs) {
-                  case 0:
-                    carriles[1][i] = 0;
-                    break;
-                  case 1:
-                    carriles[1][i] = 1;
-                    break;
-                  case 2:
-                    carriles[1][i] = 2;
-                    break;
-                  case 3:
-                    carriles[1][i] = 3;
-                    break;
-                }
-                break;
-              }
-            }
+            Generar_Color(115);
             break;
           case 4:
-            for (int i = 0; i < 2; i++)
-            {
-              if (carriles[0][i] == 0) {
-                carriles[0][i] = 165;
-                switch (color_obs) {
-                  case 0:
-                    carriles[1][i] = 0;
-                    break;
-                  case 1:
-                    carriles[1][i] = 1;
-                    break;
-                  case 2:
-                    carriles[1][i] = 2;
-                    break;
-                  case 3:
-                    carriles[1][i] = 3;
-                    break;
-                }
-                break;
-              }
-            }
+            Generar_Color(165);
             break;
           case 5:
-            for (int i = 0; i < 2; i++)
-            {
-              if (carriles[0][i] == 0) {
-                carriles[0][i] = 215;
-                switch (color_obs) {
-                  case 0:
-                    carriles[1][i] = 0;
-                    break;
-                  case 1:
-                    carriles[1][i] = 1;
-                    break;
-                  case 2:
-                    carriles[1][i] = 2;
-                    break;
-                  case 3:
-                    carriles[1][i] = 3;
-                    break;
-                }
-                break;
-              }
-            }
+            Generar_Color(215);
             break;
           case 6:
-            for (int i = 0; i < 2; i++)
-            {
-              if (carriles[0][i] == 0) {
-                carriles[0][i] = 265;
-                switch (color_obs) {
-                  case 0:
-                    carriles[1][i] = 0;
-                    break;
-                  case 1:
-                    carriles[1][i] = 1;
-                    break;
-                  case 2:
-                    carriles[1][i] = 2;
-                    break;
-                  case 3:
-                    carriles[1][i] = 3;
-                    break;
-                }
-                break;
-              }
-            }
+            Generar_Color(265);
             break;
         }
 
@@ -311,8 +192,8 @@ void loop() {
             LCD_Bitmap(carriles[0][0], ypos1, 40, 40, rcar);
             break;
         }
-        FillRect(carriles[0][0], ypos1-10, 40, 10, 0x9492);
-        if (ypos1 == 240){
+        FillRect(carriles[0][0], ypos1 - 10, 40, 10, 0x9492);
+        if (ypos1 == 240) {
           carriles[0][0] = 0;
           ypos1 = 0;
         }
@@ -330,8 +211,8 @@ void loop() {
             LCD_Bitmap(carriles[0][1], ypos2, 40, 40, rcar);
             break;
         }
-        FillRect(carriles[0][1], ypos2-10, 40, 10, 0x9492);
-        if (ypos2 == 240){
+        FillRect(carriles[0][1], ypos2 - 10, 40, 10, 0x9492);
+        if (ypos2 == 240) {
           carriles[0][1] = 0;
           ypos2 = 0;
         }
@@ -527,6 +408,31 @@ void Generar_Carretera(void) {
     LCD_Bitmap(10, y * 20, 100, 20, street);
     LCD_Bitmap(110, y * 20, 100, 20, street);
     LCD_Bitmap(210, y * 20, 100, 20, street);
+  }
+}
+
+void Generar_Color(uint8_t x) {
+  int color_obs = rand() % 3;
+  for (int i = 0; i < 2; i++)
+  {
+    if (carriles[0][i] == 0) {
+      carriles[0][i] = x;
+      switch (color_obs) {
+        case 0:
+          carriles[1][i] = 0;
+          break;
+        case 1:
+          carriles[1][i] = 1;
+          break;
+        case 2:
+          carriles[1][i] = 2;
+          break;
+        case 3:
+          carriles[1][i] = 3;
+          break;
+      }
+      break;
+    }
   }
 }
 void eleccion (uint8_t pl, int x2, int y2, int index1, char flip1, char offset1) {
