@@ -283,7 +283,7 @@ void loop() {
   }
   else if (confirmation == 5) {
     FillRect(0, 0, 320, 240, 0x0000);
-    LCD_Print("GAME OVER", 180, 120, 2, 0xffff, 0x0000);
+    LCD_Print("GAME OVER", 100, 120, 2, 0xffff, 0x0000);
   }
 }
 
