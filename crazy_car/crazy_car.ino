@@ -304,7 +304,7 @@ void loop() {
   }
   else if (confirmation == 5) {
     FillRect(0, 0, 320, 240, 0x0000);
-    LCD_Print("GAME OVER", 100, 120, 2, 0xffff, 0x0000);
+    LCD_Print("GAME OVER", 90, 110, 2, 0xffff, 0x0000);
   }
 }
 
@@ -490,22 +490,20 @@ void eleccion (uint8_t pl, int x2, int y2, int index1, char flip1, char offset1)
 
 void perder (void) {
   for (int i = 0; i < 2; i++) {
-    //Serial.println(i);
-    //delay(500);
     int temp = xpos + 15;
     if (carriles[0][i] == temp) {
       for (int j = 0; j < 2; j++) {
         switch (j) {
           case 0:
-            if (240 > ypos1) {
-              if (ypos1 > 201) {
+            if (201 > ypos1) {
+              if (ypos1 > 162) {
                 choque = 1;
               }
             }
             break;
           case 1:
-            if (240 > ypos2) {
-              if (ypos2 > 201) {
+            if (201 > ypos2) {
+              if (ypos2 > 162) {
                 choque = 1;
               }
             }
