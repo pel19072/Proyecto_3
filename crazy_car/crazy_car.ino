@@ -157,6 +157,8 @@ void loop() {
     Generar_Carretera();
     eleccion (player, 15, 201, 0, 0, 0);
     while (choque == 0) {
+      digitalWrite(PF_4, HIGH);
+      digitalWrite(PF_2, LOW);
       perder();
       // choque = 1
       if (choque == 0) {
@@ -260,8 +262,6 @@ void loop() {
         } else {
           if (FLAGC1 == 1) {
             //choque = 1;
-            digitalWrite(PF_4, LOW);
-            digitalWrite(PF_2, HIGH);
             FLAGC1 = 0;
             if (xpos <= 200) {
               for (int x = 0; x < 5; x++) {
@@ -281,8 +281,6 @@ void loop() {
           FLAGJ1 = 1;
         } else {
           if (FLAGJ1 == 1) {
-            digitalWrite(PF_2, LOW);
-            digitalWrite(PF_4, HIGH);
             FLAGJ1 = 0;
             if (xpos > 0) {
               for (int x = 0; x < 5; x++) {
@@ -303,6 +301,8 @@ void loop() {
     }
   }
   else if (confirmation == 5) {
+    digitalWrite(PF_2, HIGH);
+    digitalWrite(PF_4, LOW);
     FillRect(0, 0, 320, 240, 0x0000);
     LCD_Print("GAME OVER", 90, 110, 2, 0xffff, 0x0000);
   }
@@ -495,17 +495,13 @@ void perder (void) {
       for (int j = 0; j < 2; j++) {
         switch (j) {
           case 0:
-            if (201 > ypos1) {
-              if (ypos1 > 162) {
+            if (240 > (ypos1+39) && (ypos1+39) > 201 ) {
                 choque = 1;
-              }
             }
             break;
           case 1:
-            if (201 > ypos2) {
-              if (ypos2 > 162) {
+            if (240 > (ypos2+39) && (ypos2 +39) > 201) {
                 choque = 1;
-              }
             }
             break;
         }
