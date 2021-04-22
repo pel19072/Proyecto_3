@@ -61,6 +61,8 @@ uint8_t player = 0;
 uint8_t choque = 0;
 uint8_t xpos = 0;
 uint32_t appear = 0;
+uint8_t ypos1 = 0;
+uint8_t ypos2 = 0;
 uint8_t carriles[2][2] = {{0, 0}, {0, 0}};
 //***************************************************************************************************************************************
 // Functions Prototypes
@@ -151,7 +153,7 @@ void loop() {
     while (choque == 0) {
       int obstacle = rand() % 7;
       int color_obs = rand() % 3;
-      if (appear % 1000000 == 0) {
+      if (appear % 50000 == 0) {
         switch (obstacle) {
           case 0:
             break;
@@ -162,19 +164,15 @@ void loop() {
                 carriles[0][i] = 15;
                 switch (color_obs) {
                   case 0:
-                    LCD_Bitmap(15, 0, 40, 40, ycar);
                     carriles[1][i] = 0;
                     break;
                   case 1:
-                    LCD_Bitmap(15, 0, 40, 40, gcar);
                     carriles[1][i] = 1;
                     break;
                   case 2:
-                    LCD_Bitmap(15, 0, 40, 40, bcar);
                     carriles[1][i] = 2;
                     break;
                   case 3:
-                    LCD_Bitmap(15, 0, 40, 40, rcar);
                     carriles[1][i] = 3;
                     break;
                 }
@@ -189,19 +187,15 @@ void loop() {
                 carriles[0][i] = 65;
                 switch (color_obs) {
                   case 0:
-                    LCD_Bitmap(65, 0, 40, 40, ycar);
                     carriles[1][i] = 0;
                     break;
                   case 1:
-                    LCD_Bitmap(65, 0, 40, 40, gcar);
                     carriles[1][i] = 1;
                     break;
                   case 2:
-                    LCD_Bitmap(65, 0, 40, 40, bcar);
                     carriles[1][i] = 2;
                     break;
                   case 3:
-                    LCD_Bitmap(65, 0, 40, 40, rcar);
                     carriles[1][i] = 3;
                     break;
                 }
@@ -216,19 +210,15 @@ void loop() {
                 carriles[0][i] = 115;
                 switch (color_obs) {
                   case 0:
-                    LCD_Bitmap(115, 0, 40, 40, ycar);
                     carriles[1][i] = 0;
                     break;
                   case 1:
-                    LCD_Bitmap(115, 0, 40, 40, gcar);
                     carriles[1][i] = 1;
                     break;
                   case 2:
-                    LCD_Bitmap(115, 0, 40, 40, bcar);
                     carriles[1][i] = 2;
                     break;
                   case 3:
-                    LCD_Bitmap(115, 0, 40, 40, rcar);
                     carriles[1][i] = 3;
                     break;
                 }
@@ -243,19 +233,15 @@ void loop() {
                 carriles[0][i] = 165;
                 switch (color_obs) {
                   case 0:
-                    LCD_Bitmap(165, 0, 40, 40, ycar);
                     carriles[1][i] = 0;
                     break;
                   case 1:
-                    LCD_Bitmap(165, 0, 40, 40, gcar);
                     carriles[1][i] = 1;
                     break;
                   case 2:
-                    LCD_Bitmap(165, 0, 40, 40, bcar);
                     carriles[1][i] = 2;
                     break;
                   case 3:
-                    LCD_Bitmap(165, 0, 40, 40, rcar);
                     carriles[1][i] = 3;
                     break;
                 }
@@ -270,19 +256,15 @@ void loop() {
                 carriles[0][i] = 215;
                 switch (color_obs) {
                   case 0:
-                    LCD_Bitmap(215, 0, 40, 40, ycar);
                     carriles[1][i] = 0;
                     break;
                   case 1:
-                    LCD_Bitmap(215, 0, 40, 40, gcar);
                     carriles[1][i] = 1;
                     break;
                   case 2:
-                    LCD_Bitmap(215, 0, 40, 40, bcar);
                     carriles[1][i] = 2;
                     break;
                   case 3:
-                    LCD_Bitmap(215, 0, 40, 40, rcar);
                     carriles[1][i] = 3;
                     break;
                 }
@@ -297,19 +279,15 @@ void loop() {
                 carriles[0][i] = 265;
                 switch (color_obs) {
                   case 0:
-                    LCD_Bitmap(265, 0, 40, 40, ycar);
                     carriles[1][i] = 0;
                     break;
                   case 1:
-                    LCD_Bitmap(265, 0, 40, 40, gcar);
                     carriles[1][i] = 1;
                     break;
                   case 2:
-                    LCD_Bitmap(265, 0, 40, 40, bcar);
                     carriles[1][i] = 2;
                     break;
                   case 3:
-                    LCD_Bitmap(265, 0, 40, 40, rcar);
                     carriles[1][i] = 3;
                     break;
                 }
@@ -318,8 +296,49 @@ void loop() {
             }
             break;
         }
-        Serial.println(carriles[0][0]);
-        Serial.println(carriles[0][1]);
+
+        switch (carriles[1][0]) {
+          case 0:
+            LCD_Bitmap(carriles[0][0], ypos1, 40, 40, ycar);
+            break;
+          case 1:
+            LCD_Bitmap(carriles[0][0], ypos1, 40, 40, gcar);
+            break;
+          case 2:
+            LCD_Bitmap(carriles[0][0], ypos1, 40, 40, bcar);
+            break;
+          case 3:
+            LCD_Bitmap(carriles[0][0], ypos1, 40, 40, rcar);
+            break;
+        }
+        FillRect(carriles[0][0], ypos1-10, 40, 10, 0x9492);
+        if (ypos1 == 240){
+          carriles[0][0] = 0;
+          ypos1 = 0;
+        }
+        switch (carriles[1][1]) {
+          case 0:
+            LCD_Bitmap(carriles[0][1], ypos2, 40, 40, ycar);
+            break;
+          case 1:
+            LCD_Bitmap(carriles[0][1], ypos2, 40, 40, gcar);
+            break;
+          case 2:
+            LCD_Bitmap(carriles[0][1], ypos2, 40, 40, bcar);
+            break;
+          case 3:
+            LCD_Bitmap(carriles[0][1], ypos2, 40, 40, rcar);
+            break;
+        }
+        FillRect(carriles[0][1], ypos2-10, 40, 10, 0x9492);
+        if (ypos2 == 240){
+          carriles[0][1] = 0;
+          ypos2 = 0;
+        }
+      }
+      if (appear % 5000 == 0) {
+        ypos1++;
+        ypos2++;
       }
       appear++;
       if (digitalRead(PUSHC1) == 0) {
