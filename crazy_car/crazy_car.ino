@@ -304,7 +304,7 @@ void loop() {
     digitalWrite(PF_2, HIGH);
     digitalWrite(PF_4, LOW);
     FillRect(0, 0, 320, 240, 0x0000);
-    LCD_Print("GAME OVER", 100, 120, 2, 0xffff, 0x0000);
+    LCD_Print("GAME OVER", 90, 110, 2, 0xffff, 0x0000);
   }
 }
 
@@ -490,8 +490,6 @@ void eleccion (uint8_t pl, int x2, int y2, int index1, char flip1, char offset1)
 
 void perder (void) {
   for (int i = 0; i < 2; i++) {
-    //Serial.println(i);
-    //delay(500);
     int temp = xpos + 15;
     if (carriles[0][i] == temp) {
       for (int j = 0; j < 2; j++) {
