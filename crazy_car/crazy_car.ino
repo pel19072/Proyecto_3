@@ -458,6 +458,7 @@ void Generar_Color(uint8_t x) {
     }
   }
 }
+
 void eleccion (uint8_t pl, int x2, int y2, int index1, char flip1, char offset1) {
   if (pl == 2) {
     LCD_Sprite(x2, y2, 41, 39, player1L, 5, index1, flip1, offset1);
