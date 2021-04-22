@@ -95,6 +95,8 @@ extern uint8_t street[];
 // Inicialización
 //***************************************************************************************************************************************
 void setup() {
+  serial.begin(9600);
+  serial1
   pinMode(PUSHS, INPUT_PULLUP);
   pinMode(PUSHC, INPUT_PULLUP);
   pinMode(PUSHJ1, INPUT_PULLUP);
