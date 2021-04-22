@@ -157,129 +157,129 @@ void loop() {
     eleccion (player, 15, 201, 0, 0, 0);
     while (choque == 0) {
       perder();
-      if (choque == 1) {
-        break;
-      }
-      //*************************************************************************
-      //***********************GENERACION DE OBSTACULOS**************************
-      //*************************************************************************
-      int obstacle = rand() % 7;
-      if (appear % 50000 == 0) {
-        switch (obstacle) {
-          case 0:
-            break;
-          case 1:
-            Generar_Color(15);
-            break;
-          case 2:
-            Generar_Color(65);
-            break;
-          case 3:
-            Generar_Color(115);
-            break;
-          case 4:
-            Generar_Color(165);
-            break;
-          case 5:
-            Generar_Color(215);
-            break;
-          case 6:
-            Generar_Color(265);
-            break;
-        }
+      // choque = 1
+      if (choque == 0) {
+        //*************************************************************************
+        //***********************GENERACION DE OBSTACULOS**************************
+        //*************************************************************************
+        int obstacle = rand() % 7;
+        if (appear % 50000 == 0) {
+          switch (obstacle) {
+            case 0:
+              break;
+            case 1:
+              Generar_Color(15);
+              break;
+            case 2:
+              Generar_Color(65);
+              break;
+            case 3:
+              Generar_Color(115);
+              break;
+            case 4:
+              Generar_Color(165);
+              break;
+            case 5:
+              Generar_Color(215);
+              break;
+            case 6:
+              Generar_Color(265);
+              break;
+          }
 
-        switch (carriles[1][0]) {
-          case 0:
-            LCD_Bitmap(carriles[0][0], ypos1, 40, 40, ycar);
-            break;
-          case 1:
-            LCD_Bitmap(carriles[0][0], ypos1, 40, 40, gcar);
-            break;
-          case 2:
-            LCD_Bitmap(carriles[0][0], ypos1, 40, 40, bcar);
-            break;
-          case 3:
-            LCD_Bitmap(carriles[0][0], ypos1, 40, 40, rcar);
-            break;
+          switch (carriles[1][0]) {
+            case 0:
+              LCD_Bitmap(carriles[0][0], ypos1, 40, 40, ycar);
+              break;
+            case 1:
+              LCD_Bitmap(carriles[0][0], ypos1, 40, 40, gcar);
+              break;
+            case 2:
+              LCD_Bitmap(carriles[0][0], ypos1, 40, 40, bcar);
+              break;
+            case 3:
+              LCD_Bitmap(carriles[0][0], ypos1, 40, 40, rcar);
+              break;
+          }
+          FillRect(carriles[0][0], ypos1 - 10, 40, 10, 0x9492);
+          if (ypos1 == 240) {
+            carriles[0][0] = 0;
+            ypos1 = 0;
+          }
+          switch (carriles[1][1]) {
+            case 0:
+              LCD_Bitmap(carriles[0][1], ypos2, 40, 40, ycar);
+              break;
+            case 1:
+              LCD_Bitmap(carriles[0][1], ypos2, 40, 40, gcar);
+              break;
+            case 2:
+              LCD_Bitmap(carriles[0][1], ypos2, 40, 40, bcar);
+              break;
+            case 3:
+              LCD_Bitmap(carriles[0][1], ypos2, 40, 40, rcar);
+              break;
+          }
+          FillRect(carriles[0][1], ypos2 - 10, 40, 10, 0x9492);
+          if (ypos2 == 240) {
+            carriles[0][1] = 0;
+            ypos2 = 0;
+          }
         }
-        FillRect(carriles[0][0], ypos1 - 10, 40, 10, 0x9492);
-        if (ypos1 == 240) {
-          carriles[0][0] = 0;
-          ypos1 = 0;
+        if (appear % 5000 == 0) {
+          ypos1++;
+          ypos2++;
         }
-        switch (carriles[1][1]) {
-          case 0:
-            LCD_Bitmap(carriles[0][1], ypos2, 40, 40, ycar);
-            break;
-          case 1:
-            LCD_Bitmap(carriles[0][1], ypos2, 40, 40, gcar);
-            break;
-          case 2:
-            LCD_Bitmap(carriles[0][1], ypos2, 40, 40, bcar);
-            break;
-          case 3:
-            LCD_Bitmap(carriles[0][1], ypos2, 40, 40, rcar);
-            break;
-        }
-        FillRect(carriles[0][1], ypos2 - 10, 40, 10, 0x9492);
-        if (ypos2 == 240) {
-          carriles[0][1] = 0;
-          ypos2 = 0;
-        }
-      }
-      if (appear % 5000 == 0) {
-        ypos1++;
-        ypos2++;
-      }
-      appear++;
-      //*************************************************************************
-      //******************MOVIMIENTOS DEL CARRO JUGADOR**************************
-      //*************************************************************************
-      if (digitalRead(PUSHC1) == 0) {
-        FLAGC1 = 1;
-      } else {
-        if (FLAGC1 == 1) {
-          //choque = 1;
-          digitalWrite(PF_4, LOW);
-          digitalWrite(PF_2, HIGH);
-          FLAGC1 = 0;
-          if (xpos <= 200) {
-            for (int x = 0; x < 5; x++) {
-              eleccion (player, 15 + xpos, 201, x, 0, 0);
+        appear++;
+        //*************************************************************************
+        //******************MOVIMIENTOS DEL CARRO JUGADOR**************************
+        //*************************************************************************
+        if (digitalRead(PUSHC1) == 0) {
+          FLAGC1 = 1;
+        } else {
+          if (FLAGC1 == 1) {
+            //choque = 1;
+            digitalWrite(PF_4, LOW);
+            digitalWrite(PF_2, HIGH);
+            FLAGC1 = 0;
+            if (xpos <= 200) {
+              for (int x = 0; x < 5; x++) {
+                eleccion (player, 15 + xpos, 201, x, 0, 0);
+              }
+              FillRect(15 + xpos, 201, 41, 39, 0x9492);
+              xpos = xpos + 50;
+              eleccion (player, 15 + xpos, 201, 0, 0, 0);
+            } else {
+              FillRect(15 + xpos, 201, 41, 39,    0x9492);
+              xpos = 0;
+              eleccion (player, 15, 201, 0, 0, 0);
             }
-            FillRect(15 + xpos, 201, 41, 39, 0x9492);
-            xpos = xpos + 50;
-            eleccion (player, 15 + xpos, 201, 0, 0, 0);
-          } else {
-            FillRect(15 + xpos, 201, 41, 39,    0x9492);
-            xpos = 0;
-            eleccion (player, 15, 201, 0, 0, 0);
+          }
+        }
+        if (digitalRead(PUSHJ1) == 0) {
+          FLAGJ1 = 1;
+        } else {
+          if (FLAGJ1 == 1) {
+            digitalWrite(PF_2, LOW);
+            digitalWrite(PF_4, HIGH);
+            FLAGJ1 = 0;
+            if (xpos > 0) {
+              for (int x = 0; x < 5; x++) {
+                eleccion (player, 15 + xpos, 201, x, 1, 0);
+              }
+              FillRect(15 + xpos, 201, 41, 39,    0x9492);
+              xpos = xpos - 50;
+              eleccion (player, 15 + xpos, 201, 0, 0, 0);
+            } else {
+              FillRect(15, 201, 41, 39,    0x9492);
+              xpos = 250;
+              eleccion (player, 265, 201, 0, 0, 0);
+            }
           }
         }
       }
-      if (digitalRead(PUSHJ1) == 0) {
-        FLAGJ1 = 1;
-      } else {
-        if (FLAGJ1 == 1) {
-          digitalWrite(PF_2, LOW);
-          digitalWrite(PF_4, HIGH);
-          FLAGJ1 = 0;
-          if (xpos > 0) {
-            for (int x = 0; x < 5; x++) {
-              eleccion (player, 15 + xpos, 201, x, 1, 0);
-            }
-            FillRect(15 + xpos, 201, 41, 39,    0x9492);
-            xpos = xpos - 50;
-            eleccion (player, 15 + xpos, 201, 0, 0, 0);
-          } else {
-            FillRect(15, 201, 41, 39,    0x9492);
-            xpos = 250;
-            eleccion (player, 265, 201, 0, 0, 0);
-          }
-        }
-      }
+      confirmation = 5;
     }
-    confirmation = 5;
   }
   else if (confirmation == 5) {
     FillRect(0, 0, 320, 240, 0x0000);
@@ -467,10 +467,12 @@ void eleccion (uint8_t pl, int x2, int y2, int index1, char flip1, char offset1)
 }
 
 void perder (void) {
-  for (int i; i < 2; i++) {
+  for (int i = 0; i < 2; i++) {
+    //Serial.println(i);
+    //delay(500);
     int temp = xpos + 15;
     if (carriles[0][i] == temp) {
-      for (int j; j < 2; j++) {
+      for (int j = 0; j < 2; j++) {
         switch (j) {
           case 0:
             if (240 > ypos1) {
