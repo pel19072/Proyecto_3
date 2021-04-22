@@ -64,6 +64,7 @@ uint32_t appear = 0;
 uint8_t ypos1 = 0;
 uint8_t ypos2 = 0;
 uint8_t carriles[2][2] = {{0, 0}, {0, 0}};
+uint8_t valpos[] = {15,65,115,165,215,265};
 //***************************************************************************************************************************************
 // Functions Prototypes
 //***************************************************************************************************************************************
@@ -88,6 +89,7 @@ void seleccion_de_carro(void);
 void Generar_Carretera(void);
 void Generar_Color(uint8_t x);
 void eleccion (uint8_t pl, uint8_t x, uint8_t y, int index, char flip, char offset);
+void perder (void);
 
 extern uint8_t cover[];
 extern uint8_t flecha[];
@@ -154,6 +156,10 @@ void loop() {
     Generar_Carretera();
     eleccion (player, 15, 201, 0, 0, 0);
     while (choque == 0) {
+      perder();
+      if (choque == 1){
+        break;
+      }
       int obstacle = rand() % 7;
 
       if (appear % 50000 == 0) {
@@ -275,6 +281,7 @@ void loop() {
     LCD_Print("GAME OVER", 180, 120, 2, 0xffff, 0x0000);
   }
 }
+
 //***************************************************************************************************************************************
 // Funciones de Juego
 //***************************************************************************************************************************************
@@ -449,6 +456,26 @@ void eleccion (uint8_t pl, int x2, int y2, int index1, char flip1, char offset1)
     LCD_Sprite(x2, y2, 41, 39, player1L, 5, index1, flip1, offset1);
   } else if (pl == 3) {
     LCD_Sprite(x2, y2, 41, 39, player2L, 5, index1, flip1, offset1);
+  }
+}
+void perder (void){
+  for (int i; i<2;i++){
+    if (carriles[0][i] == xpos+15){
+      for (int j; j<2;j++){
+        switch (j){
+          case 0:
+            if (240<ypos1<201){
+              choque = 1;
+            }
+            break;
+          case 1:
+            if (240<ypos2<201){
+              choque = 1;
+            }
+            break;
+        }
+      }      
+    }
   }
 }
 //****************************************************************************************************************************************
