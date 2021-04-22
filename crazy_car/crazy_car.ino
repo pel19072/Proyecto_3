@@ -188,7 +188,6 @@ void loop() {
             FillRect(15 + xpos, 201, 41, 39,    0x9492);
             xpos = 0;
             eleccion (player, 15, 201, 0, 0, 0);
-            //LCD_Sprite(15, 201, 41, 39, player1L, 5, 0, 0, 0);
           }
         }
       }
