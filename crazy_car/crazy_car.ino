@@ -109,6 +109,8 @@ void setup() {
   pinMode(PUSHC1, INPUT_PULLUP);
   pinMode(PUSHJ2, INPUT_PULLUP);
   pinMode(PUSHC2, INPUT_PULLUP);
+  pinMode(PF_4,OUTPUT);
+  pinMode(PF_2,OUTPUT);
 
   SysCtlClockSet(SYSCTL_SYSDIV_2_5 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN | SYSCTL_XTAL_16MHZ);
   Serial.begin(9600);
@@ -153,7 +155,7 @@ void loop() {
     eleccion (player, 15, 201, 0, 0, 0);
     while (choque == 0) {
       int obstacle = rand() % 7;
-      
+
       if (appear % 50000 == 0) {
         switch (obstacle) {
           case 0:
@@ -226,6 +228,9 @@ void loop() {
         FLAGC1 = 1;
       } else {
         if (FLAGC1 == 1) {
+          //choque = 1;
+          digitalWrite(PF_4, LOW);
+          digitalWrite(PF_2, HIGH);
           FLAGC1 = 0;
           if (xpos <= 200) {
             for (int x = 0; x < 5; x++) {
@@ -245,21 +250,20 @@ void loop() {
         FLAGJ1 = 1;
       } else {
         if (FLAGJ1 == 1) {
+          digitalWrite(PF_2, LOW);
+          digitalWrite(PF_4, HIGH);
           FLAGJ1 = 0;
           if (xpos > 0) {
             for (int x = 0; x < 5; x++) {
               eleccion (player, 15 + xpos, 201, x, 1, 0);
-              //LCD_Sprite(15+xpos, 201, 41, 39, player1L, 5, x, 1, 0);
             }
             FillRect(15 + xpos, 201, 41, 39,    0x9492);
             xpos = xpos - 50;
             eleccion (player, 15 + xpos, 201, 0, 0, 0);
-            //LCD_Sprite(15+xpos, 201, 41, 39, player1L, 5, 0, 0, 0);
           } else {
             FillRect(15, 201, 41, 39,    0x9492);
             xpos = 250;
             eleccion (player, 265, 201, 0, 0, 0);
-            //LCD_Sprite(265, 201, 41, 39, player1L, 5, 0, 0, 0);
           }
         }
       }
