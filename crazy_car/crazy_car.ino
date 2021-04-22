@@ -64,7 +64,7 @@ uint32_t appear = 0;
 uint8_t ypos1 = 0;
 uint8_t ypos2 = 0;
 uint8_t carriles[2][2] = {{0, 0}, {0, 0}};
-uint8_t valpos[] = {15,65,115,165,215,265};
+uint8_t valpos[] = {15, 65, 115, 165, 215, 265};
 //***************************************************************************************************************************************
 // Functions Prototypes
 //***************************************************************************************************************************************
@@ -111,8 +111,8 @@ void setup() {
   pinMode(PUSHC1, INPUT_PULLUP);
   pinMode(PUSHJ2, INPUT_PULLUP);
   pinMode(PUSHC2, INPUT_PULLUP);
-  pinMode(PF_4,OUTPUT);
-  pinMode(PF_2,OUTPUT);
+  pinMode(PF_4, OUTPUT);
+  pinMode(PF_2, OUTPUT);
 
   SysCtlClockSet(SYSCTL_SYSDIV_2_5 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN | SYSCTL_XTAL_16MHZ);
   Serial.begin(9600);
@@ -157,11 +157,13 @@ void loop() {
     eleccion (player, 15, 201, 0, 0, 0);
     while (choque == 0) {
       perder();
-      if (choque == 1){
+      if (choque == 1) {
         break;
       }
+      //*************************************************************************
+      //***********************GENERACION DE OBSTACULOS**************************
+      //*************************************************************************
       int obstacle = rand() % 7;
-
       if (appear % 50000 == 0) {
         switch (obstacle) {
           case 0:
@@ -230,6 +232,9 @@ void loop() {
         ypos2++;
       }
       appear++;
+      //*************************************************************************
+      //******************MOVIMIENTOS DEL CARRO JUGADOR**************************
+      //*************************************************************************
       if (digitalRead(PUSHC1) == 0) {
         FLAGC1 = 1;
       } else {
@@ -276,7 +281,7 @@ void loop() {
     }
     confirmation = 5;
   }
-  else if (confirmation == 5){
+  else if (confirmation == 5) {
     FillRect(0, 0, 320, 240, 0x0000);
     LCD_Print("GAME OVER", 180, 120, 2, 0xffff, 0x0000);
   }
@@ -370,6 +375,7 @@ void Seleccion_de_Jugadores(void) {
     }
   }
 }
+
 void seleccion_de_carro(void) {
   LCD_Print("Escoja su vehiculo", 20, 20, 2, 0x018a, 0xdf5f);
   if (player == 0) {
@@ -415,6 +421,7 @@ void seleccion_de_carro(void) {
   }
 
 }
+
 void Generar_Carretera(void) {
   for (int x = 0; x < 240 / 10; x++) {
     LCD_Bitmap(0, x * 10, 10, 10, grama);
@@ -458,23 +465,29 @@ void eleccion (uint8_t pl, int x2, int y2, int index1, char flip1, char offset1)
     LCD_Sprite(x2, y2, 41, 39, player2L, 5, index1, flip1, offset1);
   }
 }
-void perder (void){
-  for (int i; i<2;i++){
-    if (carriles[0][i] == xpos+15){
-      for (int j; j<2;j++){
-        switch (j){
+
+void perder (void) {
+  for (int i; i < 2; i++) {
+    int temp = xpos + 15;
+    if (carriles[0][i] == temp) {
+      for (int j; j < 2; j++) {
+        switch (j) {
           case 0:
-            if (240<ypos1<201){
-              choque = 1;
+            if (240 > ypos1) {
+              if (ypos1 > 201) {
+                choque = 1;
+              }
             }
             break;
           case 1:
-            if (240<ypos2<201){
-              choque = 1;
+            if (240 > ypos2) {
+              if (ypos2 > 201) {
+                choque = 1;
+              }
             }
             break;
         }
-      }      
+      }
     }
   }
 }
@@ -732,7 +745,7 @@ void LCD_Print(String text, int x, int y, int fontSize, int color, int backgroun
 
   char charInput ;
   int cLength = text.length();
-  Serial.println(cLength, DEC);
+  //Serial.println(cLength, DEC);
   int charDec ;
   int c ;
   int charHex ;
@@ -740,7 +753,7 @@ void LCD_Print(String text, int x, int y, int fontSize, int color, int backgroun
   text.toCharArray(char_array, cLength + 1) ;
   for (int i = 0; i < cLength ; i++) {
     charInput = char_array[i];
-    Serial.println(char_array[i]);
+    //Serial.println(char_array[i]);
     charDec = int(charInput);
     digitalWrite(LCD_CS, LOW);
     SetWindows(x + (i * fontXSize), y, x + (i * fontXSize) + fontXSize - 1, y + fontYSize );
