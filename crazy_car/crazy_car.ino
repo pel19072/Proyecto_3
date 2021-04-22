@@ -190,38 +190,58 @@ void loop() {
 
           switch (carriles[1][0]) {
             case 0:
-              LCD_Bitmap(carriles[0][0], ypos1, 40, 40, ycar);
+              if (carriles[0][0] !=0){
+                LCD_Bitmap(carriles[0][0], ypos1, 40, 40, ycar);
+              }
               break;
             case 1:
-              LCD_Bitmap(carriles[0][0], ypos1, 40, 40, gcar);
+              if (carriles[0][0] !=0){
+                LCD_Bitmap(carriles[0][0], ypos1, 40, 40, gcar);
+              }
               break;
             case 2:
-              LCD_Bitmap(carriles[0][0], ypos1, 40, 40, bcar);
+              if (carriles[0][0] !=0){
+                LCD_Bitmap(carriles[0][0], ypos1, 40, 40, bcar);
+              }
               break;
             case 3:
-              LCD_Bitmap(carriles[0][0], ypos1, 40, 40, rcar);
+              if (carriles[0][0] !=0){
+                LCD_Bitmap(carriles[0][0], ypos1, 40, 40, rcar);
+              }
               break;
           }
-          FillRect(carriles[0][0], ypos1 - 10, 40, 10, 0x9492);
+          if (carriles[0][0] !=0){
+              FillRect(carriles[0][0], ypos1 - 10, 40, 10, 0x9492);
+            }
           if (ypos1 == 240) {
             carriles[0][0] = 0;
             ypos1 = 0;
           }
           switch (carriles[1][1]) {
             case 0:
-              LCD_Bitmap(carriles[0][1], ypos2, 40, 40, ycar);
+              if (carriles[0][1] !=0){
+                LCD_Bitmap(carriles[0][1], ypos2, 40, 40, ycar);
+              }
               break;
             case 1:
-              LCD_Bitmap(carriles[0][1], ypos2, 40, 40, gcar);
+              if (carriles[0][1] !=0){
+                LCD_Bitmap(carriles[0][1], ypos2, 40, 40, gcar);
+              }
               break;
             case 2:
-              LCD_Bitmap(carriles[0][1], ypos2, 40, 40, bcar);
+              if (carriles[0][1] !=0){
+                LCD_Bitmap(carriles[0][1], ypos2, 40, 40, bcar);
+              }
               break;
             case 3:
-              LCD_Bitmap(carriles[0][1], ypos2, 40, 40, rcar);
+              if (carriles[0][1] !=0){
+                LCD_Bitmap(carriles[0][1], ypos2, 40, 40, rcar);
+              }
               break;
           }
-          FillRect(carriles[0][1], ypos2 - 10, 40, 10, 0x9492);
+          if (carriles[0][1] !=0){
+              FillRect(carriles[0][1], ypos2 - 10, 40, 10, 0x9492);
+            }
           if (ypos2 == 240) {
             carriles[0][1] = 0;
             ypos2 = 0;
