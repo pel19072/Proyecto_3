@@ -32,6 +32,10 @@
 
 #define PUSHS PE_3
 #define PUSHC PF_1
+#define PUSHJ1 PE_5
+#define PUSHC1 PA_6
+#define PUSHJ2 PA_7
+#define PUSHC2 PE_2
 
 String text1 = "Bienvenido a";
 String text2 = "Crazy Cars!";
@@ -45,7 +49,11 @@ int DPINS[] = {PB_0, PB_1, PB_2, PB_3, PB_4, PB_5, PB_6, PB_7};
 uint8_t arrow_x = 50;
 uint8_t arrow_y = 55;
 uint8_t FLAGC = 0;
+uint8_t FLAGC1 = 0;
+uint8_t FLAGC2 = 0;
 uint8_t FLAG = 0;
+uint8_t FLAGJ1 = 0;
+uint8_t FLAGJ2 = 0;
 uint8_t arrow = 0;
 uint8_t confirmation = 0;
 uint8_t jump = 0;
@@ -89,6 +97,10 @@ extern uint8_t street[];
 void setup() {
   pinMode(PUSHS, INPUT_PULLUP);
   pinMode(PUSHC, INPUT_PULLUP);
+  pinMode(PUSHJ1, INPUT_PULLUP);
+  pinMode(PUSHC1, INPUT_PULLUP);
+  pinMode(PUSHJ2, INPUT_PULLUP);
+  pinMode(PUSHC2, INPUT_PULLUP);
 
   SysCtlClockSet(SYSCTL_SYSDIV_2_5 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN | SYSCTL_XTAL_16MHZ);
   Serial.begin(9600);
@@ -101,9 +113,9 @@ void setup() {
 
   //LCD_Bitmap(unsigned int x, unsigned int y, unsigned int width, unsigned int height, unsigned char bitmap[]);
   LCD_Bitmap(0, 120, 320, 120, cover);
-  LCD_Print(text1, 60, 0, 2, 0xffff, 0xdf5f);
-  LCD_Print(text2, 70, 20, 2, 0xffff, 0xdf5f);
-  LCD_Print(text4, 80, 100, 2, 0xffff, 0xdf5f);
+  LCD_Print(text1, 60, 0, 2, 0x018a, 0xdf5f);
+  LCD_Print(text2, 70, 20, 2, 0x018a, 0xdf5f);
+  LCD_Print(text4, 80, 100, 2, 0x018a, 0xdf5f);
 
 }
 //***************************************************************************************************************************************
@@ -138,74 +150,67 @@ void loop() {
       case 1:
         break;
     }
-    LCD_Print("Escoja su vehiculo", 20, 20, 2, 0xffff, 0xdf5f);
-    LCD_Print("Jugador 1 Jugador 2", 10, 60, 2, 0xffff, 0xdf5f);
-    LCD_Bitmap(50, 110, 40, 40, gcar);
-    LCD_Bitmap(220, 110, 40, 40, ycar);
-    LCD_Bitmap(50, 180, 40, 40, bcar);
-    LCD_Bitmap(220, 180, 40, 40, rcar);
-    //LCD_Sprite(50, 110, 41, 39, player1L, 5, 0, 0, 0);
-    //LCD_Sprite(220, 110, 41, 39, player1L, 5, 0, 0, 0);
-    //LCD_Sprite(50, 180, 41, 39, player2L, 5, 0, 0, 0);
-    //LCD_Sprite(220, 180, 41, 39, player2L, 5, 0, 0, 0);
-  }else if (confirmation == 4){
+    LCD_Print("Escoja su vehiculo", 20, 20, 2, 0x018a, 0xdf5f);
+    LCD_Print("Jugador 1 Jugador 2", 10, 60, 2, 0x018a, 0xdf5f);
+  }
+  else if (confirmation == 4) {
     FillRect(0, 0, 320, 240, 0xdf5f);
-    LCD_Print("comienza el juego", 20, 120, 2, 0xffff, 0xdf5f);
+    LCD_Print("comienza el juego", 20, 120, 2, 0x018a, 0xdf5f);
     delay(1000);
-    for (int x = 0; x<240/10;x++){
-         LCD_Bitmap(0, x*10, 10, 10, grama);
-         LCD_Bitmap(310, x*10, 10, 10, grama);
-      }
-      for (int y = 0; y<240/10;y++){
-        LCD_Bitmap(10, y*20, 100, 20, street);
-        LCD_Bitmap(110, y*20, 100, 20, street);
-        LCD_Bitmap(210, y*20, 100, 20, street);
-      }
-      eleccion (player, 15, 201, 0, 0, 0);
-      //LCD_Sprite(15, 201, 41, 39, player1L, 5, 0, 0, 0);
-    while (choque == 0){
-      if (digitalRead(PUSHC) == 0){
-        FLAGC = 1;
-      }else{
-        if (FLAGC == 1){
+    for (int x = 0; x < 240 / 10; x++) {
+      LCD_Bitmap(0, x * 10, 10, 10, grama);
+      LCD_Bitmap(310, x * 10, 10, 10, grama);
+    }
+    for (int y = 0; y < 240 / 10; y++) {
+      LCD_Bitmap(10, y * 20, 100, 20, street);
+      LCD_Bitmap(110, y * 20, 100, 20, street);
+      LCD_Bitmap(210, y * 20, 100, 20, street);
+    }
+    eleccion (player, 15, 201, 0, 0, 0);
+    //LCD_Sprite(15, 201, 41, 39, player1L, 5, 0, 0, 0);
+    while (choque == 0) {
+      if (digitalRead(PUSHC1) == 0) {
+        FLAGC1 = 1;
+      } else {
+        if (FLAGC1 == 1) {
           //choque = 1;
-          FLAGC = 0;
-          if (xpos <= 200){
-            for (int x = 0; x<5;x++){
-              eleccion (player, 15+xpos, 201, x, 0, 0);
+          FLAGC1 = 0;
+          if (xpos <= 200) {
+            for (int x = 0; x < 5; x++) {
+              eleccion (player, 15 + xpos, 201, x, 0, 0);
               //LCD_Sprite(15+xpos, 201, 41, 39, player1L, 5, x, 0, 0);
             }
-            FillRect(15+xpos, 201, 41, 39,0x9492);
+            FillRect(15 + xpos, 201, 41, 39, 0x9492);
             xpos = xpos + 50;
-            eleccion (player, 15+xpos, 201, 0, 0, 0);
+            eleccion (player, 15 + xpos, 201, 0, 0, 0);
             //LCD_Sprite(15+xpos, 201, 41, 39, player1L, 5, 0, 0, 0);
-          }else{
-            FillRect(15+xpos, 201, 41, 39,    0x9492);
+          } else {
+            FillRect(15 + xpos, 201, 41, 39,    0x9492);
             xpos = 0;
             eleccion (player, 15, 201, 0, 0, 0);
             //LCD_Sprite(15, 201, 41, 39, player1L, 5, 0, 0, 0);
           }
         }
       }
-      if (digitalRead(PUSHS) == 0){
-        FLAG = 1;
-      }else{
-        if (FLAG == 1){
-          FLAG = 0;
-        if (xpos > 0){
-          for (int x = 0; x<5;x++){
-            eleccion (player, 15+xpos, 201, x, 1, 0);
-            //LCD_Sprite(15+xpos, 201, 41, 39, player1L, 5, x, 1, 0);
-          }
-          FillRect(15+xpos, 201, 41, 39,    0x9492);
-          xpos = xpos - 50;
-          eleccion (player, 15+xpos, 201, 0, 0, 0);
-          //LCD_Sprite(15+xpos, 201, 41, 39, player1L, 5, 0, 0, 0);
-        }else{
-          FillRect(15, 201, 41, 39,    0x9492);
-          xpos = 250;
-          eleccion (player, 265, 201, 0, 0, 0);
-          //LCD_Sprite(265, 201, 41, 39, player1L, 5, 0, 0, 0);
+      if (digitalRead(PUSHJ1) == 0) {
+        FLAGJ1 = 1;
+      } else {
+        if (FLAGJ1 == 1) {
+          FLAGJ1 = 0;
+          if (xpos > 0) {
+            for (int x = 0; x < 5; x++) {
+              eleccion (player, 15 + xpos, 201, x, 1, 0);
+              //LCD_Sprite(15+xpos, 201, 41, 39, player1L, 5, x, 1, 0);
+            }
+            FillRect(15 + xpos, 201, 41, 39,    0x9492);
+            xpos = xpos - 50;
+            eleccion (player, 15 + xpos, 201, 0, 0, 0);
+            //LCD_Sprite(15+xpos, 201, 41, 39, player1L, 5, 0, 0, 0);
+          } else {
+            FillRect(15, 201, 41, 39,    0x9492);
+            xpos = 250;
+            eleccion (player, 265, 201, 0, 0, 0);
+            //LCD_Sprite(265, 201, 41, 39, player1L, 5, 0, 0, 0);
           }
         }
       }
@@ -236,10 +241,10 @@ void Seleccion_de_Jugadores(void) {
   switch (jump) {
     case 0:
       FillRect(0, 0, 320, 120, 0xdf5f);
-      LCD_Print(text3, 50, 0, 2, 0xffff, 0xdf5f);
-      LCD_Print(text3_1, 60, 20, 2, 0xffff, 0xdf5f);
-      LCD_Print(text3_2, 70, 40, 2, 0xffff, 0xdf5f);
-      LCD_Print(text3_3, 90, 60, 2, 0xffff, 0xdf5f);
+      LCD_Print(text3, 50, 0, 2, 0x018a, 0xdf5f);
+      LCD_Print(text3_1, 60, 20, 2, 0x018a, 0xdf5f);
+      LCD_Print(text3_2, 70, 40, 2, 0x018a, 0xdf5f);
+      LCD_Print(text3_3, 90, 60, 2, 0x018a, 0xdf5f);
       jump++;
       break;
     case 1:
@@ -289,55 +294,55 @@ void Seleccion_de_Jugadores(void) {
     }
   }
 }
-void seleccion_de_carro(void){
-  LCD_Print("Escoja su vehiculo", 20, 20, 2, 0xffff, 0xdf5f);
-    if (player == 0){
+void seleccion_de_carro(void) {
+  LCD_Print("Escoja su vehiculo", 20, 20, 2, 0x018a, 0xdf5f);
+  if (player == 0) {
     LCD_Sprite(110, 110, 41, 39, player1L, 5, 0, 0, 0);
-      if (digitalRead(PUSHS) == 0){
-        FLAG = 1;
-      }else{
-        if (FLAG == 1){
-          FLAG = 0;
-          player = 1;
-        }
-      }
-      if (digitalRead(PUSHC) == 0){
-        FLAGC = 1;
-      }else{
-        if (FLAGC == 1){
-          FLAGC = 0;
-          player = 2;
-          confirmation = 4;
-        }
-      }
-    }else if (player == 1){
-      LCD_Sprite(110, 110, 41, 39, player2L, 5, 0, 0, 0);
-       if (digitalRead(PUSHS) == 0){
-        FLAG = 1;
-      }else{
-        if (FLAG == 1){
-          FLAG = 0;
-          player = 0;
-        }
-      }
-      if (digitalRead(PUSHC) == 0){
-        FLAGC = 1;
-      }else{
-        if (FLAGC == 1){
-          FLAGC = 0;
-          player = 3;
-          confirmation = 4;
-        }
+    if (digitalRead(PUSHJ1) == 0) {
+      FLAGJ1 = 1;
+    } else {
+      if (FLAGJ1 == 1) {
+        FLAGJ1 = 0;
+        player = 1;
       }
     }
-    
+    if (digitalRead(PUSHC1) == 0) {
+      FLAGC1 = 1;
+    } else {
+      if (FLAGC1 == 1) {
+        FLAGC1 = 0;
+        player = 2;
+        confirmation = 4;
+      }
+    }
+  } else if (player == 1) {
+    LCD_Sprite(110, 110, 41, 39, player2L, 5, 0, 0, 0);
+    if (digitalRead(PUSHJ1) == 0) {
+      FLAGJ1 = 1;
+    } else {
+      if (FLAGJ1 == 1) {
+        FLAGJ1 = 0;
+        player = 0;
+      }
+    }
+    if (digitalRead(PUSHC1) == 0) {
+      FLAGC1 = 1;
+    } else {
+      if (FLAGC1 == 1) {
+        FLAGC1 = 0;
+        player = 3;
+        confirmation = 4;
+      }
+    }
+  }
+
 }
-void eleccion (uint8_t pl, int x2, int y2,int index1, char flip1, char offset1){
-        if (pl == 2){
-          LCD_Sprite(x2, y2, 41, 39, player1L, 5, index1, flip1, offset1);
-        }else if (pl == 3){
-          LCD_Sprite(x2, y2, 41, 39, player2L, 5, index1, flip1, offset1);
-        }
+void eleccion (uint8_t pl, int x2, int y2, int index1, char flip1, char offset1) {
+  if (pl == 2) {
+    LCD_Sprite(x2, y2, 41, 39, player1L, 5, index1, flip1, offset1);
+  } else if (pl == 3) {
+    LCD_Sprite(x2, y2, 41, 39, player2L, 5, index1, flip1, offset1);
+  }
 }
 //****************************************************************************************************************************************
 // Función para inicializar LCD
