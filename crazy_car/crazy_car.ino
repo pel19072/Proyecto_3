@@ -162,7 +162,6 @@ void loop() {
         LCD_Bitmap(210, y*20, 100, 20, street);
       }
       eleccion (player, 15, 201, 0, 0, 0);
-      //LCD_Sprite(15, 201, 41, 39, player1L, 5, 0, 0, 0);
     while (choque == 0){
       if (digitalRead(PUSHC) == 0){
         FLAGC = 1;
@@ -173,17 +172,14 @@ void loop() {
           if (xpos <= 200){
             for (int x = 0; x<5;x++){
               eleccion (player, 15+xpos, 201, x, 0, 0);
-              //LCD_Sprite(15+xpos, 201, 41, 39, player1L, 5, x, 0, 0);
             }
             FillRect(15+xpos, 201, 41, 39,0x9492);
             xpos = xpos + 50;
             eleccion (player, 15+xpos, 201, 0, 0, 0);
-            //LCD_Sprite(15+xpos, 201, 41, 39, player1L, 5, 0, 0, 0);
           }else{
             FillRect(15+xpos, 201, 41, 39,    0x9492);
             xpos = 0;
             eleccion (player, 15, 201, 0, 0, 0);
-            //LCD_Sprite(15, 201, 41, 39, player1L, 5, 0, 0, 0);
           }
         }
       }
@@ -195,17 +191,14 @@ void loop() {
         if (xpos > 0){
           for (int x = 0; x<5;x++){
             eleccion (player, 15+xpos, 201, x, 1, 0);
-            //LCD_Sprite(15+xpos, 201, 41, 39, player1L, 5, x, 1, 0);
           }
           FillRect(15+xpos, 201, 41, 39,    0x9492);
           xpos = xpos - 50;
           eleccion (player, 15+xpos, 201, 0, 0, 0);
-          //LCD_Sprite(15+xpos, 201, 41, 39, player1L, 5, 0, 0, 0);
         }else{
           FillRect(15, 201, 41, 39,    0x9492);
           xpos = 250;
           eleccion (player, 265, 201, 0, 0, 0);
-          //LCD_Sprite(265, 201, 41, 39, player1L, 5, 0, 0, 0);
           }
         }
       }
