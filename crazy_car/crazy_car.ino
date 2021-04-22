@@ -60,6 +60,8 @@ uint8_t jump = 0;
 uint8_t player = 0;
 uint8_t choque = 0;
 uint8_t xpos = 0;
+uint32_t appear = 0;
+uint8_t carriles[2][2] = {{0, 0}, {0, 0}};
 //***************************************************************************************************************************************
 // Functions Prototypes
 //***************************************************************************************************************************************
@@ -77,9 +79,11 @@ void LCD_Print(String text, int x, int y, int fontSize, int color, int backgroun
 void LCD_Bitmap(unsigned int x, unsigned int y, unsigned int width, unsigned int height, unsigned char bitmap[]);
 void LCD_Sprite(int x, int y, int width, int height, unsigned char bitmap[], int columns, int index, char flip, char offset);
 
+void Limpieza_Unitaria(void);
 void Seleccion_de_Jugadores(void);
 void Pantalla_de_Inicio(void);
 void seleccion_de_carro(void);
+void Generar_Carretera(void);
 void eleccion (uint8_t pl, uint8_t x, uint8_t y, int index, char flip, char offset);
 
 extern uint8_t cover[];
@@ -95,6 +99,7 @@ extern uint8_t street[];
 // Inicialización
 //***************************************************************************************************************************************
 void setup() {
+  Serial.begin(9600);
   pinMode(PUSHS, INPUT_PULLUP);
   pinMode(PUSHC, INPUT_PULLUP);
   pinMode(PUSHJ1, INPUT_PULLUP);
@@ -129,27 +134,11 @@ void loop() {
     Seleccion_de_Jugadores();
   }
   else if (confirmation == 2) {
-    switch (jump) {
-      case 0:
-        FillRect(0, 0, 320, 240, 0xdf5f);
-        jump++;
-        break;
-      case 1:
-        break;
-    }
-
+    Limpieza_Unitaria();
     seleccion_de_carro();
-
   }
   else if (confirmation == 3) {
-    switch (jump) {
-      case 0:
-        FillRect(0, 0, 320, 240, 0xdf5f);
-        jump++;
-        break;
-      case 1:
-        break;
-    }
+    Limpieza_Unitaria();
     LCD_Print("Escoja su vehiculo", 20, 20, 2, 0x018a, 0xdf5f);
     LCD_Print("Jugador 1 Jugador 2", 10, 60, 2, 0x018a, 0xdf5f);
   }
@@ -157,33 +146,194 @@ void loop() {
     FillRect(0, 0, 320, 240, 0xdf5f);
     LCD_Print("comienza el juego", 20, 120, 2, 0x018a, 0xdf5f);
     delay(1000);
-    for (int x = 0; x < 240 / 10; x++) {
-      LCD_Bitmap(0, x * 10, 10, 10, grama);
-      LCD_Bitmap(310, x * 10, 10, 10, grama);
-    }
-    for (int y = 0; y < 240 / 10; y++) {
-      LCD_Bitmap(10, y * 20, 100, 20, street);
-      LCD_Bitmap(110, y * 20, 100, 20, street);
-      LCD_Bitmap(210, y * 20, 100, 20, street);
-    }
+    Generar_Carretera();
     eleccion (player, 15, 201, 0, 0, 0);
-    //LCD_Sprite(15, 201, 41, 39, player1L, 5, 0, 0, 0);
     while (choque == 0) {
+      int obstacle = rand() % 7;
+      int color_obs = rand() % 3;
+      if (appear % 1000000 == 0) {
+        switch (obstacle) {
+          case 0:
+            break;
+          case 1:
+            for (int i = 0; i < 2; i++)
+            {
+              if (carriles[0][i] == 0) {
+                carriles[0][i] = 15;
+                switch (color_obs) {
+                  case 0:
+                    LCD_Bitmap(15, 0, 40, 40, ycar);
+                    carriles[1][i] = 0;
+                    break;
+                  case 1:
+                    LCD_Bitmap(15, 0, 40, 40, gcar);
+                    carriles[1][i] = 1;
+                    break;
+                  case 2:
+                    LCD_Bitmap(15, 0, 40, 40, bcar);
+                    carriles[1][i] = 2;
+                    break;
+                  case 3:
+                    LCD_Bitmap(15, 0, 40, 40, rcar);
+                    carriles[1][i] = 3;
+                    break;
+                }
+                break;
+              }
+            }
+            break;
+          case 2:
+            for (int i = 0; i < 2; i++)
+            {
+              if (carriles[0][i] == 0) {
+                carriles[0][i] = 65;
+                switch (color_obs) {
+                  case 0:
+                    LCD_Bitmap(65, 0, 40, 40, ycar);
+                    carriles[1][i] = 0;
+                    break;
+                  case 1:
+                    LCD_Bitmap(65, 0, 40, 40, gcar);
+                    carriles[1][i] = 1;
+                    break;
+                  case 2:
+                    LCD_Bitmap(65, 0, 40, 40, bcar);
+                    carriles[1][i] = 2;
+                    break;
+                  case 3:
+                    LCD_Bitmap(65, 0, 40, 40, rcar);
+                    carriles[1][i] = 3;
+                    break;
+                }
+                break;
+              }
+            }
+            break;
+          case 3:
+            for (int i = 0; i < 2; i++)
+            {
+              if (carriles[0][i] == 0) {
+                carriles[0][i] = 115;
+                switch (color_obs) {
+                  case 0:
+                    LCD_Bitmap(115, 0, 40, 40, ycar);
+                    carriles[1][i] = 0;
+                    break;
+                  case 1:
+                    LCD_Bitmap(115, 0, 40, 40, gcar);
+                    carriles[1][i] = 1;
+                    break;
+                  case 2:
+                    LCD_Bitmap(115, 0, 40, 40, bcar);
+                    carriles[1][i] = 2;
+                    break;
+                  case 3:
+                    LCD_Bitmap(115, 0, 40, 40, rcar);
+                    carriles[1][i] = 3;
+                    break;
+                }
+                break;
+              }
+            }
+            break;
+          case 4:
+            for (int i = 0; i < 2; i++)
+            {
+              if (carriles[0][i] == 0) {
+                carriles[0][i] = 165;
+                switch (color_obs) {
+                  case 0:
+                    LCD_Bitmap(165, 0, 40, 40, ycar);
+                    carriles[1][i] = 0;
+                    break;
+                  case 1:
+                    LCD_Bitmap(165, 0, 40, 40, gcar);
+                    carriles[1][i] = 1;
+                    break;
+                  case 2:
+                    LCD_Bitmap(165, 0, 40, 40, bcar);
+                    carriles[1][i] = 2;
+                    break;
+                  case 3:
+                    LCD_Bitmap(165, 0, 40, 40, rcar);
+                    carriles[1][i] = 3;
+                    break;
+                }
+                break;
+              }
+            }
+            break;
+          case 5:
+            for (int i = 0; i < 2; i++)
+            {
+              if (carriles[0][i] == 0) {
+                carriles[0][i] = 215;
+                switch (color_obs) {
+                  case 0:
+                    LCD_Bitmap(215, 0, 40, 40, ycar);
+                    carriles[1][i] = 0;
+                    break;
+                  case 1:
+                    LCD_Bitmap(215, 0, 40, 40, gcar);
+                    carriles[1][i] = 1;
+                    break;
+                  case 2:
+                    LCD_Bitmap(215, 0, 40, 40, bcar);
+                    carriles[1][i] = 2;
+                    break;
+                  case 3:
+                    LCD_Bitmap(215, 0, 40, 40, rcar);
+                    carriles[1][i] = 3;
+                    break;
+                }
+                break;
+              }
+            }
+            break;
+          case 6:
+            for (int i = 0; i < 2; i++)
+            {
+              if (carriles[0][i] == 0) {
+                carriles[0][i] = 265;
+                switch (color_obs) {
+                  case 0:
+                    LCD_Bitmap(265, 0, 40, 40, ycar);
+                    carriles[1][i] = 0;
+                    break;
+                  case 1:
+                    LCD_Bitmap(265, 0, 40, 40, gcar);
+                    carriles[1][i] = 1;
+                    break;
+                  case 2:
+                    LCD_Bitmap(265, 0, 40, 40, bcar);
+                    carriles[1][i] = 2;
+                    break;
+                  case 3:
+                    LCD_Bitmap(265, 0, 40, 40, rcar);
+                    carriles[1][i] = 3;
+                    break;
+                }
+                break;
+              }
+            }
+            break;
+        }
+        Serial.println(carriles[0][0]);
+        Serial.println(carriles[0][1]);
+      }
+      appear++;
       if (digitalRead(PUSHC1) == 0) {
         FLAGC1 = 1;
       } else {
         if (FLAGC1 == 1) {
-          //choque = 1;
           FLAGC1 = 0;
           if (xpos <= 200) {
             for (int x = 0; x < 5; x++) {
               eleccion (player, 15 + xpos, 201, x, 0, 0);
-              //LCD_Sprite(15+xpos, 201, 41, 39, player1L, 5, x, 0, 0);
             }
             FillRect(15 + xpos, 201, 41, 39, 0x9492);
             xpos = xpos + 50;
             eleccion (player, 15 + xpos, 201, 0, 0, 0);
-            //LCD_Sprite(15+xpos, 201, 41, 39, player1L, 5, 0, 0, 0);
           } else {
             FillRect(15 + xpos, 201, 41, 39,    0x9492);
             xpos = 0;
@@ -219,6 +369,17 @@ void loop() {
 //***************************************************************************************************************************************
 // Funciones de Juego
 //***************************************************************************************************************************************
+void Limpieza_Unitaria(void) {
+  switch (jump) {
+    case 0:
+      FillRect(0, 0, 320, 240, 0xdf5f);
+      jump++;
+      break;
+    case 1:
+      break;
+  }
+}
+
 void Pantalla_de_Inicio(void) {
   if (digitalRead(PUSHC) == 1) {
     FLAGC = 1;
@@ -310,6 +471,7 @@ void seleccion_de_carro(void) {
     } else {
       if (FLAGC1 == 1) {
         FLAGC1 = 0;
+        jump = 0;
         player = 2;
         confirmation = 4;
       }
@@ -329,12 +491,24 @@ void seleccion_de_carro(void) {
     } else {
       if (FLAGC1 == 1) {
         FLAGC1 = 0;
+        jump = 0;
         player = 3;
         confirmation = 4;
       }
     }
   }
 
+}
+void Generar_Carretera(void) {
+  for (int x = 0; x < 240 / 10; x++) {
+    LCD_Bitmap(0, x * 10, 10, 10, grama);
+    LCD_Bitmap(310, x * 10, 10, 10, grama);
+  }
+  for (int y = 0; y < 240 / 10; y++) {
+    LCD_Bitmap(10, y * 20, 100, 20, street);
+    LCD_Bitmap(110, y * 20, 100, 20, street);
+    LCD_Bitmap(210, y * 20, 100, 20, street);
+  }
 }
 void eleccion (uint8_t pl, int x2, int y2, int index1, char flip1, char offset1) {
   if (pl == 2) {
