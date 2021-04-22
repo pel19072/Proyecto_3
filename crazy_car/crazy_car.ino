@@ -63,8 +63,9 @@ uint8_t xpos = 0;
 uint32_t appear = 0;
 uint8_t ypos1 = 0;
 uint8_t ypos2 = 0;
-uint8_t carriles[2][2] = {{0, 0}, {0, 0}};
+int carriles[2][2] = {{0, 0}, {0, 0}};
 uint8_t valpos[] = {15, 65, 115, 165, 215, 265};
+uint8_t ylist[] = {ypos1,ypos2};
 //***************************************************************************************************************************************
 // Functions Prototypes
 //***************************************************************************************************************************************
@@ -156,10 +157,14 @@ void loop() {
     Generar_Carretera();
     eleccion (player, 15, 201, 0, 0, 0);
     while (choque == 0) {
-      perder();
-      if (choque == 1) {
+      /* Serial.print("carriles[0][0] ");
+       Serial.println(carriles[0][0]);
+       Serial.print("carriles[0][1] ");
+       Serial.println(carriles[0][1]);/*
+      //perder();
+     /* if (choque == 1) {
         break;
-      }
+      }*/
       //*************************************************************************
       //***********************GENERACION DE OBSTACULOS**************************
       //*************************************************************************
@@ -190,41 +195,64 @@ void loop() {
 
         switch (carriles[1][0]) {
           case 0:
-            LCD_Bitmap(carriles[0][0], ypos1, 40, 40, ycar);
+            if (carriles[0][0] !=0){
+              LCD_Bitmap(carriles[0][0], ypos1, 40, 40, ycar);
+            }
             break;
           case 1:
-            LCD_Bitmap(carriles[0][0], ypos1, 40, 40, gcar);
+            if (carriles[0][0] !=0){
+              LCD_Bitmap(carriles[0][0], ypos1, 40, 40, gcar);
+            }
             break;
           case 2:
-            LCD_Bitmap(carriles[0][0], ypos1, 40, 40, bcar);
+            if (carriles[0][0] !=0){
+              LCD_Bitmap(carriles[0][0], ypos1, 40, 40, bcar);
+            }
             break;
           case 3:
-            LCD_Bitmap(carriles[0][0], ypos1, 40, 40, rcar);
+            if (carriles[0][0] !=0){
+              LCD_Bitmap(carriles[0][0], ypos1, 40, 40, rcar);
+            }
             break;
         }
-        FillRect(carriles[0][0], ypos1 - 10, 40, 10, 0x9492);
+        if (carriles[0][0] !=0){
+          FillRect(carriles[0][0], ypos1 - 10, 40, 10, 0x9492);
+        }
         if (ypos1 == 240) {
           carriles[0][0] = 0;
           ypos1 = 0;
+          //FillRect(carriles[0][0], 0, 40, 10, 0x9492);
         }
         switch (carriles[1][1]) {
           case 0:
-            LCD_Bitmap(carriles[0][1], ypos2, 40, 40, ycar);
+            if (carriles[0][1] !=0){
+              LCD_Bitmap(carriles[0][1], ypos2, 40, 40, ycar);
+            }
             break;
           case 1:
-            LCD_Bitmap(carriles[0][1], ypos2, 40, 40, gcar);
+            if (carriles[0][1] !=0){
+              LCD_Bitmap(carriles[0][1], ypos2, 40, 40, gcar);
+            }
             break;
           case 2:
-            LCD_Bitmap(carriles[0][1], ypos2, 40, 40, bcar);
+            if (carriles[0][1] !=0){
+              LCD_Bitmap(carriles[0][1], ypos2, 40, 40, bcar);
+            }
             break;
           case 3:
-            LCD_Bitmap(carriles[0][1], ypos2, 40, 40, rcar);
+            if (carriles[0][1] !=0){
+              LCD_Bitmap(carriles[0][1], ypos2, 40, 40, rcar);
+            }
             break;
         }
-        FillRect(carriles[0][1], ypos2 - 10, 40, 10, 0x9492);
+        if (carriles[0][1] !=0){
+          FillRect(carriles[0][1], ypos2 - 10, 40, 10, 0x9492);
+        }
         if (ypos2 == 240) {
+          
           carriles[0][1] = 0;
           ypos2 = 0;
+         // FillRect(carriles[0][1], 0, 40, 10, 0x9492);
         }
       }
       if (appear % 5000 == 0) {
@@ -434,7 +462,7 @@ void Generar_Carretera(void) {
   }
 }
 
-void Generar_Color(uint8_t x) {
+void Generar_Color(int x) {
   int color_obs = rand() % 3;
   for (int i = 0; i < 2; i++)
   {
@@ -468,29 +496,12 @@ void eleccion (uint8_t pl, int x2, int y2, int index1, char flip1, char offset1)
 
 void perder (void) {
   for (int i; i < 2; i++) {
-    int temp = xpos + 15;
-    if (carriles[0][i] == temp) {
-      for (int j; j < 2; j++) {
-        switch (j) {
-          case 0:
-            if (240 > ypos1) {
-              if (ypos1 > 201) {
-                choque = 1;
-              }
-            }
-            break;
-          case 1:
-            if (240 > ypos2) {
-              if (ypos2 > 201) {
-                choque = 1;
-              }
-            }
-            break;
-        }
-      }
+      //int temp = xpos + 15;
+      if (carriles[0][i] > 0) {
+        digitalWrite(PF_4,HIGH);
     }
   }
-}
+ }   
 //****************************************************************************************************************************************
 // Función para inicializar LCD
 //***************************************************************************************************************************************
