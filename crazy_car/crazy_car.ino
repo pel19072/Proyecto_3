@@ -172,7 +172,7 @@ void loop() {
     seleccion_de_carro();
   }
   else if (confirmation == 3) {
-    switch(jump1){
+    switch (jump1) {
       case 0:
         Limpieza_Unitaria();
         LCD_Print("Escoja su vehiculo", 20, 20, 2, 0x018a, 0xdf5f);
@@ -199,7 +199,7 @@ void loop() {
         generador_de_obstaculos();
         movimiento_un_jugador();
       }
-       confirmation = 5;
+      confirmation = 5;
     }
   }
   else if (confirmation == 5) {
@@ -213,79 +213,9 @@ void loop() {
     Generar_Carretera();
     eleccion (player, 15, 201, 0, 0, 0);
     eleccion (player2, 165, 201, 0, 0, 0);
-    while (choque2 == 0){
+    while (choque2 == 0) {
       generador_de_obstaculos();
       movimiento_2jugadores();
-    digitalWrite(PF_2, HIGH);
-    digitalWrite(PF_4, LOW);
-    switch (jump) {
-      case 0:
-        player = 0;
-        choque = 0;
-        ypos1 = 0;
-        ypos2 = 0;
-        xpos = 0;
-        FillRect(0, 0, 320, 240, 0x0000);
-        LCD_Print("GAME OVER", 100, 120, 2, 0xffff, 0x0000);
-        delay(1000);
-        Score1_Conversion = String(Score1);
-        SD_Write(Score1_Conversion);
-        SD_Read();
-        FillRect(0, 0, 320, 240, 0xdf5f);
-        LCD_Print("Score obtenido:", 20, 20, 2, 0x018a, 0xdf5f);
-        LCD_Print(Score1_Conversion, 260, 20, 2, 0x018a, 0xdf5f);
-        LCD_Print("Desea volver", 50, 50, 2, 0x018a, 0xdf5f);
-        LCD_Print("a jugar?", 60, 80, 2, 0x018a, 0xdf5f);
-        LCD_Print("si     no", 90, 110, 2, 0x018a, 0xdf5f);
-        arrow_x = 45;
-        arrow_y = 105;
-        jump++;
-        break;
-      case 1:
-        break;
-    }
-    //ANTIREBOTE DEL BOTON DE INICIO
-    if (digitalRead(PUSHS) == 0) {
-      FLAG = 1;
-      delay(50);
-    }
-    else {
-      if (FLAG == 1) {
-        FLAG = 0;
-        switch (arrow) {
-          case 0:
-            arrow_x = 145;
-            arrow_y = 105;
-            arrow++;
-            break;
-          case 1:
-            arrow_x = 45;
-            arrow_y = 105;
-            arrow = 0;
-            break;
-        }
-      }
-    }
-    LCD_Bitmap(arrow_x, arrow_y, 40, 30, flecha);
-    delay(150);
-    FillRect(arrow_x, arrow_y, 40, 30, 0xdf5f);
-    delay(150);
-
-    if (digitalRead(PUSHC) == 1) {
-      FLAGC = 1;
-      delay(50);
-    }
-    else {
-      if (FLAGC == 1) {
-        FLAGC = 0;
-        jump = 0;
-        if (arrow_x == 50) {
-          confirmation = 2;
-        }
-        else {
-          confirmation = 0;
-        }
-      }
     }
   }
 }
@@ -307,37 +237,39 @@ void Limpieza_Unitaria(void) {
 void Pantalla_de_Inicio(void) {
   digitalWrite(PF_4, LOW);
   digitalWrite(PF_2, LOW);
-  switch (jump1){
-      case 0:
-          FillRect(0, 0, 319, 206, 0xdf5f);
-          //LCD_Bitmap(unsigned int x, unsigned int y, unsigned int width, unsigned int height, unsigned char bitmap[]);
-          LCD_Bitmap(0, 120, 320, 120, cover);
-          LCD_Print(text1, 60, 0, 2, 0x018a, 0xdf5f);
-          LCD_Print(text2, 70, 20, 2, 0x018a, 0xdf5f);
-          LCD_Print(text4, 80, 100, 2, 0x018a, 0xdf5f);
-          jump1++;
-          break;
-      case 1:
-          if (digitalRead(PUSHC) == 1) {
-            FLAGC = 1;
-            delay(50);
-          }
-          else {
-            if (FLAGC == 1) {
-              FLAGC = 0;
-              confirmation = 1;
-              jump1 = 0;
-            }
-          }
-          LCD_Bitmap(40, 90, 40, 30, flecha);
-          delay(150);
-          FillRect(40, 90, 40, 30, 0xdf5f);
-          delay(150);
-          break;
-    }
+  switch (jump1) {
+    case 0:
+      FillRect(0, 0, 319, 206, 0xdf5f);
+      //LCD_Bitmap(unsigned int x, unsigned int y, unsigned int width, unsigned int height, unsigned char bitmap[]);
+      LCD_Bitmap(0, 120, 320, 120, cover);
+      LCD_Print(text1, 60, 0, 2, 0x018a, 0xdf5f);
+      LCD_Print(text2, 70, 20, 2, 0x018a, 0xdf5f);
+      LCD_Print(text4, 80, 100, 2, 0x018a, 0xdf5f);
+      jump1++;
+      break;
+    case 1:
+      if (digitalRead(PUSHC) == 1) {
+        FLAGC = 1;
+        delay(50);
+      }
+      else {
+        if (FLAGC == 1) {
+          FLAGC = 0;
+          confirmation = 1;
+          jump1 = 0;
+        }
+      }
+      LCD_Bitmap(40, 90, 40, 30, flecha);
+      delay(150);
+      FillRect(40, 90, 40, 30, 0xdf5f);
+      delay(150);
+      break;
+  }
 }
 
 void Seleccion_de_Jugadores(void) {
+  arrow_x = 50;
+  arrow_y = 55;
   switch (jump) {
     case 0:
       FillRect(0, 0, 320, 120, 0xdf5f);
@@ -508,212 +440,217 @@ void perder (void) {
       }
     }
   }
- }
+}
 
-void J1gameover (void){
+void J1gameover (void) {
   digitalWrite(PF_2, HIGH);
-    digitalWrite(PF_4, LOW);
-    switch (jump) {
+  digitalWrite(PF_4, LOW);
+  switch (jump) {
     case 0:
       player = 0;
       choque = 0;
       ypos1 = 0;
       ypos2 = 0;
       xpos = 0;
-      arrow_x = 50;
-      arrow_y = 55;
       FillRect(0, 0, 320, 240, 0x0000);
       LCD_Print("GAME OVER", 100, 120, 2, 0xffff, 0x0000);
       delay(1000);
+      Score1_Conversion = String(Score1);
+      SD_Write(Score1_Conversion);
+      SD_Read();
       FillRect(0, 0, 320, 240, 0xdf5f);
-      LCD_Print("Desea volver", 50, 20, 2, 0x018a, 0xdf5f);
-      LCD_Print("a jugar?", 60, 40, 2, 0x018a, 0xdf5f);
-      LCD_Print("si   no", 90, 60, 2, 0x018a, 0xdf5f);
+      LCD_Print("Score obtenido:", 20, 20, 2, 0x018a, 0xdf5f);
+      LCD_Print(Score1_Conversion, 260, 20, 2, 0x018a, 0xdf5f);
+      LCD_Print("Desea volver", 50, 50, 2, 0x018a, 0xdf5f);
+      LCD_Print("a jugar?", 60, 80, 2, 0x018a, 0xdf5f);
+      LCD_Print("si     no", 90, 110, 2, 0x018a, 0xdf5f);
+      arrow_x = 45;
+      arrow_y = 105;
       jump++;
       break;
     case 1:
       break;
   }
-    //ANTIREBOTE DEL BOTON DE INICIO
-    if (digitalRead(PUSHS) == 0) {
-      FLAG = 1;
-      delay(50);
-    }
-    else {
-      if (FLAG == 1) {
-        FLAG = 0;
-        switch (arrow) {
-          case 0:
-            arrow_x = 130;
-            arrow_y = 55;
-            arrow++;
-            break;
-          case 1:
-            arrow_x = 50;
-            arrow_y = 55;
-            arrow = 0;
-            break;
-        }
+  //ANTIREBOTE DEL BOTON DE INICIO
+  if (digitalRead(PUSHS) == 0) {
+    FLAG = 1;
+    delay(50);
+  }
+  else {
+    if (FLAG == 1) {
+      FLAG = 0;
+      switch (arrow) {
+        case 0:
+          arrow_x = 145;
+          arrow_y = 105;
+          arrow++;
+          break;
+        case 1:
+          arrow_x = 45;
+          arrow_y = 105;
+          arrow = 0;
+          break;
       }
     }
-    LCD_Bitmap(arrow_x, arrow_y, 40, 30, flecha);
-    delay(150);
-    FillRect(arrow_x, arrow_y, 40, 30, 0xdf5f);
-    delay(150);
+  }
+  LCD_Bitmap(arrow_x, arrow_y, 40, 30, flecha);
+  delay(150);
+  FillRect(arrow_x, arrow_y, 40, 30, 0xdf5f);
+  delay(150);
 
-    if (digitalRead(PUSHC) == 1) {
-      FLAGC = 1;
-      delay(50);
-    }
-    else {
-      if (FLAGC == 1) {
-        FLAGC = 0;
-        jump = 0;
-        if (arrow_x == 50) {
-          confirmation = 2;
-        }
-        else {
-          confirmation = 0;
-        }
+  if (digitalRead(PUSHC) == 1) {
+    FLAGC = 1;
+    delay(50);
+  }
+  else {
+    if (FLAGC == 1) {
+      FLAGC = 0;
+      jump = 0;
+      if (arrow_x == 45) {
+        confirmation = 2;
+      }
+      else {
+        confirmation = 0;
       }
     }
- }
+  }
+}
 
-void generador_de_obstaculos(void){
+void generador_de_obstaculos(void) {
   int obstacle = rand() % 7;
-        if (appear % 50000 == 0) {
-          switch (obstacle) {
-            case 0:
-              break;
-            case 1:
-              Generar_Color(15);
-              break;
-            case 2:
-              Generar_Color(65);
-              break;
-            case 3:
-              Generar_Color(115);
-              break;
-            case 4:
-              Generar_Color(165);
-              break;
-            case 5:
-              Generar_Color(215);
-              break;
-            case 6:
-              Generar_Color(265);
-              break;
-          }
+  if (appear % 50000 == 0) {
+    switch (obstacle) {
+      case 0:
+        break;
+      case 1:
+        Generar_Color(15);
+        break;
+      case 2:
+        Generar_Color(65);
+        break;
+      case 3:
+        Generar_Color(115);
+        break;
+      case 4:
+        Generar_Color(165);
+        break;
+      case 5:
+        Generar_Color(215);
+        break;
+      case 6:
+        Generar_Color(265);
+        break;
+    }
 
-          switch (carriles[1][0]) {
-            case 0:
-              if (carriles[0][0] !=0){
-                LCD_Bitmap(carriles[0][0], ypos1, 40, 40, ycar);
-              }
-              break;
-            case 1:
-              if (carriles[0][0] !=0){
-                LCD_Bitmap(carriles[0][0], ypos1, 40, 40, gcar);
-              }
-              break;
-            case 2:
-              if (carriles[0][0] !=0){
-                LCD_Bitmap(carriles[0][0], ypos1, 40, 40, bcar);
-              }
-              break;
-            case 3:
-              if (carriles[0][0] !=0){
-                LCD_Bitmap(carriles[0][0], ypos1, 40, 40, rcar);
-              }
-              break;
-          }
-          if (carriles[0][0] !=0){
-              FillRect(carriles[0][0], ypos1 - 10, 40, 10, 0x9492);
-            }
-          if (ypos1 == 240) {
-            carriles[0][0] = 0;
-            ypos1 = 0;
-          }
-          switch (carriles[1][1]) {
-            case 0:
-              if (carriles[0][1] !=0){
-                LCD_Bitmap(carriles[0][1], ypos2, 40, 40, ycar);
-              }
-              break;
-            case 1:
-              if (carriles[0][1] !=0){
-                LCD_Bitmap(carriles[0][1], ypos2, 40, 40, gcar);
-              }
-              break;
-            case 2:
-              if (carriles[0][1] !=0){
-                LCD_Bitmap(carriles[0][1], ypos2, 40, 40, bcar);
-              }
-              break;
-            case 3:
-              if (carriles[0][1] !=0){
-                LCD_Bitmap(carriles[0][1], ypos2, 40, 40, rcar);
-              }
-              break;
-          }
-          if (carriles[0][1] !=0){
-              FillRect(carriles[0][1], ypos2 - 10, 40, 10, 0x9492);
-            }
-          if (ypos2 == 240) {
-            carriles[0][1] = 0;
-            ypos2 = 0;
-          }
+    switch (carriles[1][0]) {
+      case 0:
+        if (carriles[0][0] != 0) {
+          LCD_Bitmap(carriles[0][0], ypos1, 40, 40, ycar);
         }
-        if (appear % 5000 == 0) {
-          ypos1++;
-          ypos2++;
+        break;
+      case 1:
+        if (carriles[0][0] != 0) {
+          LCD_Bitmap(carriles[0][0], ypos1, 40, 40, gcar);
         }
-        appear++;
- }
+        break;
+      case 2:
+        if (carriles[0][0] != 0) {
+          LCD_Bitmap(carriles[0][0], ypos1, 40, 40, bcar);
+        }
+        break;
+      case 3:
+        if (carriles[0][0] != 0) {
+          LCD_Bitmap(carriles[0][0], ypos1, 40, 40, rcar);
+        }
+        break;
+    }
+    if (carriles[0][0] != 0) {
+      FillRect(carriles[0][0], ypos1 - 10, 40, 10, 0x9492);
+    }
+    if (ypos1 == 240) {
+      carriles[0][0] = 0;
+      ypos1 = 0;
+    }
+    switch (carriles[1][1]) {
+      case 0:
+        if (carriles[0][1] != 0) {
+          LCD_Bitmap(carriles[0][1], ypos2, 40, 40, ycar);
+        }
+        break;
+      case 1:
+        if (carriles[0][1] != 0) {
+          LCD_Bitmap(carriles[0][1], ypos2, 40, 40, gcar);
+        }
+        break;
+      case 2:
+        if (carriles[0][1] != 0) {
+          LCD_Bitmap(carriles[0][1], ypos2, 40, 40, bcar);
+        }
+        break;
+      case 3:
+        if (carriles[0][1] != 0) {
+          LCD_Bitmap(carriles[0][1], ypos2, 40, 40, rcar);
+        }
+        break;
+    }
+    if (carriles[0][1] != 0) {
+      FillRect(carriles[0][1], ypos2 - 10, 40, 10, 0x9492);
+    }
+    if (ypos2 == 240) {
+      carriles[0][1] = 0;
+      ypos2 = 0;
+    }
+  }
+  if (appear % 5000 == 0) {
+    ypos1++;
+    ypos2++;
+  }
+  appear++;
+}
 
-void movimiento_un_jugador (void){
+void movimiento_un_jugador (void) {
   if (digitalRead(PUSHC1) == 0) {
-          FLAGC1 = 1;
-        } else {
-          if (FLAGC1 == 1) {
-            //choque = 1;
-            FLAGC1 = 0;
-            if (xpos <= 200) {
-              for (int x = 0; x < 5; x++) {
-                eleccion (player, 15 + xpos, 201, x, 0, 0);
-              }
-              FillRect(15 + xpos, 201, 41, 39, 0x9492);
-              xpos = xpos + 50;
-              eleccion (player, 15 + xpos, 201, 0, 0, 0);
-            } else {
-              FillRect(15 + xpos, 201, 41, 39,    0x9492);
-              xpos = 0;
-              eleccion (player, 15, 201, 0, 0, 0);
-            }
-          }
+    FLAGC1 = 1;
+  } else {
+    if (FLAGC1 == 1) {
+      //choque = 1;
+      FLAGC1 = 0;
+      if (xpos <= 200) {
+        for (int x = 0; x < 5; x++) {
+          eleccion (player, 15 + xpos, 201, x, 0, 0);
         }
-        if (digitalRead(PUSHJ1) == 0) {
-          FLAGJ1 = 1;
-        } else {
-          if (FLAGJ1 == 1) {
-            FLAGJ1 = 0;
-            if (xpos > 0) {
-              for (int x = 0; x < 5; x++) {
-                eleccion (player, 15 + xpos, 201, x, 1, 0);
-              }
-              FillRect(15 + xpos, 201, 41, 39,    0x9492);
-              xpos = xpos - 50;
-              eleccion (player, 15 + xpos, 201, 0, 0, 0);
-            } else {
-              FillRect(15, 201, 41, 39,    0x9492);
-              xpos = 250;
-              eleccion (player, 265, 201, 0, 0, 0);
-            }
-          }
+        FillRect(15 + xpos, 201, 41, 39, 0x9492);
+        xpos = xpos + 50;
+        eleccion (player, 15 + xpos, 201, 0, 0, 0);
+      } else {
+        FillRect(15 + xpos, 201, 41, 39,    0x9492);
+        xpos = 0;
+        eleccion (player, 15, 201, 0, 0, 0);
+      }
+    }
+  }
+  if (digitalRead(PUSHJ1) == 0) {
+    FLAGJ1 = 1;
+  } else {
+    if (FLAGJ1 == 1) {
+      FLAGJ1 = 0;
+      if (xpos > 0) {
+        for (int x = 0; x < 5; x++) {
+          eleccion (player, 15 + xpos, 201, x, 1, 0);
         }
- }
+        FillRect(15 + xpos, 201, 41, 39,    0x9492);
+        xpos = xpos - 50;
+        eleccion (player, 15 + xpos, 201, 0, 0, 0);
+      } else {
+        FillRect(15, 201, 41, 39,    0x9492);
+        xpos = 250;
+        eleccion (player, 265, 201, 0, 0, 0);
+      }
+    }
+  }
+}
 
-void seleccion_carro_2jugadores(void){
+void seleccion_carro_2jugadores(void) {
   if (player == 0) {
     LCD_Sprite(110, 110, 41, 39, player1L, 5, 0, 0, 0);
     if (digitalRead(PUSHJ1) == 0) {
@@ -754,13 +691,13 @@ void seleccion_carro_2jugadores(void){
         conf++;
       }
     }
-  }else if (player == 3 || player == 2){
+  } else if (player == 3 || player == 2) {
     FillRect(110, 110, 41, 39, 0xdf5f);
     LCD_Print("Listo", 30, 110, 2, 0x018a, 0xdf5f);
     listo1 = 1;
   }
 
-   if (player2 == 0) {
+  if (player2 == 0) {
     LCD_Sprite(170, 110, 41, 39, player1L, 5, 0, 0, 0);
     if (digitalRead(PUSHJ2) == 0) {
       FLAGJ2 = 1;
@@ -800,97 +737,97 @@ void seleccion_carro_2jugadores(void){
         conf++;
       }
     }
-  } else if (player2 == 3 || player2 == 2){
+  } else if (player2 == 3 || player2 == 2) {
     FillRect(170, 110, 41, 39, 0xdf5f);
     LCD_Print("Listo", 210, 110, 2, 0x018a, 0xdf5f);
     listo2 = 1;
   }
-  if (conf == 2 && (listo1 +listo2 == 2)){
+  if (conf == 2 && (listo1 + listo2 == 2)) {
     listo1 = 0;
     listo2 = 0;
     jump1 = 0;
     conf = 0;
     confirmation = 6;
   }
- }
-void movimiento_2jugadores (void){
+}
+void movimiento_2jugadores (void) {
   if (digitalRead(PUSHC1) == 0) {
-          FLAGC1 = 1;
-        } else {
-          if (FLAGC1 == 1) {
-            FLAGC1 = 0;
-            if (xpos <= 50) {
-              for (int x = 0; x < 5; x++) {
-                eleccion (player, 15 + xpos, 201, x, 0, 0);
-              }
-              FillRect(15 + xpos, 201, 41, 39, 0x9492);
-              xpos = xpos + 50;
-              eleccion (player, 15 + xpos, 201, 0, 0, 0);
-            } else {
-              FillRect(15 + xpos, 201, 41, 39,    0x9492);
-              xpos = 0;
-              eleccion (player, 15, 201, 0, 0, 0);
-            }
-          }
+    FLAGC1 = 1;
+  } else {
+    if (FLAGC1 == 1) {
+      FLAGC1 = 0;
+      if (xpos <= 50) {
+        for (int x = 0; x < 5; x++) {
+          eleccion (player, 15 + xpos, 201, x, 0, 0);
         }
-        if (digitalRead(PUSHJ1) == 0) {
-          FLAGJ1 = 1;
-        } else {
-          if (FLAGJ1 == 1) {
-            FLAGJ1 = 0;
-            if (xpos > 0) {
-              for (int x = 0; x < 5; x++) {
-                eleccion (player, 15 + xpos, 201, x, 1, 0);
-              }
-              FillRect(15 + xpos, 201, 41, 39,    0x9492);
-              xpos = xpos - 50;
-              eleccion (player, 15 + xpos, 201, 0, 0, 0);
-            } else {
-              FillRect(15, 201, 41, 39,    0x9492);
-              xpos = 100;
-              eleccion (player, 115, 201, 0, 0, 0);
-            }
-          }
+        FillRect(15 + xpos, 201, 41, 39, 0x9492);
+        xpos = xpos + 50;
+        eleccion (player, 15 + xpos, 201, 0, 0, 0);
+      } else {
+        FillRect(15 + xpos, 201, 41, 39,    0x9492);
+        xpos = 0;
+        eleccion (player, 15, 201, 0, 0, 0);
+      }
+    }
+  }
+  if (digitalRead(PUSHJ1) == 0) {
+    FLAGJ1 = 1;
+  } else {
+    if (FLAGJ1 == 1) {
+      FLAGJ1 = 0;
+      if (xpos > 0) {
+        for (int x = 0; x < 5; x++) {
+          eleccion (player, 15 + xpos, 201, x, 1, 0);
         }
-   if (digitalRead(PUSHC2) == 0) {
-          FLAGC2 = 1;
-        } else {
-          if (FLAGC2 == 1) {
-            FLAGC2 = 0;
-            if (xpos2 <= 200) {
-              for (int x = 0; x < 5; x++) {
-                eleccion (player2, 15 + xpos2, 201, x, 0, 0);
-              }
-              FillRect(15 + xpos2, 201, 41, 39, 0x9492);
-              xpos2 = xpos2 + 50;
-              eleccion (player2, 15 + xpos2, 201, 0, 0, 0);
-            } else {
-              FillRect(15 + xpos2, 201, 41, 39,    0x9492);
-              xpos2 = 150;
-              eleccion (player2, 165, 201, 0, 0, 0);
-            }
-          }
+        FillRect(15 + xpos, 201, 41, 39,    0x9492);
+        xpos = xpos - 50;
+        eleccion (player, 15 + xpos, 201, 0, 0, 0);
+      } else {
+        FillRect(15, 201, 41, 39,    0x9492);
+        xpos = 100;
+        eleccion (player, 115, 201, 0, 0, 0);
+      }
+    }
+  }
+  if (digitalRead(PUSHC2) == 0) {
+    FLAGC2 = 1;
+  } else {
+    if (FLAGC2 == 1) {
+      FLAGC2 = 0;
+      if (xpos2 <= 200) {
+        for (int x = 0; x < 5; x++) {
+          eleccion (player2, 15 + xpos2, 201, x, 0, 0);
         }
-        if (digitalRead(PUSHJ2) == 0) {
-          FLAGJ2 = 1;
-        } else {
-          if (FLAGJ2 == 1) {
-            FLAGJ2 = 0;
-            if (xpos2 > 150) {
-              for (int x = 0; x < 5; x++) {
-                eleccion (player2, 15 + xpos2, 201, x, 1, 0);
-              }
-              FillRect(15 + xpos2, 201, 41, 39,    0x9492);
-              xpos2 = xpos2 - 50;
-              eleccion (player2, 15 + xpos2, 201, 0, 0, 0);
-            } else {
-              FillRect(165, 201, 41, 39,    0x9492);
-              xpos2 = 250;
-              eleccion (player2, 265, 201, 0, 0, 0);
-            }
-          }
+        FillRect(15 + xpos2, 201, 41, 39, 0x9492);
+        xpos2 = xpos2 + 50;
+        eleccion (player2, 15 + xpos2, 201, 0, 0, 0);
+      } else {
+        FillRect(15 + xpos2, 201, 41, 39,    0x9492);
+        xpos2 = 150;
+        eleccion (player2, 165, 201, 0, 0, 0);
+      }
+    }
+  }
+  if (digitalRead(PUSHJ2) == 0) {
+    FLAGJ2 = 1;
+  } else {
+    if (FLAGJ2 == 1) {
+      FLAGJ2 = 0;
+      if (xpos2 > 150) {
+        for (int x = 0; x < 5; x++) {
+          eleccion (player2, 15 + xpos2, 201, x, 1, 0);
         }
- }
+        FillRect(15 + xpos2, 201, 41, 39,    0x9492);
+        xpos2 = xpos2 - 50;
+        eleccion (player2, 15 + xpos2, 201, 0, 0, 0);
+      } else {
+        FillRect(165, 201, 41, 39,    0x9492);
+        xpos2 = 250;
+        eleccion (player2, 265, 201, 0, 0, 0);
+      }
+    }
+  }
+}
 //****************************************************************************************************************************************
 // Función para inicializar LCD
 //***************************************************************************************************************************************
