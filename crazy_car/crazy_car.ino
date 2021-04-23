@@ -129,6 +129,7 @@ extern uint8_t rcar[];
 extern uint8_t bcar[];
 extern uint8_t ycar[];
 extern uint8_t street[];
+extern uint8_t explosion[];
 //***************************************************************************************************************************************
 // Inicialización
 //***************************************************************************************************************************************
@@ -444,19 +445,25 @@ void eleccion (uint8_t pl, int x2, int y2, int index1, char flip1, char offset1)
 
 void perder (void) {
   for (int i = 0; i < 2; i++) {
-    //Serial.println(i);
-    //delay(500);
     int temp = xpos + 15;
     if (carriles[0][i] == temp) {
       for (int j = 0; j < 2; j++) {
         switch (j) {
           case 0:
             if (240 > (ypos1 + 39) && (ypos1 + 39) > 201 ) {
+              for (int i = 0; i<7;i++){
+                LCD_Sprite(xpos+15, ypos1+20, 32, 32, explosion, 8, 0, i, 0);
+                }
+              delay(300);  
               choque = 1;
             }
             break;
           case 1:
             if (240 > (ypos2 + 39) && (ypos2 + 39) > 201) {
+              for (int i = 0; i<7;i++){
+                LCD_Sprite(xpos+15, ypos2+20, 32, 32, explosion, 8, 0, i, 0);
+                }
+              delay(300);
               choque = 1;
             }
             break;
