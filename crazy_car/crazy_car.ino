@@ -235,6 +235,78 @@ void loop() {
         J1 = 0;
         J2 = 0;
         choque2 = 1;
+=======
+      generador_de_obstaculos();
+      movimiento_2jugadores();
+    digitalWrite(PF_2, HIGH);
+    digitalWrite(PF_4, LOW);
+    switch (jump) {
+      case 0:
+        player = 0;
+        choque = 0;
+        ypos1 = 0;
+        ypos2 = 0;
+        xpos = 0;
+        FillRect(0, 0, 320, 240, 0x0000);
+        LCD_Print("GAME OVER", 100, 120, 2, 0xffff, 0x0000);
+        delay(1000);
+        Score1_Conversion = String(Score1);
+        SD_Write(Score1_Conversion);
+        SD_Read();
+        FillRect(0, 0, 320, 240, 0xdf5f);
+        LCD_Print("Score obtenido:", 20, 20, 2, 0x018a, 0xdf5f);
+        LCD_Print(Score1_Conversion, 260, 20, 2, 0x018a, 0xdf5f);
+        LCD_Print("Desea volver", 50, 50, 2, 0x018a, 0xdf5f);
+        LCD_Print("a jugar?", 60, 80, 2, 0x018a, 0xdf5f);
+        LCD_Print("si     no", 90, 110, 2, 0x018a, 0xdf5f);
+        arrow_x = 45;
+        arrow_y = 105;
+        jump++;
+        break;
+      case 1:
+        break;
+    }
+    //ANTIREBOTE DEL BOTON DE INICIO
+    if (digitalRead(PUSHS) == 0) {
+      FLAG = 1;
+      delay(50);
+    }
+    else {
+      if (FLAG == 1) {
+        FLAG = 0;
+        switch (arrow) {
+          case 0:
+            arrow_x = 145;
+            arrow_y = 105;
+            arrow++;
+            break;
+          case 1:
+            arrow_x = 45;
+            arrow_y = 105;
+            arrow = 0;
+            break;
+        }
+      }
+    }
+    LCD_Bitmap(arrow_x, arrow_y, 40, 30, flecha);
+    delay(150);
+    FillRect(arrow_x, arrow_y, 40, 30, 0xdf5f);
+    delay(150);
+
+    if (digitalRead(PUSHC) == 1) {
+      FLAGC = 1;
+      delay(50);
+    }
+    else {
+      if (FLAGC == 1) {
+        FLAGC = 0;
+        jump = 0;
+        if (arrow_x == 50) {
+          confirmation = 2;
+        }
+        else {
+          confirmation = 0;
+        }
       }
     }
     confirmation = 5;
@@ -460,8 +532,7 @@ void perder (void) {
     }
   }
 }
-
-void J1gameover (void) {
+void J1gameover (void){
   digitalWrite(PF_2, HIGH);
   digitalWrite(PF_4, LOW);
   switch (jump) {
@@ -530,6 +601,20 @@ void J1gameover (void) {
       }
       else {
         confirmation = 0;
+    if (digitalRead(PUSHC) == 1) {
+      FLAGC = 1;
+      delay(50);
+    }
+    else {
+      if (FLAGC == 1) {
+        FLAGC = 0;
+        jump = 0;
+        if (arrow_x == 50) {
+          confirmation = 2;
+        }
+        else {
+          confirmation = 0;
+        }
       }
     }
   }
@@ -821,6 +906,23 @@ void movimientoJ2_2jugadores (void) {
       if (xpos2 <= 200) {
         for (int x = 0; x < 5; x++) {
           eleccion (player2, 15 + xpos2, 201, x, 0, 0);
+          FLAGC2 = 1;
+        } else {
+          if (FLAGC2 == 1) {
+            FLAGC2 = 0;
+            if (xpos2 <= 200) {
+              for (int x = 0; x < 5; x++) {
+                eleccion (player2, 15 + xpos2, 201, x, 0, 0);
+              }
+              FillRect(15 + xpos2, 201, 41, 39, 0x9492);
+              xpos2 = xpos2 + 50;
+              eleccion (player2, 15 + xpos2, 201, 0, 0, 0);
+            } else {
+              FillRect(15 + xpos2, 201, 41, 39,    0x9492);
+              xpos2 = 150;
+              eleccion (player2, 165, 201, 0, 0, 0);
+            }
+          }
         }
         FillRect(15 + xpos2, 201, 41, 39, 0x9492);
         xpos2 = xpos2 + 50;
@@ -893,6 +995,7 @@ void perder2 (void) {
     }
   }
 }
+ }
 //****************************************************************************************************************************************
 // Función para inicializar LCD
 //***************************************************************************************************************************************
