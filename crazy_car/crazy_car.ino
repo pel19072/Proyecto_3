@@ -71,7 +71,12 @@ uint8_t conf = 0;
 uint8_t listo1, listo2 = 0;
 int carriles[2][2] = {{0, 0}, {0, 0}};
 uint8_t valpos[] = {15, 65, 115, 165, 215, 265};
-uint8_t ylist[] = {ypos1,ypos2};
+uint8_t ylist[] = {ypos1, ypos2};
+int Score1 = 0;
+int Score2 = 0;
+String Score1_Conversion;
+String Score2_Conversion;
+int Scores[] = {Score1, Score2};
 //***************************************************************************************************************************************
 // Functions Prototypes
 //***************************************************************************************************************************************
@@ -133,7 +138,7 @@ void setup() {
   LCD_Init();
   LCD_Clear(0x00);
 
-  
+
 }
 //***************************************************************************************************************************************
 // Loop Infinito
@@ -175,7 +180,7 @@ void loop() {
       perder();
       if (choque == 0) {
         generador_de_obstaculos();
-        movimiento_un_jugador();        
+        movimiento_un_jugador();
       }
        confirmation = 5;
     }
@@ -194,6 +199,74 @@ void loop() {
     while (choque2 == 0){
       generador_de_obstaculos();
       movimiento_2jugadores();
+    digitalWrite(PF_2, HIGH);
+    digitalWrite(PF_4, LOW);
+    switch (jump) {
+      case 0:
+        player = 0;
+        choque = 0;
+        ypos1 = 0;
+        ypos2 = 0;
+        xpos = 0;
+        FillRect(0, 0, 320, 240, 0x0000);
+        LCD_Print("GAME OVER", 100, 120, 2, 0xffff, 0x0000);
+        delay(1000);
+        Score1_Conversion = String(Score1);
+        FillRect(0, 0, 320, 240, 0xdf5f);
+        LCD_Print("Score obtenido:", 20, 20, 2, 0x018a, 0xdf5f);
+        LCD_Print(Score1_Conversion, 260, 20, 2, 0x018a, 0xdf5f);
+        LCD_Print("Desea volver", 50, 50, 2, 0x018a, 0xdf5f);
+        LCD_Print("a jugar?", 60, 80, 2, 0x018a, 0xdf5f);
+        LCD_Print("si     no", 90, 110, 2, 0x018a, 0xdf5f);
+        arrow_x = 45;
+        arrow_y = 105;
+        jump++;
+        break;
+      case 1:
+        break;
+    }
+    //ANTIREBOTE DEL BOTON DE INICIO
+    if (digitalRead(PUSHS) == 0) {
+      FLAG = 1;
+      delay(50);
+    }
+    else {
+      if (FLAG == 1) {
+        FLAG = 0;
+        switch (arrow) {
+          case 0:
+            arrow_x = 145;
+            arrow_y = 105;
+            arrow++;
+            break;
+          case 1:
+            arrow_x = 45;
+            arrow_y = 105;
+            arrow = 0;
+            break;
+        }
+      }
+    }
+    LCD_Bitmap(arrow_x, arrow_y, 40, 30, flecha);
+    delay(150);
+    FillRect(arrow_x, arrow_y, 40, 30, 0xdf5f);
+    delay(150);
+
+    if (digitalRead(PUSHC) == 1) {
+      FLAGC = 1;
+      delay(50);
+    }
+    else {
+      if (FLAGC == 1) {
+        FLAGC = 0;
+        jump = 0;
+        if (arrow_x == 50) {
+          confirmation = 2;
+        }
+        else {
+          confirmation = 0;
+        }
+      }
     }
   }
 }
@@ -403,13 +476,13 @@ void perder (void) {
       for (int j = 0; j < 2; j++) {
         switch (j) {
           case 0:
-            if (240 > (ypos1+39) && (ypos1+39) > 201 ) {
-                choque = 1;
+            if (240 > (ypos1 + 39) && (ypos1 + 39) > 201 ) {
+              choque = 1;
             }
             break;
           case 1:
-            if (240 > (ypos2+39) && (ypos2 +39) > 201) {
-                choque = 1;
+            if (240 > (ypos2 + 39) && (ypos2 + 39) > 201) {
+              choque = 1;
             }
             break;
         }
@@ -417,7 +490,7 @@ void perder (void) {
     }
   }
  }
- 
+
 void J1gameover (void){
   digitalWrite(PF_2, HIGH);
     digitalWrite(PF_4, LOW);
@@ -468,7 +541,7 @@ void J1gameover (void){
     delay(150);
     FillRect(arrow_x, arrow_y, 40, 30, 0xdf5f);
     delay(150);
-  
+
     if (digitalRead(PUSHC) == 1) {
       FLAGC = 1;
       delay(50);
