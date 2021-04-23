@@ -59,11 +59,16 @@ uint8_t confirmation = 0;
 uint8_t jump = 0;
 uint8_t jump1 = 0;
 uint8_t player = 0;
+uint8_t player2 = 0;
 uint8_t choque = 0;
+uint8_t choque2 = 0;
 uint8_t xpos = 0;
+uint8_t xpos2 = 150;
 uint32_t appear = 0;
 uint8_t ypos1 = 0;
 uint8_t ypos2 = 0;
+uint8_t conf = 0;
+uint8_t listo1, listo2 = 0;
 int carriles[2][2] = {{0, 0}, {0, 0}};
 uint8_t valpos[] = {15, 65, 115, 165, 215, 265};
 uint8_t ylist[] = {ypos1,ypos2};
@@ -92,6 +97,11 @@ void Generar_Carretera(void);
 void Generar_Color(uint8_t x);
 void eleccion (uint8_t pl, uint8_t x, uint8_t y, int index, char flip, char offset);
 void perder (void);
+void J1gameover (void);
+void generador_de_obstaculos (void);
+void movimiento_un_jugador (void);
+void seleccion_carro_2jugadores(void);
+void movimiento_2jugadores (void);
 
 extern uint8_t cover[];
 extern uint8_t flecha[];
@@ -140,227 +150,50 @@ void loop() {
     seleccion_de_carro();
   }
   else if (confirmation == 3) {
-    Limpieza_Unitaria();
-    LCD_Print("Escoja su vehiculo", 20, 20, 2, 0x018a, 0xdf5f);
-    LCD_Print("Jugador 1 Jugador 2", 10, 60, 2, 0x018a, 0xdf5f);
+    switch(jump1){
+      case 0:
+        Limpieza_Unitaria();
+        LCD_Print("Escoja su vehiculo", 20, 20, 2, 0x018a, 0xdf5f);
+        LCD_Print("Jugador 1 Jugador 2", 10, 60, 2, 0x018a, 0xdf5f);
+        seleccion_carro_2jugadores();
+        jump1++;
+        break;
+      case 1:
+        seleccion_carro_2jugadores();
+        break;
+    }
   }
   else if (confirmation == 4) {
+    FillRect(0, 0, 320, 240, 0xdf5f);
+    LCD_Print("comienza el juego", 20, 120, 2, 0x018a, 0xdf5f);
+    digitalWrite(PF_4, HIGH);
+    digitalWrite(PF_2, LOW);
+    delay(1000);
+    Generar_Carretera();
+    eleccion (player, 15, 201, 0, 0, 0);
+    while (choque == 0) {
+      perder();
+      if (choque == 0) {
+        generador_de_obstaculos();
+        movimiento_un_jugador();        
+      }
+       confirmation = 5;
+    }
+  }
+  else if (confirmation == 5) {
+    J1gameover();
+  }
+  else if (confirmation == 6) {
+    delay(500);
     FillRect(0, 0, 320, 240, 0xdf5f);
     LCD_Print("comienza el juego", 20, 120, 2, 0x018a, 0xdf5f);
     delay(1000);
     Generar_Carretera();
     eleccion (player, 15, 201, 0, 0, 0);
-    while (choque == 0) {
-      digitalWrite(PF_4, HIGH);
-      digitalWrite(PF_2, LOW);
-      choque = 0;
-      perder();
-      if (choque == 0) {
-        //*************************************************************************
-        //***********************GENERACION DE OBSTACULOS**************************
-        //*************************************************************************
-        int obstacle = rand() % 7;
-        if (appear % 50000 == 0) {
-          switch (obstacle) {
-            case 0:
-              break;
-            case 1:
-              Generar_Color(15);
-              break;
-            case 2:
-              Generar_Color(65);
-              break;
-            case 3:
-              Generar_Color(115);
-              break;
-            case 4:
-              Generar_Color(165);
-              break;
-            case 5:
-              Generar_Color(215);
-              break;
-            case 6:
-              Generar_Color(265);
-              break;
-          }
-
-          switch (carriles[1][0]) {
-            case 0:
-              if (carriles[0][0] !=0){
-                LCD_Bitmap(carriles[0][0], ypos1, 40, 40, ycar);
-              }
-              break;
-            case 1:
-              if (carriles[0][0] !=0){
-                LCD_Bitmap(carriles[0][0], ypos1, 40, 40, gcar);
-              }
-              break;
-            case 2:
-              if (carriles[0][0] !=0){
-                LCD_Bitmap(carriles[0][0], ypos1, 40, 40, bcar);
-              }
-              break;
-            case 3:
-              if (carriles[0][0] !=0){
-                LCD_Bitmap(carriles[0][0], ypos1, 40, 40, rcar);
-              }
-              break;
-          }
-          if (carriles[0][0] !=0){
-              FillRect(carriles[0][0], ypos1 - 10, 40, 10, 0x9492);
-            }
-          if (ypos1 == 240) {
-            carriles[0][0] = 0;
-            ypos1 = 0;
-          }
-          switch (carriles[1][1]) {
-            case 0:
-              if (carriles[0][1] !=0){
-                LCD_Bitmap(carriles[0][1], ypos2, 40, 40, ycar);
-              }
-              break;
-            case 1:
-              if (carriles[0][1] !=0){
-                LCD_Bitmap(carriles[0][1], ypos2, 40, 40, gcar);
-              }
-              break;
-            case 2:
-              if (carriles[0][1] !=0){
-                LCD_Bitmap(carriles[0][1], ypos2, 40, 40, bcar);
-              }
-              break;
-            case 3:
-              if (carriles[0][1] !=0){
-                LCD_Bitmap(carriles[0][1], ypos2, 40, 40, rcar);
-              }
-              break;
-          }
-          if (carriles[0][1] !=0){
-              FillRect(carriles[0][1], ypos2 - 10, 40, 10, 0x9492);
-            }
-          if (ypos2 == 240) {
-            carriles[0][1] = 0;
-            ypos2 = 0;
-          }
-        }
-        if (appear % 5000 == 0) {
-          ypos1++;
-          ypos2++;
-        }
-        appear++;
-        //*************************************************************************
-        //******************MOVIMIENTOS DEL CARRO JUGADOR**************************
-        //*************************************************************************
-        if (digitalRead(PUSHC1) == 0) {
-          FLAGC1 = 1;
-        } else {
-          if (FLAGC1 == 1) {
-            //choque = 1;
-            FLAGC1 = 0;
-            if (xpos <= 200) {
-              for (int x = 0; x < 5; x++) {
-                eleccion (player, 15 + xpos, 201, x, 0, 0);
-              }
-              FillRect(15 + xpos, 201, 41, 39, 0x9492);
-              xpos = xpos + 50;
-              eleccion (player, 15 + xpos, 201, 0, 0, 0);
-            } else {
-              FillRect(15 + xpos, 201, 41, 39,    0x9492);
-              xpos = 0;
-              eleccion (player, 15, 201, 0, 0, 0);
-            }
-          }
-        }
-        if (digitalRead(PUSHJ1) == 0) {
-          FLAGJ1 = 1;
-        } else {
-          if (FLAGJ1 == 1) {
-            FLAGJ1 = 0;
-            if (xpos > 0) {
-              for (int x = 0; x < 5; x++) {
-                eleccion (player, 15 + xpos, 201, x, 1, 0);
-              }
-              FillRect(15 + xpos, 201, 41, 39,    0x9492);
-              xpos = xpos - 50;
-              eleccion (player, 15 + xpos, 201, 0, 0, 0);
-            } else {
-              FillRect(15, 201, 41, 39,    0x9492);
-              xpos = 250;
-              eleccion (player, 265, 201, 0, 0, 0);
-            }
-          }
-        }
-      }else if (choque == 1){
-          confirmation = 5;
-      }
-    }
-  }
-  else if (confirmation == 5) {
-    digitalWrite(PF_2, HIGH);
-    digitalWrite(PF_4, LOW);
-    switch (jump) {
-    case 0:
-      player = 0;
-      choque = 0;
-      ypos1 = 0;
-      ypos2 = 0;
-      xpos = 0;
-      arrow_x = 50;
-      arrow_y = 55;
-      FillRect(0, 0, 320, 240, 0x0000);
-      LCD_Print("GAME OVER", 100, 120, 2, 0xffff, 0x0000);
-      delay(1000);
-      FillRect(0, 0, 320, 240, 0xdf5f);
-      LCD_Print("Desea volver", 50, 20, 2, 0x018a, 0xdf5f);
-      LCD_Print("a jugar?", 60, 40, 2, 0x018a, 0xdf5f);
-      LCD_Print("si     no", 90, 60, 2, 0x018a, 0xdf5f);
-      jump++;
-      break;
-    case 1:
-      break;
-  }
-    //ANTIREBOTE DEL BOTON DE INICIO
-    if (digitalRead(PUSHS) == 0) {
-      FLAG = 1;
-      delay(50);
-    }
-    else {
-      if (FLAG == 1) {
-        FLAG = 0;
-        switch (arrow) {
-          case 0:
-            arrow_x = 130;
-            arrow_y = 55;
-            arrow++;
-            break;
-          case 1:
-            arrow_x = 50;
-            arrow_y = 55;
-            arrow = 0;
-            break;
-        }
-      }
-    }
-    LCD_Bitmap(arrow_x, arrow_y, 40, 30, flecha);
-    delay(150);
-    FillRect(arrow_x, arrow_y, 40, 30, 0xdf5f);
-    delay(150);
-  
-    if (digitalRead(PUSHC) == 1) {
-      FLAGC = 1;
-      delay(50);
-    }
-    else {
-      if (FLAGC == 1) {
-        FLAGC = 0;
-        jump = 0;
-        if (arrow_x == 50) {
-          confirmation = 2;
-        }
-        else {
-          confirmation = 0;
-        }
-      }
+    eleccion (player2, 165, 201, 0, 0, 0);
+    while (choque2 == 0){
+      generador_de_obstaculos();
+      movimiento_2jugadores();
     }
   }
 }
@@ -380,6 +213,8 @@ void Limpieza_Unitaria(void) {
 }
 
 void Pantalla_de_Inicio(void) {
+  digitalWrite(PF_4, LOW);
+  digitalWrite(PF_2, LOW);
   switch (jump1){
       case 0:
           FillRect(0, 0, 319, 206, 0xdf5f);
@@ -581,6 +416,388 @@ void perder (void) {
       }
     }
   }
+ }
+ 
+void J1gameover (void){
+  digitalWrite(PF_2, HIGH);
+    digitalWrite(PF_4, LOW);
+    switch (jump) {
+    case 0:
+      player = 0;
+      choque = 0;
+      ypos1 = 0;
+      ypos2 = 0;
+      xpos = 0;
+      arrow_x = 50;
+      arrow_y = 55;
+      FillRect(0, 0, 320, 240, 0x0000);
+      LCD_Print("GAME OVER", 100, 120, 2, 0xffff, 0x0000);
+      delay(1000);
+      FillRect(0, 0, 320, 240, 0xdf5f);
+      LCD_Print("Desea volver", 50, 20, 2, 0x018a, 0xdf5f);
+      LCD_Print("a jugar?", 60, 40, 2, 0x018a, 0xdf5f);
+      LCD_Print("si   no", 90, 60, 2, 0x018a, 0xdf5f);
+      jump++;
+      break;
+    case 1:
+      break;
+  }
+    //ANTIREBOTE DEL BOTON DE INICIO
+    if (digitalRead(PUSHS) == 0) {
+      FLAG = 1;
+      delay(50);
+    }
+    else {
+      if (FLAG == 1) {
+        FLAG = 0;
+        switch (arrow) {
+          case 0:
+            arrow_x = 130;
+            arrow_y = 55;
+            arrow++;
+            break;
+          case 1:
+            arrow_x = 50;
+            arrow_y = 55;
+            arrow = 0;
+            break;
+        }
+      }
+    }
+    LCD_Bitmap(arrow_x, arrow_y, 40, 30, flecha);
+    delay(150);
+    FillRect(arrow_x, arrow_y, 40, 30, 0xdf5f);
+    delay(150);
+  
+    if (digitalRead(PUSHC) == 1) {
+      FLAGC = 1;
+      delay(50);
+    }
+    else {
+      if (FLAGC == 1) {
+        FLAGC = 0;
+        jump = 0;
+        if (arrow_x == 50) {
+          confirmation = 2;
+        }
+        else {
+          confirmation = 0;
+        }
+      }
+    }
+ }
+
+void generador_de_obstaculos(void){
+  int obstacle = rand() % 7;
+        if (appear % 50000 == 0) {
+          switch (obstacle) {
+            case 0:
+              break;
+            case 1:
+              Generar_Color(15);
+              break;
+            case 2:
+              Generar_Color(65);
+              break;
+            case 3:
+              Generar_Color(115);
+              break;
+            case 4:
+              Generar_Color(165);
+              break;
+            case 5:
+              Generar_Color(215);
+              break;
+            case 6:
+              Generar_Color(265);
+              break;
+          }
+
+          switch (carriles[1][0]) {
+            case 0:
+              if (carriles[0][0] !=0){
+                LCD_Bitmap(carriles[0][0], ypos1, 40, 40, ycar);
+              }
+              break;
+            case 1:
+              if (carriles[0][0] !=0){
+                LCD_Bitmap(carriles[0][0], ypos1, 40, 40, gcar);
+              }
+              break;
+            case 2:
+              if (carriles[0][0] !=0){
+                LCD_Bitmap(carriles[0][0], ypos1, 40, 40, bcar);
+              }
+              break;
+            case 3:
+              if (carriles[0][0] !=0){
+                LCD_Bitmap(carriles[0][0], ypos1, 40, 40, rcar);
+              }
+              break;
+          }
+          if (carriles[0][0] !=0){
+              FillRect(carriles[0][0], ypos1 - 10, 40, 10, 0x9492);
+            }
+          if (ypos1 == 240) {
+            carriles[0][0] = 0;
+            ypos1 = 0;
+          }
+          switch (carriles[1][1]) {
+            case 0:
+              if (carriles[0][1] !=0){
+                LCD_Bitmap(carriles[0][1], ypos2, 40, 40, ycar);
+              }
+              break;
+            case 1:
+              if (carriles[0][1] !=0){
+                LCD_Bitmap(carriles[0][1], ypos2, 40, 40, gcar);
+              }
+              break;
+            case 2:
+              if (carriles[0][1] !=0){
+                LCD_Bitmap(carriles[0][1], ypos2, 40, 40, bcar);
+              }
+              break;
+            case 3:
+              if (carriles[0][1] !=0){
+                LCD_Bitmap(carriles[0][1], ypos2, 40, 40, rcar);
+              }
+              break;
+          }
+          if (carriles[0][1] !=0){
+              FillRect(carriles[0][1], ypos2 - 10, 40, 10, 0x9492);
+            }
+          if (ypos2 == 240) {
+            carriles[0][1] = 0;
+            ypos2 = 0;
+          }
+        }
+        if (appear % 5000 == 0) {
+          ypos1++;
+          ypos2++;
+        }
+        appear++;
+ }
+
+void movimiento_un_jugador (void){
+  if (digitalRead(PUSHC1) == 0) {
+          FLAGC1 = 1;
+        } else {
+          if (FLAGC1 == 1) {
+            //choque = 1;
+            FLAGC1 = 0;
+            if (xpos <= 200) {
+              for (int x = 0; x < 5; x++) {
+                eleccion (player, 15 + xpos, 201, x, 0, 0);
+              }
+              FillRect(15 + xpos, 201, 41, 39, 0x9492);
+              xpos = xpos + 50;
+              eleccion (player, 15 + xpos, 201, 0, 0, 0);
+            } else {
+              FillRect(15 + xpos, 201, 41, 39,    0x9492);
+              xpos = 0;
+              eleccion (player, 15, 201, 0, 0, 0);
+            }
+          }
+        }
+        if (digitalRead(PUSHJ1) == 0) {
+          FLAGJ1 = 1;
+        } else {
+          if (FLAGJ1 == 1) {
+            FLAGJ1 = 0;
+            if (xpos > 0) {
+              for (int x = 0; x < 5; x++) {
+                eleccion (player, 15 + xpos, 201, x, 1, 0);
+              }
+              FillRect(15 + xpos, 201, 41, 39,    0x9492);
+              xpos = xpos - 50;
+              eleccion (player, 15 + xpos, 201, 0, 0, 0);
+            } else {
+              FillRect(15, 201, 41, 39,    0x9492);
+              xpos = 250;
+              eleccion (player, 265, 201, 0, 0, 0);
+            }
+          }
+        }
+ }
+
+void seleccion_carro_2jugadores(void){
+  if (player == 0) {
+    LCD_Sprite(110, 110, 41, 39, player1L, 5, 0, 0, 0);
+    if (digitalRead(PUSHJ1) == 0) {
+      FLAGJ1 = 1;
+    } else {
+      if (FLAGJ1 == 1) {
+        FLAGJ1 = 0;
+        player = 1;
+      }
+    }
+    if (digitalRead(PUSHC1) == 0) {
+      FLAGC1 = 1;
+    } else {
+      if (FLAGC1 == 1) {
+        FLAGC1 = 0;
+        jump = 0;
+        player = 2;
+        conf++;
+      }
+    }
+  } else if (player == 1) {
+    LCD_Sprite(110, 110, 41, 39, player2L, 5, 0, 0, 0);
+    if (digitalRead(PUSHJ1) == 0) {
+      FLAGJ1 = 1;
+    } else {
+      if (FLAGJ1 == 1) {
+        FLAGJ1 = 0;
+        player = 0;
+      }
+    }
+    if (digitalRead(PUSHC1) == 0) {
+      FLAGC1 = 1;
+    } else {
+      if (FLAGC1 == 1) {
+        FLAGC1 = 0;
+        jump = 0;
+        player = 3;
+        conf++;
+      }
+    }
+  }else if (player == 3 || player == 2){
+    FillRect(110, 110, 41, 39, 0xdf5f);
+    LCD_Print("Listo", 30, 110, 2, 0x018a, 0xdf5f);
+    listo1 = 1;
+  }
+
+   if (player2 == 0) {
+    LCD_Sprite(170, 110, 41, 39, player1L, 5, 0, 0, 0);
+    if (digitalRead(PUSHJ2) == 0) {
+      FLAGJ2 = 1;
+    } else {
+      if (FLAGJ2 == 1) {
+        FLAGJ2 = 0;
+        player2 = 1;
+      }
+    }
+    if (digitalRead(PUSHC2) == 0) {
+      FLAGC2 = 1;
+    } else {
+      if (FLAGC2 == 1) {
+        FLAGC2 = 0;
+        jump = 0;
+        player2 = 2;
+        conf++;
+      }
+    }
+  } else if (player2 == 1) {
+    LCD_Sprite(170, 110, 41, 39, player2L, 5, 0, 0, 0);
+    if (digitalRead(PUSHJ2) == 0) {
+      FLAGJ2 = 1;
+    } else {
+      if (FLAGJ2 == 1) {
+        FLAGJ2 = 0;
+        player2 = 0;
+      }
+    }
+    if (digitalRead(PUSHC2) == 0) {
+      FLAGC2 = 1;
+    } else {
+      if (FLAGC2 == 1) {
+        FLAGC2 = 0;
+        jump = 0;
+        player2 = 3;
+        conf++;
+      }
+    }
+  } else if (player2 == 3 || player2 == 2){
+    FillRect(170, 110, 41, 39, 0xdf5f);
+    LCD_Print("Listo", 210, 110, 2, 0x018a, 0xdf5f);
+    listo2 = 1;
+  }
+  if (conf == 2 && (listo1 +listo2 == 2)){
+    listo1 = 0;
+    listo2 = 0;
+    jump1 = 0;
+    conf = 0;
+    confirmation = 6;
+  }
+ }
+void movimiento_2jugadores (void){
+  if (digitalRead(PUSHC1) == 0) {
+          FLAGC1 = 1;
+        } else {
+          if (FLAGC1 == 1) {
+            FLAGC1 = 0;
+            if (xpos <= 50) {
+              for (int x = 0; x < 5; x++) {
+                eleccion (player, 15 + xpos, 201, x, 0, 0);
+              }
+              FillRect(15 + xpos, 201, 41, 39, 0x9492);
+              xpos = xpos + 50;
+              eleccion (player, 15 + xpos, 201, 0, 0, 0);
+            } else {
+              FillRect(15 + xpos, 201, 41, 39,    0x9492);
+              xpos = 0;
+              eleccion (player, 15, 201, 0, 0, 0);
+            }
+          }
+        }
+        if (digitalRead(PUSHJ1) == 0) {
+          FLAGJ1 = 1;
+        } else {
+          if (FLAGJ1 == 1) {
+            FLAGJ1 = 0;
+            if (xpos > 0) {
+              for (int x = 0; x < 5; x++) {
+                eleccion (player, 15 + xpos, 201, x, 1, 0);
+              }
+              FillRect(15 + xpos, 201, 41, 39,    0x9492);
+              xpos = xpos - 50;
+              eleccion (player, 15 + xpos, 201, 0, 0, 0);
+            } else {
+              FillRect(15, 201, 41, 39,    0x9492);
+              xpos = 100;
+              eleccion (player, 115, 201, 0, 0, 0);
+            }
+          }
+        }
+   if (digitalRead(PUSHC2) == 0) {
+          FLAGC2 = 1;
+        } else {
+          if (FLAGC2 == 1) {
+            FLAGC2 = 0;
+            if (xpos2 <= 200) {
+              for (int x = 0; x < 5; x++) {
+                eleccion (player2, 15 + xpos2, 201, x, 0, 0);
+              }
+              FillRect(15 + xpos2, 201, 41, 39, 0x9492);
+              xpos2 = xpos2 + 50;
+              eleccion (player2, 15 + xpos2, 201, 0, 0, 0);
+            } else {
+              FillRect(15 + xpos2, 201, 41, 39,    0x9492);
+              xpos2 = 150;
+              eleccion (player2, 165, 201, 0, 0, 0);
+            }
+          }
+        }
+        if (digitalRead(PUSHJ2) == 0) {
+          FLAGJ2 = 1;
+        } else {
+          if (FLAGJ2 == 1) {
+            FLAGJ2 = 0;
+            if (xpos2 > 150) {
+              for (int x = 0; x < 5; x++) {
+                eleccion (player2, 15 + xpos2, 201, x, 1, 0);
+              }
+              FillRect(15 + xpos2, 201, 41, 39,    0x9492);
+              xpos2 = xpos2 - 50;
+              eleccion (player2, 15 + xpos2, 201, 0, 0, 0);
+            } else {
+              FillRect(165, 201, 41, 39,    0x9492);
+              xpos2 = 250;
+              eleccion (player2, 265, 201, 0, 0, 0);
+            }
+          }
+        }
  }
 //****************************************************************************************************************************************
 // Función para inicializar LCD
