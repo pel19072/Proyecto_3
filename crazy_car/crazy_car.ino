@@ -9,6 +9,11 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <TM4C123GH6PM.h>
+#include <SPI.h>
+#include <SD.h>
+#include <stdint.h>
+File myFile;
+File root;
 #include "inc/hw_ints.h"
 #include "inc/hw_memmap.h"
 #include "inc/hw_types.h"
@@ -98,6 +103,9 @@ void Generar_Color(uint8_t x);
 void eleccion (uint8_t pl, uint8_t x, uint8_t y, int index, char flip, char offset);
 void perder (void);
 
+void printDirectory(File dir, int numTabs);
+void SD_Write(String High_Score);
+
 extern uint8_t cover[];
 extern uint8_t flecha[];
 extern uint8_t player1L[];
@@ -121,10 +129,19 @@ void setup() {
   pinMode(PF_4, OUTPUT);
   pinMode(PF_2, OUTPUT);
 
+  SPI.setModule(0); //Utiliza al PA_3 como CS
+  Serial.print("Initializing SD card...");
+  pinMode(PA_3, OUTPUT);
+
+  if (!SD.begin(PA_3)) {
+    Serial.println("initialization failed");
+    return;
+  }
+  Serial.println("initialization done.");
+
+
   SysCtlClockSet(SYSCTL_SYSDIV_2_5 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN | SYSCTL_XTAL_16MHZ);
-  Serial.begin(9600);
   GPIOPadConfigSet(GPIO_PORTB_BASE, 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7, GPIO_STRENGTH_8MA, GPIO_PIN_TYPE_STD_WPU);
-  Serial.println("Inicio");
   LCD_Init();
   LCD_Clear(0x00);
 
@@ -316,6 +333,8 @@ void loop() {
         LCD_Print("GAME OVER", 100, 120, 2, 0xffff, 0x0000);
         delay(1000);
         Score1_Conversion = String(Score1);
+        SD_Write(Score1_Conversion);
+        SD_Read();
         FillRect(0, 0, 320, 240, 0xdf5f);
         LCD_Print("Score obtenido:", 20, 20, 2, 0x018a, 0xdf5f);
         LCD_Print(Score1_Conversion, 260, 20, 2, 0x018a, 0xdf5f);
@@ -941,4 +960,60 @@ void LCD_Sprite(int x, int y, int width, int height, unsigned char bitmap[], int
 
   }
   digitalWrite(LCD_CS, HIGH);
+}
+
+void printDirectory(File dir, int numTabs) {
+  while (true) {
+
+    File entry =  dir.openNextFile();
+    if (! entry) {
+      // no more files
+      break;
+    }
+    for (uint8_t i = 0; i < numTabs; i++) {
+      Serial.print('\t');
+    }
+    Serial.print(entry.name());
+    if (entry.isDirectory()) {
+      Serial.println("/");
+      printDirectory(entry, numTabs + 1);
+    } else {
+      // files have sizes, directories do not
+      Serial.print("\t\t");
+      Serial.println(entry.size(), DEC);
+    }
+    entry.close();
+  }
+}
+
+void SD_Write(String High_Score) {
+  root = SD.open("yoshi.txt", FILE_WRITE);
+  if (root) {
+    Serial.print("Writing to High_Scores.txt...");
+    root.println(High_Score);
+    // close the file:
+    root.close();
+    Serial.println("done.");
+  } else {
+    // if the file didn't open, print an error:
+    Serial.println("error opening High_Scores.txt");
+  }
+}
+
+void SD_Read() {
+  // re-open the file for reading:
+  root = SD.open("yoshi.txt");
+  if (root) {
+    Serial.println("High_Scores.txt:");
+
+    // read from the file until there's nothing else in it:
+    while (root.available()) {
+      Serial.write(root.read());
+    }
+    // close the file:
+    root.close();
+  } else {
+    // if the file didn't open, print an error:
+    Serial.println("error opening High_Scores.txt");
+  }
 }
