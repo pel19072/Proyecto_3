@@ -57,6 +57,7 @@ uint8_t FLAGJ2 = 0;
 uint8_t arrow = 0;
 uint8_t confirmation = 0;
 uint8_t jump = 0;
+uint8_t jump1 = 0;
 uint8_t player = 0;
 uint8_t choque = 0;
 uint8_t xpos = 0;
@@ -122,14 +123,7 @@ void setup() {
   LCD_Init();
   LCD_Clear(0x00);
 
-  FillRect(0, 0, 319, 206, 0xdf5f);
-
-  //LCD_Bitmap(unsigned int x, unsigned int y, unsigned int width, unsigned int height, unsigned char bitmap[]);
-  LCD_Bitmap(0, 120, 320, 120, cover);
-  LCD_Print(text1, 60, 0, 2, 0x018a, 0xdf5f);
-  LCD_Print(text2, 70, 20, 2, 0x018a, 0xdf5f);
-  LCD_Print(text4, 80, 100, 2, 0x018a, 0xdf5f);
-
+  
 }
 //***************************************************************************************************************************************
 // Loop Infinito
@@ -159,8 +153,8 @@ void loop() {
     while (choque == 0) {
       digitalWrite(PF_4, HIGH);
       digitalWrite(PF_2, LOW);
+      choque = 0;
       perder();
-      // choque = 1
       if (choque == 0) {
         //*************************************************************************
         //***********************GENERACION DE OBSTACULOS**************************
@@ -296,15 +290,78 @@ void loop() {
             }
           }
         }
+      }else if (choque == 1){
+          confirmation = 5;
       }
-      confirmation = 5;
     }
   }
   else if (confirmation == 5) {
     digitalWrite(PF_2, HIGH);
     digitalWrite(PF_4, LOW);
-    FillRect(0, 0, 320, 240, 0x0000);
-    LCD_Print("GAME OVER", 90, 110, 2, 0xffff, 0x0000);
+    switch (jump) {
+    case 0:
+      player = 0;
+      choque = 0;
+      ypos1 = 0;
+      ypos2 = 0;
+      xpos = 0;
+      arrow_x = 50;
+      arrow_y = 55;
+      FillRect(0, 0, 320, 240, 0x0000);
+      LCD_Print("GAME OVER", 100, 120, 2, 0xffff, 0x0000);
+      delay(1000);
+      FillRect(0, 0, 320, 240, 0xdf5f);
+      LCD_Print("Desea volver", 50, 20, 2, 0x018a, 0xdf5f);
+      LCD_Print("a jugar?", 60, 40, 2, 0x018a, 0xdf5f);
+      LCD_Print("si     no", 90, 60, 2, 0x018a, 0xdf5f);
+      jump++;
+      break;
+    case 1:
+      break;
+  }
+    //ANTIREBOTE DEL BOTON DE INICIO
+    if (digitalRead(PUSHS) == 0) {
+      FLAG = 1;
+      delay(50);
+    }
+    else {
+      if (FLAG == 1) {
+        FLAG = 0;
+        switch (arrow) {
+          case 0:
+            arrow_x = 130;
+            arrow_y = 55;
+            arrow++;
+            break;
+          case 1:
+            arrow_x = 50;
+            arrow_y = 55;
+            arrow = 0;
+            break;
+        }
+      }
+    }
+    LCD_Bitmap(arrow_x, arrow_y, 40, 30, flecha);
+    delay(150);
+    FillRect(arrow_x, arrow_y, 40, 30, 0xdf5f);
+    delay(150);
+  
+    if (digitalRead(PUSHC) == 1) {
+      FLAGC = 1;
+      delay(50);
+    }
+    else {
+      if (FLAGC == 1) {
+        FLAGC = 0;
+        jump = 0;
+        if (arrow_x == 50) {
+          confirmation = 2;
+        }
+        else {
+          confirmation = 0;
+        }
+      }
+    }
   }
 }
 
@@ -323,20 +380,34 @@ void Limpieza_Unitaria(void) {
 }
 
 void Pantalla_de_Inicio(void) {
-  if (digitalRead(PUSHC) == 1) {
-    FLAGC = 1;
-    delay(50);
-  }
-  else {
-    if (FLAGC == 1) {
-      FLAGC = 0;
-      confirmation = 1;
+  switch (jump1){
+      case 0:
+          FillRect(0, 0, 319, 206, 0xdf5f);
+          //LCD_Bitmap(unsigned int x, unsigned int y, unsigned int width, unsigned int height, unsigned char bitmap[]);
+          LCD_Bitmap(0, 120, 320, 120, cover);
+          LCD_Print(text1, 60, 0, 2, 0x018a, 0xdf5f);
+          LCD_Print(text2, 70, 20, 2, 0x018a, 0xdf5f);
+          LCD_Print(text4, 80, 100, 2, 0x018a, 0xdf5f);
+          jump1++;
+          break;
+      case 1:
+          if (digitalRead(PUSHC) == 1) {
+            FLAGC = 1;
+            delay(50);
+          }
+          else {
+            if (FLAGC == 1) {
+              FLAGC = 0;
+              confirmation = 1;
+              jump1 = 0;
+            }
+          }
+          LCD_Bitmap(40, 90, 40, 30, flecha);
+          delay(150);
+          FillRect(40, 90, 40, 30, 0xdf5f);
+          delay(150);
+          break;
     }
-  }
-  LCD_Bitmap(40, 90, 40, 30, flecha);
-  delay(150);
-  FillRect(40, 90, 40, 30, 0xdf5f);
-  delay(150);
 }
 
 void Seleccion_de_Jugadores(void) {
@@ -490,6 +561,8 @@ void eleccion (uint8_t pl, int x2, int y2, int index1, char flip1, char offset1)
 
 void perder (void) {
   for (int i = 0; i < 2; i++) {
+    //Serial.println(i);
+    //delay(500);
     int temp = xpos + 15;
     if (carriles[0][i] == temp) {
       for (int j = 0; j < 2; j++) {
