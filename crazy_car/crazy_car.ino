@@ -66,7 +66,12 @@ uint8_t ypos1 = 0;
 uint8_t ypos2 = 0;
 int carriles[2][2] = {{0, 0}, {0, 0}};
 uint8_t valpos[] = {15, 65, 115, 165, 215, 265};
-uint8_t ylist[] = {ypos1,ypos2};
+uint8_t ylist[] = {ypos1, ypos2};
+int Score1 = 0;
+int Score2 = 0;
+String Score1_Conversion;
+String Score2_Conversion;
+int Scores[] = {Score1, Score2};
 //***************************************************************************************************************************************
 // Functions Prototypes
 //***************************************************************************************************************************************
@@ -123,7 +128,7 @@ void setup() {
   LCD_Init();
   LCD_Clear(0x00);
 
-  
+
 }
 //***************************************************************************************************************************************
 // Loop Infinito
@@ -153,7 +158,6 @@ void loop() {
     while (choque == 0) {
       digitalWrite(PF_4, HIGH);
       digitalWrite(PF_2, LOW);
-      choque = 0;
       perder();
       if (choque == 0) {
         //*************************************************************************
@@ -186,58 +190,58 @@ void loop() {
 
           switch (carriles[1][0]) {
             case 0:
-              if (carriles[0][0] !=0){
+              if (carriles[0][0] != 0) {
                 LCD_Bitmap(carriles[0][0], ypos1, 40, 40, ycar);
               }
               break;
             case 1:
-              if (carriles[0][0] !=0){
+              if (carriles[0][0] != 0) {
                 LCD_Bitmap(carriles[0][0], ypos1, 40, 40, gcar);
               }
               break;
             case 2:
-              if (carriles[0][0] !=0){
+              if (carriles[0][0] != 0) {
                 LCD_Bitmap(carriles[0][0], ypos1, 40, 40, bcar);
               }
               break;
             case 3:
-              if (carriles[0][0] !=0){
+              if (carriles[0][0] != 0) {
                 LCD_Bitmap(carriles[0][0], ypos1, 40, 40, rcar);
               }
               break;
           }
-          if (carriles[0][0] !=0){
-              FillRect(carriles[0][0], ypos1 - 10, 40, 10, 0x9492);
-            }
+          if (carriles[0][0] != 0) {
+            FillRect(carriles[0][0], ypos1 - 10, 40, 10, 0x9492);
+          }
           if (ypos1 == 240) {
             carriles[0][0] = 0;
             ypos1 = 0;
           }
           switch (carriles[1][1]) {
             case 0:
-              if (carriles[0][1] !=0){
+              if (carriles[0][1] != 0) {
                 LCD_Bitmap(carriles[0][1], ypos2, 40, 40, ycar);
               }
               break;
             case 1:
-              if (carriles[0][1] !=0){
+              if (carriles[0][1] != 0) {
                 LCD_Bitmap(carriles[0][1], ypos2, 40, 40, gcar);
               }
               break;
             case 2:
-              if (carriles[0][1] !=0){
+              if (carriles[0][1] != 0) {
                 LCD_Bitmap(carriles[0][1], ypos2, 40, 40, bcar);
               }
               break;
             case 3:
-              if (carriles[0][1] !=0){
+              if (carriles[0][1] != 0) {
                 LCD_Bitmap(carriles[0][1], ypos2, 40, 40, rcar);
               }
               break;
           }
-          if (carriles[0][1] !=0){
-              FillRect(carriles[0][1], ypos2 - 10, 40, 10, 0x9492);
-            }
+          if (carriles[0][1] != 0) {
+            FillRect(carriles[0][1], ypos2 - 10, 40, 10, 0x9492);
+          }
           if (ypos2 == 240) {
             carriles[0][1] = 0;
             ypos2 = 0;
@@ -246,6 +250,9 @@ void loop() {
         if (appear % 5000 == 0) {
           ypos1++;
           ypos2++;
+        }
+        if (appear % 50000 == 0) {
+          Score1++;
         }
         appear++;
         //*************************************************************************
@@ -290,8 +297,8 @@ void loop() {
             }
           }
         }
-      }else if (choque == 1){
-          confirmation = 5;
+      } else if (choque == 1) {
+        confirmation = 5;
       }
     }
   }
@@ -299,26 +306,29 @@ void loop() {
     digitalWrite(PF_2, HIGH);
     digitalWrite(PF_4, LOW);
     switch (jump) {
-    case 0:
-      player = 0;
-      choque = 0;
-      ypos1 = 0;
-      ypos2 = 0;
-      xpos = 0;
-      arrow_x = 50;
-      arrow_y = 55;
-      FillRect(0, 0, 320, 240, 0x0000);
-      LCD_Print("GAME OVER", 100, 120, 2, 0xffff, 0x0000);
-      delay(1000);
-      FillRect(0, 0, 320, 240, 0xdf5f);
-      LCD_Print("Desea volver", 50, 20, 2, 0x018a, 0xdf5f);
-      LCD_Print("a jugar?", 60, 40, 2, 0x018a, 0xdf5f);
-      LCD_Print("si     no", 90, 60, 2, 0x018a, 0xdf5f);
-      jump++;
-      break;
-    case 1:
-      break;
-  }
+      case 0:
+        player = 0;
+        choque = 0;
+        ypos1 = 0;
+        ypos2 = 0;
+        xpos = 0;
+        FillRect(0, 0, 320, 240, 0x0000);
+        LCD_Print("GAME OVER", 100, 120, 2, 0xffff, 0x0000);
+        delay(1000);
+        Score1_Conversion = String(Score1);
+        FillRect(0, 0, 320, 240, 0xdf5f);
+        LCD_Print("Score obtenido:", 20, 20, 2, 0x018a, 0xdf5f);
+        LCD_Print(Score1_Conversion, 260, 20, 2, 0x018a, 0xdf5f);
+        LCD_Print("Desea volver", 50, 50, 2, 0x018a, 0xdf5f);
+        LCD_Print("a jugar?", 60, 80, 2, 0x018a, 0xdf5f);
+        LCD_Print("si     no", 90, 110, 2, 0x018a, 0xdf5f);
+        arrow_x = 45;
+        arrow_y = 105;
+        jump++;
+        break;
+      case 1:
+        break;
+    }
     //ANTIREBOTE DEL BOTON DE INICIO
     if (digitalRead(PUSHS) == 0) {
       FLAG = 1;
@@ -329,13 +339,13 @@ void loop() {
         FLAG = 0;
         switch (arrow) {
           case 0:
-            arrow_x = 130;
-            arrow_y = 55;
+            arrow_x = 145;
+            arrow_y = 105;
             arrow++;
             break;
           case 1:
-            arrow_x = 50;
-            arrow_y = 55;
+            arrow_x = 45;
+            arrow_y = 105;
             arrow = 0;
             break;
         }
@@ -345,7 +355,7 @@ void loop() {
     delay(150);
     FillRect(arrow_x, arrow_y, 40, 30, 0xdf5f);
     delay(150);
-  
+
     if (digitalRead(PUSHC) == 1) {
       FLAGC = 1;
       delay(50);
@@ -380,34 +390,34 @@ void Limpieza_Unitaria(void) {
 }
 
 void Pantalla_de_Inicio(void) {
-  switch (jump1){
-      case 0:
-          FillRect(0, 0, 319, 206, 0xdf5f);
-          //LCD_Bitmap(unsigned int x, unsigned int y, unsigned int width, unsigned int height, unsigned char bitmap[]);
-          LCD_Bitmap(0, 120, 320, 120, cover);
-          LCD_Print(text1, 60, 0, 2, 0x018a, 0xdf5f);
-          LCD_Print(text2, 70, 20, 2, 0x018a, 0xdf5f);
-          LCD_Print(text4, 80, 100, 2, 0x018a, 0xdf5f);
-          jump1++;
-          break;
-      case 1:
-          if (digitalRead(PUSHC) == 1) {
-            FLAGC = 1;
-            delay(50);
-          }
-          else {
-            if (FLAGC == 1) {
-              FLAGC = 0;
-              confirmation = 1;
-              jump1 = 0;
-            }
-          }
-          LCD_Bitmap(40, 90, 40, 30, flecha);
-          delay(150);
-          FillRect(40, 90, 40, 30, 0xdf5f);
-          delay(150);
-          break;
-    }
+  switch (jump1) {
+    case 0:
+      FillRect(0, 0, 319, 206, 0xdf5f);
+      //LCD_Bitmap(unsigned int x, unsigned int y, unsigned int width, unsigned int height, unsigned char bitmap[]);
+      LCD_Bitmap(0, 120, 320, 120, cover);
+      LCD_Print(text1, 60, 0, 2, 0x018a, 0xdf5f);
+      LCD_Print(text2, 70, 20, 2, 0x018a, 0xdf5f);
+      LCD_Print(text4, 80, 100, 2, 0x018a, 0xdf5f);
+      jump1++;
+      break;
+    case 1:
+      if (digitalRead(PUSHC) == 1) {
+        FLAGC = 1;
+        delay(50);
+      }
+      else {
+        if (FLAGC == 1) {
+          FLAGC = 0;
+          confirmation = 1;
+          jump1 = 0;
+        }
+      }
+      LCD_Bitmap(40, 90, 40, 30, flecha);
+      delay(150);
+      FillRect(40, 90, 40, 30, 0xdf5f);
+      delay(150);
+      break;
+  }
 }
 
 void Seleccion_de_Jugadores(void) {
@@ -568,20 +578,20 @@ void perder (void) {
       for (int j = 0; j < 2; j++) {
         switch (j) {
           case 0:
-            if (240 > (ypos1+39) && (ypos1+39) > 201 ) {
-                choque = 1;
+            if (240 > (ypos1 + 39) && (ypos1 + 39) > 201 ) {
+              choque = 1;
             }
             break;
           case 1:
-            if (240 > (ypos2+39) && (ypos2 +39) > 201) {
-                choque = 1;
+            if (240 > (ypos2 + 39) && (ypos2 + 39) > 201) {
+              choque = 1;
             }
             break;
         }
       }
     }
   }
- }
+}
 //****************************************************************************************************************************************
 // Función para inicializar LCD
 //***************************************************************************************************************************************
