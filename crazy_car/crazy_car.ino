@@ -663,7 +663,7 @@ void J2gameover (void) {
           arrow++;
           break;
         case 2:
-          arrow_x = 50;
+          arrow_x = 51;
           arrow_y = 150;
           arrow = 0;
           break;
@@ -686,7 +686,7 @@ void J2gameover (void) {
         jump = 0;
         confirmation = 3;
       }
-      else if (arrow_y == 105){
+      else if (arrow_x == 150){
         jump = 0;
         confirmation = 0;
       }else{
