@@ -615,9 +615,12 @@ void J2gameover (void) {
       player = 0;
       player2 = 0;
       choque = 0;
+      choque2 = 0;
       ypos1 = 0;
       ypos2 = 0;
       xpos = 0;
+      J1 = 0;
+      J2 = 0;
       FillRect(0, 0, 320, 240, 0x0000);
       LCD_Print("GAME OVER", 90, 110, 2, 0xffff, 0x0000);
       delay(1000);
@@ -683,7 +686,7 @@ void J2gameover (void) {
         jump = 0;
         confirmation = 3;
       }
-      else if (arrow == 150){
+      else if (arrow_y == 105){
         jump = 0;
         confirmation = 0;
       }else{
