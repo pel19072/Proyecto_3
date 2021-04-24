@@ -79,9 +79,7 @@ int carriles[2][2] = {{0, 0}, {0, 0}};
 uint8_t valpos[] = {15, 65, 115, 165, 215, 265};
 uint8_t ylist[] = {ypos1, ypos2};
 int Score1 = 0;
-int Score2 = 0;
 String Score1_Conversion;
-String Score2_Conversion;
 
 //***************************************************************************************************************************************
 // Functions Prototypes
@@ -176,15 +174,23 @@ void loop() {
     Seleccion_de_Jugadores();
   }
   else if (confirmation == 2) {
-    Limpieza_Unitaria();
+    switch (jump) {
+      case 0:
+        Generar_Carretera();
+        jump++;
+        break;
+      case 1:
+        break;
+    }
+    Score1 = 0;
     seleccion_de_carro();
   }
   else if (confirmation == 3) {
     switch (jump1) {
       case 0:
-        Limpieza_Unitaria();
-        LCD_Print("Escoja su vehiculo", 20, 20, 2, 0x018a, 0xdf5f);
-        LCD_Print("Jugador 1 Jugador 2", 10, 60, 2, 0x018a, 0xdf5f);
+        Generar_Carretera();
+        LCD_Print("Escoja su vehiculo", 20, 20, 2, 0xffff, 0x9492);
+        LCD_Print("Jugador 1 Jugador 2", 10, 60, 2, 0xffff, 0x9492);
         seleccion_carro_2jugadores();
         jump1++;
         break;
@@ -227,23 +233,23 @@ void loop() {
     carriles[1][1] = 0;
     while (choque2 == 0) {
       perder2();
+      generador_de_obstaculos();
       if (choque2 == 0) {
         if (J1 == 0) {
-          generador_de_obstaculosJ1();
           movimientoJ1_2jugadores();
         }
         if (J2 == 0) {
-          generador_de_obstaculosJ2();
           movimientoJ2_2jugadores();
         }
-        if ((J1 == 1) && (J2 == 1)) {
-          J1 = 0;
-          J2 = 0;
+        if ((J1 == 1) || (J2 == 1)) {
           choque2 = 1;
         }
       }
-      confirmation = 5;
+      confirmation = 7;
     }
+  }
+  else if (confirmation == 7) {
+    J2gameover();
   }
 }
 
@@ -355,9 +361,9 @@ void Seleccion_de_Jugadores(void) {
 }
 
 void seleccion_de_carro(void) {
-  LCD_Print("Escoja su vehiculo", 20, 20, 2, 0x018a, 0xdf5f);
+  LCD_Print("Escoja su vehiculo", 15, 20, 2, 0xffff, 0x9492);
   if (player == 0) {
-    LCD_Sprite(110, 110, 41, 39, player1L, 5, 0, 0, 0);
+    LCD_Sprite(115, 110, 41, 39, player1L, 5, 0, 0, 0);
     if (digitalRead(PUSHJ1) == 0) {
       FLAGJ1 = 1;
     } else {
@@ -377,7 +383,7 @@ void seleccion_de_carro(void) {
       }
     }
   } else if (player == 1) {
-    LCD_Sprite(110, 110, 41, 39, player2L, 5, 0, 0, 0);
+    LCD_Sprite(115, 110, 41, 39, player2L, 5, 0, 0, 0);
     if (digitalRead(PUSHJ1) == 0) {
       FLAGJ1 = 1;
     } else {
@@ -526,7 +532,7 @@ void J1gameover (void) {
       ypos2 = 0;
       xpos = 0;
       FillRect(0, 0, 320, 240, 0x0000);
-      LCD_Print("GAME OVER", 100, 120, 2, 0xffff, 0x0000);
+      LCD_Print("GAME OVER", 90, 110, 2, 0xffff, 0x0000);
       delay(1000);
       Score1_Conversion = String(Score1);
       SD_Write(Score1_Conversion);
@@ -534,9 +540,11 @@ void J1gameover (void) {
       FillRect(0, 0, 320, 240, 0xdf5f);
       LCD_Print("Score obtenido:", 20, 20, 2, 0x018a, 0xdf5f);
       LCD_Print(Score1_Conversion, 260, 20, 2, 0x018a, 0xdf5f);
-      LCD_Print("Desea volver", 50, 50, 2, 0x018a, 0xdf5f);
-      LCD_Print("a jugar?", 60, 80, 2, 0x018a, 0xdf5f);
+      LCD_Print("Desea volver", 60, 50, 2, 0x018a, 0xdf5f);
+      LCD_Print("a jugar?", 90, 80, 2, 0x018a, 0xdf5f);
       LCD_Print("si     no", 90, 110, 2, 0x018a, 0xdf5f);
+      LCD_Print("GUARDAR", 100, 140, 2, 0x018a, 0xdf5f);
+      LCD_Print("EL SCORE", 90, 160, 2, 0x018a, 0xdf5f);
       arrow_x = 45;
       arrow_y = 105;
       jump++;
@@ -581,6 +589,84 @@ void J1gameover (void) {
       jump = 0;
       if (arrow_x == 45) {
         confirmation = 2;
+      }
+      else {
+        confirmation = 0;
+      }
+    }
+  }
+}
+
+void J2gameover (void) {
+  digitalWrite(PF_2, HIGH);
+  digitalWrite(PF_4, LOW);
+  switch (jump) {
+    case 0:
+      player = 0;
+      player2 = 0;
+      choque = 0;
+      ypos1 = 0;
+      ypos2 = 0;
+      xpos = 0;
+      FillRect(0, 0, 320, 240, 0x0000);
+      LCD_Print("GAME OVER", 90, 110, 2, 0xffff, 0x0000);
+      delay(1000);
+      FillRect(0, 0, 320, 240, 0xdf5f);
+      if (J1 == 0) {
+        LCD_Print("Gana Jugador1:", 40, 20, 2, 0x018a, 0xdf5f);
+      }
+      else {
+        LCD_Print("Gana Jugador2:", 40, 20, 2, 0x018a, 0xdf5f);
+      }
+      LCD_Print("Desea volver", 60, 70, 2, 0x018a, 0xdf5f);
+      LCD_Print("a jugar?", 90, 100, 2, 0x018a, 0xdf5f);
+      LCD_Print("si     no", 90, 130, 2, 0x018a, 0xdf5f);
+      LCD_Print("GUARDAR", 100, 180, 2, 0x018a, 0xdf5f);
+      LCD_Print("EL RESULTADO", 50, 200, 2, 0x018a, 0xdf5f);
+      arrow_x = 45;
+      arrow_y = 125;
+      jump++;
+      break;
+    case 1:
+      break;
+  }
+  //ANTIREBOTE DEL BOTON DE INICIO
+  if (digitalRead(PUSHS) == 0) {
+    FLAG = 1;
+    delay(50);
+  }
+  else {
+    if (FLAG == 1) {
+      FLAG = 0;
+      switch (arrow) {
+        case 0:
+          arrow_x = 145;
+          arrow_y = 125;
+          arrow++;
+          break;
+        case 1:
+          arrow_x = 45;
+          arrow_y = 125;
+          arrow = 0;
+          break;
+      }
+    }
+  }
+  LCD_Bitmap(arrow_x, arrow_y, 40, 30, flecha);
+  delay(150);
+  FillRect(arrow_x, arrow_y, 40, 30, 0xdf5f);
+  delay(150);
+
+  if (digitalRead(PUSHC) == 1) {
+    FLAGC = 1;
+    delay(50);
+  }
+  else {
+    if (FLAGC == 1) {
+      FLAGC = 0;
+      jump = 0;
+      if (arrow_x == 45) {
+        confirmation = 3;
       }
       else {
         confirmation = 0;
@@ -684,118 +770,6 @@ void generador_de_obstaculos(void) {
   appear++;
 }
 
-void generador_de_obstaculosJ1(void) {
-  int obstacle = rand() % 4;
-  if (appear % 50000 == 0) {
-    switch (obstacle) {
-      case 0:
-        break;
-      case 1:
-        Generar_ColorJ1(15);
-        break;
-      case 2:
-        Generar_ColorJ1(65);
-        break;
-      case 3:
-        Generar_ColorJ1(115);
-        break;
-    }
-
-    switch (carriles[1][0]) {
-      case 0:
-        if (carriles[0][0] != 0) {
-          LCD_Bitmap(carriles[0][0], ypos1, 40, 40, ycar);
-        }
-        break;
-      case 1:
-        if (carriles[0][0] != 0) {
-          LCD_Bitmap(carriles[0][0], ypos1, 40, 40, gcar);
-        }
-        break;
-      case 2:
-        if (carriles[0][0] != 0) {
-          LCD_Bitmap(carriles[0][0], ypos1, 40, 40, bcar);
-        }
-        break;
-      case 3:
-        if (carriles[0][0] != 0) {
-          LCD_Bitmap(carriles[0][0], ypos1, 40, 40, rcar);
-        }
-        break;
-    }
-    if (carriles[0][0] != 0) {
-      FillRect(carriles[0][0], ypos1 - 10, 40, 10, 0x9492);
-    }
-    if (ypos1 == 240) {
-      carriles[0][0] = 0;
-      ypos1 = 0;
-    }
-  }
-  if (appear % 5000 == 0) {
-    ypos1++;
-  }
-  if (appear % 25000 == 0) {
-    Score1++;
-  }
-  appear++;
-}
-
-void generador_de_obstaculosJ2(void) {
-  int obstacle = rand() % 4;
-  if (appear % 50000 == 0) {
-    switch (obstacle) {
-      case 0:
-        break;
-      case 1:
-        Generar_ColorJ2(165);
-        break;
-      case 2:
-        Generar_ColorJ2(215);
-        break;
-      case 3:
-        Generar_ColorJ2(265);
-        break;
-    }
-
-    switch (carriles[1][1]) {
-      case 0:
-        if (carriles[0][1] != 0) {
-          LCD_Bitmap(carriles[0][1], ypos2, 40, 40, ycar);
-        }
-        break;
-      case 1:
-        if (carriles[0][1] != 0) {
-          LCD_Bitmap(carriles[0][1], ypos2, 40, 40, gcar);
-        }
-        break;
-      case 2:
-        if (carriles[0][1] != 0) {
-          LCD_Bitmap(carriles[0][1], ypos2, 40, 40, bcar);
-        }
-        break;
-      case 3:
-        if (carriles[0][1] != 0) {
-          LCD_Bitmap(carriles[0][1], ypos2, 40, 40, rcar);
-        }
-        break;
-    }
-    if (carriles[0][1] != 0) {
-      FillRect(carriles[0][1], ypos2 - 10, 40, 10, 0x9492);
-    }
-    if (ypos2 == 240) {
-      carriles[0][1] = 0;
-      ypos2 = 0;
-    }
-  }
-  if (appear % 5000 == 0) {
-    ypos2++;
-  }
-  if (appear % 25000 == 0) {
-    Score2++;
-  }
-  appear++;
-}
-
 void movimiento_un_jugador (void) {
   if (digitalRead(PUSHC1) == 0) {
     FLAGC1 = 1;
@@ -840,7 +814,7 @@ void movimiento_un_jugador (void) {
 
 void seleccion_carro_2jugadores(void) {
   if (player == 0) {
-    LCD_Sprite(110, 110, 41, 39, player1L, 5, 0, 0, 0);
+    LCD_Sprite(65, 110, 41, 39, player1L, 5, 0, 0, 0);
     if (digitalRead(PUSHJ1) == 0) {
       FLAGJ1 = 1;
     } else {
@@ -860,7 +834,7 @@ void seleccion_carro_2jugadores(void) {
       }
     }
   } else if (player == 1) {
-    LCD_Sprite(110, 110, 41, 39, player2L, 5, 0, 0, 0);
+    LCD_Sprite(65, 110, 41, 39, player2L, 5, 0, 0, 0);
     if (digitalRead(PUSHJ1) == 0) {
       FLAGJ1 = 1;
     } else {
@@ -880,13 +854,13 @@ void seleccion_carro_2jugadores(void) {
       }
     }
   } else if (player == 3 || player == 2) {
-    FillRect(110, 110, 41, 39, 0xdf5f);
-    LCD_Print("Listo", 30, 110, 2, 0x018a, 0xdf5f);
+    FillRect(65, 110, 41, 39, 0x9492);
+    LCD_Print("Listo", 15, 150, 2, 0xffff, 0x9492);
     listo1 = 1;
   }
 
   if (player2 == 0) {
-    LCD_Sprite(170, 110, 41, 39, player1L, 5, 0, 0, 0);
+    LCD_Sprite(165, 110, 41, 39, player1L, 5, 0, 0, 0);
     if (digitalRead(PUSHJ2) == 0) {
       FLAGJ2 = 1;
     } else {
@@ -906,7 +880,7 @@ void seleccion_carro_2jugadores(void) {
       }
     }
   } else if (player2 == 1) {
-    LCD_Sprite(170, 110, 41, 39, player2L, 5, 0, 0, 0);
+    LCD_Sprite(165, 110, 41, 39, player2L, 5, 0, 0, 0);
     if (digitalRead(PUSHJ2) == 0) {
       FLAGJ2 = 1;
     } else {
@@ -926,8 +900,8 @@ void seleccion_carro_2jugadores(void) {
       }
     }
   } else if (player2 == 3 || player2 == 2) {
-    FillRect(170, 110, 41, 39, 0xdf5f);
-    LCD_Print("Listo", 210, 110, 2, 0x018a, 0xdf5f);
+    FillRect(165, 110, 41, 39, 0x9492);
+    LCD_Print("Listo", 215, 150, 2, 0xffff, 0x9492);
     listo2 = 1;
   }
   if (conf == 2 && (listo1 + listo2 == 2)) {
