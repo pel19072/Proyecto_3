@@ -562,13 +562,18 @@ void J1gameover (void) {
       FLAG = 0;
       switch (arrow) {
         case 0:
-          arrow_x = 145;
+          arrow_x = 45;
           arrow_y = 105;
           arrow++;
           break;
         case 1:
-          arrow_x = 45;
+          arrow_x = 145;
           arrow_y = 105;
+          arrow++;
+          break;
+        case 2:
+          arrow_x = 50;
+          arrow_y = 140;
           arrow = 0;
           break;
       }
@@ -586,12 +591,17 @@ void J1gameover (void) {
   else {
     if (FLAGC == 1) {
       FLAGC = 0;
-      jump = 0;
       if (arrow_x == 45) {
+        jump = 0;
         confirmation = 2;
       }
-      else {
+      else if (arrow_x == 145) {
+        jump = 0;
         confirmation = 0;
+      }
+      else if (arrow_x == 50){
+        //rutina SD
+        LCD_Print("Listo", 105, 190, 2, 0x018a, 0xdf5f);
       }
     }
   }
@@ -618,13 +628,13 @@ void J2gameover (void) {
       else {
         LCD_Print("Gana Jugador2:", 40, 20, 2, 0x018a, 0xdf5f);
       }
-      LCD_Print("Desea volver", 60, 70, 2, 0x018a, 0xdf5f);
-      LCD_Print("a jugar?", 90, 100, 2, 0x018a, 0xdf5f);
-      LCD_Print("si     no", 90, 130, 2, 0x018a, 0xdf5f);
-      LCD_Print("GUARDAR", 100, 180, 2, 0x018a, 0xdf5f);
-      LCD_Print("EL RESULTADO", 50, 200, 2, 0x018a, 0xdf5f);
-      arrow_x = 45;
-      arrow_y = 125;
+      LCD_Print("Desea volver", 60, 50, 2, 0x018a, 0xdf5f);
+      LCD_Print("a jugar?", 90, 80, 2, 0x018a, 0xdf5f);
+      LCD_Print("si     no", 90, 110, 2, 0x018a, 0xdf5f);
+      LCD_Print("GUARDAR", 100, 160, 2, 0x018a, 0xdf5f);
+      LCD_Print("EL RESULTADO", 50, 180, 2, 0x018a, 0xdf5f);
+      arrow_x = 50;
+      arrow_y = 105;
       jump++;
       break;
     case 1:
@@ -640,13 +650,18 @@ void J2gameover (void) {
       FLAG = 0;
       switch (arrow) {
         case 0:
-          arrow_x = 145;
-          arrow_y = 125;
+          arrow_x = 50;
+          arrow_y = 105;
           arrow++;
           break;
         case 1:
-          arrow_x = 45;
-          arrow_y = 125;
+          arrow_x = 150;
+          arrow_y = 105;
+          arrow++;
+          break;
+        case 2:
+          arrow_x = 50;
+          arrow_y = 150;
           arrow = 0;
           break;
       }
@@ -664,12 +679,15 @@ void J2gameover (void) {
   else {
     if (FLAGC == 1) {
       FLAGC = 0;
-      jump = 0;
-      if (arrow_x == 45) {
+      if (arrow_x == 50) {
+        jump = 0;
         confirmation = 3;
       }
-      else {
+      else if (arrow == 150){
+        jump = 0;
         confirmation = 0;
+      }else{
+        LCD_Print("Listo", 105, 200, 2, 0x018a, 0xdf5f);
       }
     }
   }
