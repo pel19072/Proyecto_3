@@ -70,6 +70,7 @@ uint8_t choque2 = 0;
 uint8_t xpos = 0;
 uint8_t xpos2 = 150;
 uint32_t appear = 0;
+uint32_t speed = 0;
 uint8_t ypos1 = 0;
 uint8_t ypos2 = 0;
 uint8_t conf = 0;
@@ -158,10 +159,6 @@ void setup() {
   Serial.println("Inicio");
   LCD_Init();
   LCD_Clear(0x00);
-
-
-
-
 }
 //***************************************************************************************************************************************
 // Loop Infinito
@@ -171,6 +168,7 @@ void loop() {
     Pantalla_de_Inicio();
   }
   else if (confirmation == 1) {
+    LCD_Bitmap(0, 120, 320, 120, cover);
     Seleccion_de_Jugadores();
   }
   else if (confirmation == 2) {
@@ -442,48 +440,6 @@ void Generar_Color(int x) {
   }
 }
 
-void Generar_ColorJ1(int x) {
-  int color_obs = rand() % 3;
-  if (carriles[0][0] == 0) {
-    carriles[0][0] = x;
-    switch (color_obs) {
-      case 0:
-        carriles[1][0] = 0;
-        break;
-      case 1:
-        carriles[1][0] = 1;
-        break;
-      case 2:
-        carriles[1][0] = 2;
-        break;
-      case 3:
-        carriles[1][0] = 3;
-        break;
-    }
-  }
-}
-
-void Generar_ColorJ2(int x) {
-  int color_obs = rand() % 3;
-  if (carriles[0][1] == 0) {
-    carriles[0][1] = x;
-    switch (color_obs) {
-      case 0:
-        carriles[1][1] = 0;
-        break;
-      case 1:
-        carriles[1][1] = 1;
-        break;
-      case 2:
-        carriles[1][1] = 2;
-        break;
-      case 3:
-        carriles[1][1] = 3;
-        break;
-    }
-  }
-}
-
 void eleccion (uint8_t pl, int x2, int y2, int index1, char flip1, char offset1) {
   if (pl == 2) {
     LCD_Sprite(x2, y2, 41, 39, player1L, 5, index1, flip1, offset1);
@@ -496,27 +452,25 @@ void perder (void) {
   for (int i = 0; i < 2; i++) {
     int temp = xpos + 15;
     if (carriles[0][i] == temp) {
-      for (int j = 0; j < 2; j++) {
-        switch (j) {
-          case 0:
-            if (240 > (ypos1 + 39) && (ypos1 + 39) > 201 ) {
-              for (int i = 0; i < 7; i++) {
-                LCD_Sprite(xpos + 15, ypos1 + 20, 32, 32, explosion, 8, 0, i, 0);
-              }
-              delay(300);
-              choque = 1;
+      switch (i) {
+        case 0:
+          if (240 > (ypos1 + 39) && (ypos1 + 39) > 201 ) {
+            for (int j = 0; j < 7; j++) {
+              LCD_Sprite(xpos + 15, ypos1 + 20, 32, 32, explosion, 8, 0, j, 0);
             }
-            break;
-          case 1:
-            if (240 > (ypos2 + 39) && (ypos2 + 39) > 201) {
-              for (int i = 0; i < 7; i++) {
-                LCD_Sprite(xpos + 15, ypos2 + 20, 32, 32, explosion, 8, 0, i, 0);
-              }
-              delay(300);
-              choque = 1;
+            delay(300);
+            choque = 1;
+          }
+          break;
+        case 1:
+          if (240 > (ypos2 + 39) && (ypos2 + 39) > 201) {
+            for (int j = 0; j < 7; j++) {
+              LCD_Sprite(xpos + 15, ypos2 + 20, 32, 32, explosion, 8, 0, j, 0);
             }
-            break;
-        }
+            delay(300);
+            choque = 1;
+          }
+          break;
       }
     }
   }
@@ -531,6 +485,7 @@ void J1gameover (void) {
       ypos1 = 0;
       ypos2 = 0;
       xpos = 0;
+      speed = 0;
       FillRect(0, 0, 320, 240, 0x0000);
       LCD_Print("GAME OVER", 90, 110, 2, 0xffff, 0x0000);
       delay(1000);
@@ -593,13 +548,13 @@ void J1gameover (void) {
       FLAGC = 0;
       if (arrow_x == 45) {
         jump = 0;
-        confirmation = 2;
+        confirmation = 1;
       }
       else if (arrow_x == 145) {
         jump = 0;
         confirmation = 0;
       }
-      else if (arrow_x == 50){
+      else if (arrow_x == 50) {
         //rutina SD
         LCD_Print("Listo", 105, 190, 2, 0x018a, 0xdf5f);
       }
@@ -621,6 +576,7 @@ void J2gameover (void) {
       xpos = 0;
       J1 = 0;
       J2 = 0;
+      speed = 0;
       FillRect(0, 0, 320, 240, 0x0000);
       LCD_Print("GAME OVER", 90, 110, 2, 0xffff, 0x0000);
       delay(1000);
@@ -684,12 +640,12 @@ void J2gameover (void) {
       FLAGC = 0;
       if (arrow_x == 50) {
         jump = 0;
-        confirmation = 3;
+        confirmation = 1;
       }
-      else if (arrow_x == 150){
+      else if (arrow_x == 150) {
         jump = 0;
         confirmation = 0;
-      }else{
+      } else {
         LCD_Print("Listo", 105, 200, 2, 0x018a, 0xdf5f);
       }
     }
@@ -698,7 +654,7 @@ void J2gameover (void) {
 
 void generador_de_obstaculos(void) {
   int obstacle = rand() % 7;
-  if (appear % 50000 == 0) {
+  if (appear % 800000 == 0) {
     switch (obstacle) {
       case 0:
         break;
@@ -721,7 +677,8 @@ void generador_de_obstaculos(void) {
         Generar_Color(265);
         break;
     }
-
+  }
+  if (appear % (50000 - speed) == 0) {
     switch (carriles[1][0]) {
       case 0:
         if (carriles[0][0] != 0) {
@@ -745,7 +702,7 @@ void generador_de_obstaculos(void) {
         break;
     }
     if (carriles[0][0] != 0) {
-      FillRect(carriles[0][0], ypos1 - 10, 40, 10, 0x9492);
+      FillRect(carriles[0][0], ypos1 - 20, 40, 20, 0x9492);
     }
     if (ypos1 == 240) {
       carriles[0][0] = 0;
@@ -774,19 +731,28 @@ void generador_de_obstaculos(void) {
         break;
     }
     if (carriles[0][1] != 0) {
-      FillRect(carriles[0][1], ypos2 - 10, 40, 10, 0x9492);
+      FillRect(carriles[0][1], ypos2 - 20, 40, 20, 0x9492);
     }
     if (ypos2 == 240) {
       carriles[0][1] = 0;
       ypos2 = 0;
     }
   }
-  if (appear % 5000 == 0) {
-    ypos1++;
-    ypos2++;
+  if (appear % ((50000 - speed) / 10) == 0) {
+    if (carriles[0][0] != 0) {
+      ypos1++;
+    }
+    if (carriles[0][1] != 0) {
+      ypos2++;
+    }
   }
   if (appear % 25000 == 0) {
     Score1++;
+  }
+  if (appear % 50000 == 0) {
+    if ((appear - speed) > 10000) {
+      speed++;
+    }
   }
   appear++;
 }
@@ -1021,27 +987,25 @@ void perder2 (void) {
   for (int i = 0; i < 2; i++) {
     int temp = xpos + 15;
     if (carriles[0][i] == temp) {
-      for (int j = 0; j < 2; j++) {
-        switch (j) {
-          case 0:
-            if (240 > (ypos1 + 39) && (ypos1 + 39) > 201 ) {
-              J1 = 1;
-              for (int i = 0; i < 7; i++) {
-                LCD_Sprite(xpos + 15, ypos1 + 20, 32, 32, explosion, 8, 0, i, 0);
-              }
-              delay(300);
+      switch (i) {
+        case 0:
+          if (240 > (ypos1 + 39) && (ypos1 + 39) > 201 ) {
+            J1 = 1;
+            for (int j = 0; j < 7; j++) {
+              LCD_Sprite(xpos + 15, ypos1 + 20, 32, 32, explosion, 8, 0, j, 0);
             }
-            break;
-          case 1:
-            if (240 > (ypos2 + 39) && (ypos2 + 39) > 201) {
-              J1 = 1;
-              for (int i = 0; i < 7; i++) {
-                LCD_Sprite(xpos + 15, ypos2 + 20, 32, 32, explosion, 8, 0, i, 0);
-              }
-              delay(300);
+            delay(300);
+          }
+          break;
+        case 1:
+          if (240 > (ypos2 + 39) && (ypos2 + 39) > 201) {
+            J1 = 1;
+            for (int j = 0; j < 7; j++) {
+              LCD_Sprite(xpos + 15, ypos2 + 20, 32, 32, explosion, 8, 0, j, 0);
             }
-            break;
-        }
+            delay(300);
+          }
+          break;
       }
     }
   }
