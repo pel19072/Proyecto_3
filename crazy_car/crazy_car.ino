@@ -219,8 +219,8 @@ void loop() {
     while (choque == 0) {
       if (var <= 4) {
         if (appear != 0) {
-          if (appear % 1000000 == 0) {
-            bloqueo = rand() % 6;
+          if (appear % 500000 == 0) {
+            bloqueo = random(0, 6);
             switch (bloqueo) {
               case 0:
                 LCD_Bitmap(15, 200, 40, 40, gcar);
@@ -472,7 +472,7 @@ void Generar_Carretera(void) {
 }
 
 void Generar_Color(int x) {
-  color_obs = rand() % 4;
+  color_obs = random(0, 4);
   for (int i = 0; i < 2; i++)
   {
     if ((carriles[0][i] == 0) && (carriles[0][0] != x) && (carriles[0][1] != x)) {
@@ -510,51 +510,50 @@ void perder (void) {
       for (int j = 0; j < 7; j++) {
         LCD_Sprite(xpos + 15, ypos1 + 20, 32, 32, explosion, 8, 0, j, 0);
       }
-      delay(300);
       choque = 1;
     }
-  } else if (alto2 == 1) {
+  }
+  if (alto2 == 1) {
     if (xpos == 50) {
       for (int j = 0; j < 7; j++) {
         LCD_Sprite(xpos + 15, ypos1 + 20, 32, 32, explosion, 8, 0, j, 0);
       }
-      delay(300);
       choque = 1;
     }
 
-  } else if (alto3 == 1) {
+  }
+  if (alto3 == 1) {
     if (xpos == 100) {
       for (int j = 0; j < 7; j++) {
         LCD_Sprite(xpos + 15, ypos1 + 20, 32, 32, explosion, 8, 0, j, 0);
       }
-      delay(300);
       choque = 1;
     }
 
-  } else if (alto4 == 1) {
+  }
+  if (alto4 == 1) {
     if (xpos == 150) {
       for (int j = 0; j < 7; j++) {
         LCD_Sprite(xpos + 15, ypos1 + 20, 32, 32, explosion, 8, 0, j, 0);
       }
-      delay(300);
       choque = 1;
     }
 
-  } else if (alto5 == 1) {
+  }
+  if (alto5 == 1) {
     if (xpos == 200) {
       for (int j = 0; j < 7; j++) {
         LCD_Sprite(xpos + 15, ypos1 + 20, 32, 32, explosion, 8, 0, j, 0);
       }
-      delay(300);
       choque = 1;
     }
 
-  } else if (alto6 == 1) {
+  }
+  if (alto6 == 1) {
     if (xpos == 250) {
       for (int j = 0; j < 7; j++) {
         LCD_Sprite(xpos + 15, ypos1 + 20, 32, 32, explosion, 8, 0, j, 0);
       }
-      delay(300);
       choque = 1;
     }
   }
@@ -567,7 +566,6 @@ void perder (void) {
             for (int j = 0; j < 7; j++) {
               LCD_Sprite(xpos + 15, ypos1 + 20, 32, 32, explosion, 8, 0, j, 0);
             }
-            delay(300);
             choque = 1;
           }
           break;
@@ -576,7 +574,6 @@ void perder (void) {
             for (int j = 0; j < 7; j++) {
               LCD_Sprite(xpos + 15, ypos2 + 20, 32, 32, explosion, 8, 0, j, 0);
             }
-            delay(300);
             choque = 1;
           }
           break;
@@ -585,10 +582,11 @@ void perder (void) {
   }
 }
 void J1gameover (void) {
-  digitalWrite(PF_2, HIGH);
-  digitalWrite(PF_4, LOW);
   switch (jump) {
     case 0:
+      digitalWrite(PF_2, HIGH);
+      digitalWrite(PF_4, LOW);
+      delay(800);
       player = 0;
       choque = 0;
       ypos1 = 0;
@@ -596,8 +594,14 @@ void J1gameover (void) {
       xpos = 0;
       speed = 5;
       appear = 0;
-      alto1, alto2, alto3, alto4, alto5, alto6 = 0;
+      alto1 = 0;
+      alto2 = 0;
+      alto3 = 0;
+      alto4 = 0;
+      alto5 = 0;
+      alto6 = 0;
       var = 0;
+      Score1_Conversion = String(Score1);
       FillRect(0, 0, 320, 240, 0x0000);
       LCD_Print("GAME OVER", 90, 110, 2, 0xffff, 0x0000);
       delay(1000);
@@ -665,7 +669,6 @@ void J1gameover (void) {
       }
       else if (arrow_x == 50 && saved == 0) {
         //rutina SD
-        Score1_Conversion = String(Score1);
         SD_Write_Scores(Score1_Conversion);
         SD_Read_Scores();
         LCD_Print("Listo", 105, 190, 2, 0x018a, 0xdf5f);
@@ -776,7 +779,7 @@ void J2gameover (void) {
 }
 
 void generador_de_obstaculos(void) {
-  obstacle = rand() % 7;
+  obstacle = random(0, 7);
   if (appear % (60000 - speed) == 0) {
     switch (obstacle) {
       case 0:
@@ -837,7 +840,7 @@ void generador_de_obstaculos(void) {
         break;
     }
     if (carriles[0][0] != 0) {
-      FillRect(carriles[0][0], ypos1 - (speed - 9), 40, speed, 0x9492);
+      FillRect(carriles[0][0], ypos1 - (speed + 2), 40, speed, 0x9492);
     }
     if (ypos1 == 240) {
       carriles[0][0] = 0;
@@ -866,7 +869,7 @@ void generador_de_obstaculos(void) {
         break;
     }
     if (carriles[0][1] != 0) {
-      FillRect(carriles[0][1], ypos2 - (speed - 9), 40, speed, 0x9492);
+      FillRect(carriles[0][1], ypos2 - (speed + 2), 40, speed, 0x9492);
     }
     if (ypos2 == 240) {
       carriles[0][1] = 0;
