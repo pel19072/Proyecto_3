@@ -555,7 +555,7 @@ void perder (void) {
   if (alto1 == 1) {
     if (xpos == 0) {
       for (int j = 0; j < 7; j++) {
-        LCD_Sprite(xpos + 15, ypos1 + 20, 32, 32, explosion, 8, 0, j, 0);
+        LCD_Sprite(xpos + 15, 20, 32, 32, explosion, 8, 0, j, 0);
       }
       choque = 1;
     }
@@ -563,7 +563,7 @@ void perder (void) {
   if (alto2 == 1) {
     if (xpos == 50) {
       for (int j = 0; j < 7; j++) {
-        LCD_Sprite(xpos + 15, ypos1 + 20, 32, 32, explosion, 8, 0, j, 0);
+        LCD_Sprite(xpos + 15, 20, 32, 32, explosion, 8, 0, j, 0);
       }
       choque = 1;
     }
@@ -572,7 +572,7 @@ void perder (void) {
   if (alto3 == 1) {
     if (xpos == 100) {
       for (int j = 0; j < 7; j++) {
-        LCD_Sprite(xpos + 15, ypos1 + 20, 32, 32, explosion, 8, 0, j, 0);
+        LCD_Sprite(xpos + 15, 20, 32, 32, explosion, 8, 0, j, 0);
       }
       choque = 1;
     }
@@ -581,7 +581,7 @@ void perder (void) {
   if (alto4 == 1) {
     if (xpos == 150) {
       for (int j = 0; j < 7; j++) {
-        LCD_Sprite(xpos + 15, ypos1 + 20, 32, 32, explosion, 8, 0, j, 0);
+        LCD_Sprite(xpos + 15, 20, 32, 32, explosion, 8, 0, j, 0);
       }
       choque = 1;
     }
@@ -590,7 +590,7 @@ void perder (void) {
   if (alto5 == 1) {
     if (xpos == 200) {
       for (int j = 0; j < 7; j++) {
-        LCD_Sprite(xpos + 15, ypos1 + 20, 32, 32, explosion, 8, 0, j, 0);
+        LCD_Sprite(xpos + 15, 20, 32, 32, explosion, 8, 0, j, 0);
       }
       choque = 1;
     }
@@ -599,7 +599,7 @@ void perder (void) {
   if (alto6 == 1) {
     if (xpos == 250) {
       for (int j = 0; j < 7; j++) {
-        LCD_Sprite(xpos + 15, ypos1 + 20, 32, 32, explosion, 8, 0, j, 0);
+        LCD_Sprite(xpos + 15, 20, 32, 32, explosion, 8, 0, j, 0);
       }
       choque = 1;
     }
