@@ -73,8 +73,8 @@ uint8_t xpos = 0;
 uint8_t xpos2 = 150;
 uint32_t appear = 0;
 uint32_t speed = 5;
-uint8_t ypos1 = 0;
-uint8_t ypos2 = 0;
+uint8_t ypos1, ypos2 = 0;
+uint8_t ypos1J1, ypos2J2 = 0;
 uint8_t conf = 0;
 uint8_t listo1, listo2 = 0;
 uint8_t J1, J2, J3 = 0;
@@ -111,10 +111,14 @@ void Pantalla_de_Inicio(void);
 void seleccion_de_carro(void);
 void Generar_Carretera(void);
 void Generar_Color(uint8_t x);
+void Generar_ColorJ1(uint8_t x);
+void Generar_ColorJ2(uint8_t x);
 void eleccion (uint8_t pl, uint8_t x, uint8_t y, int index, char flip, char offset);
 void perder (void);
 void J1gameover (void);
 void generador_de_obstaculos (void);
+void generador_de_obstaculosJ1(void);
+void generador_de_obstaculosJ2(void);
 void movimiento_un_jugador (void);
 void seleccion_carro_2jugadores(void);
 void movimientoJ1_2jugadores (void);
@@ -287,7 +291,8 @@ void loop() {
     carriles[1][1] = 0;
     while (choque2 == 0) {
       perder2();
-      generador_de_obstaculos();
+      generador_de_obstaculosJ1();
+      generador_de_obstaculosJ2();
       if (choque2 == 0) {
         if (J1 == 0) {
           movimientoJ1_2jugadores();
@@ -492,6 +497,48 @@ void Generar_Color(int x) {
           break;
       }
       break;
+    }
+  }
+}
+
+void Generar_ColorJ1(int x) {
+  color_obs = random(0, 4);
+  if (carriles[0][0] == 0) {
+    carriles[0][0] = x;
+    switch (color_obs) {
+      case 0:
+        carriles[1][0] = 0;
+        break;
+      case 1:
+        carriles[1][0] = 1;
+        break;
+      case 2:
+        carriles[1][0] = 2;
+        break;
+      case 3:
+        carriles[1][0] = 3;
+        break;
+    }
+  }
+}
+
+void Generar_ColorJ2(int x) {
+  color_obs = random(0, 4);
+  if (carriles[0][1] == 0) {
+    carriles[0][1] = x;
+    switch (color_obs) {
+      case 0:
+        carriles[1][1] = 0;
+        break;
+      case 1:
+        carriles[1][1] = 1;
+        break;
+      case 2:
+        carriles[1][1] = 2;
+        break;
+      case 3:
+        carriles[1][1] = 3;
+        break;
     }
   }
 }
@@ -895,6 +942,134 @@ void generador_de_obstaculos(void) {
   appear++;
 }
 
+void generador_de_obstaculosJ1(void) {
+  obstacle = random(0, 4);
+  if (appear % (60000 - speed) == 0) {
+    switch (obstacle) {
+      case 0:
+        break;
+      case 1:
+        if (alto1 == 0) {
+          Generar_ColorJ1(15);
+        }
+        break;
+      case 2:
+        if (alto2 == 0) {
+          Generar_ColorJ1(65);
+        }
+        break;
+      case 3:
+        if (alto3 == 0) {
+          Generar_ColorJ1(115);
+        }
+        break;
+    }
+  }
+  if (appear % (1000 - speed) == 0) {
+    switch (carriles[1][0]) {
+      case 0:
+        if (carriles[0][0] != 0) {
+          LCD_Bitmap(carriles[0][0], ypos1J1, 40, 40, ycar);
+        }
+        break;
+      case 1:
+        if (carriles[0][0] != 0) {
+          LCD_Bitmap(carriles[0][0], ypos1J1, 40, 40, gcar);
+        }
+        break;
+      case 2:
+        if (carriles[0][0] != 0) {
+          LCD_Bitmap(carriles[0][0], ypos1J1, 40, 40, bcar);
+        }
+        break;
+      case 3:
+        if (carriles[0][0] != 0) {
+          LCD_Bitmap(carriles[0][0], ypos1J1, 40, 40, rcar);
+        }
+        break;
+    }
+    if (carriles[0][0] != 0) {
+      FillRect(carriles[0][0], ypos1J1 - (speed + 2), 40, speed, 0x9492);
+    }
+    if (ypos1J1 == 240) {
+      carriles[0][0] = 0;
+      ypos1J1 = 0;
+    }
+    if (appear % (1000 - speed) / speed == 0) {
+      if (carriles[0][0] != 0) {
+        ypos1J1++;
+      }
+    }
+  }
+}
+
+void generador_de_obstaculosJ2(void) {
+  obstacle = random(0, 4);
+  if (appear % (60000 - speed) == 0) {
+    switch (obstacle) {
+      case 0:
+        break;
+      case 1:
+        if (alto4 == 0) {
+          Generar_ColorJ2(165);
+        }
+        break;
+      case 2:
+        if (alto5 == 0) {
+          Generar_ColorJ2(215);
+        }
+        break;
+      case 3:
+        if (alto6 == 0) {
+          Generar_ColorJ2(265);
+        }
+        break;
+    }
+  }
+  if (appear % (1000 - speed) == 0) {
+    switch (carriles[1][1]) {
+      case 0:
+        if (carriles[0][1] != 0) {
+          LCD_Bitmap(carriles[0][1], ypos2J2, 40, 40, ycar);
+        }
+        break;
+      case 1:
+        if (carriles[0][1] != 0) {
+          LCD_Bitmap(carriles[0][1], ypos2J2, 40, 40, gcar);
+        }
+        break;
+      case 2:
+        if (carriles[0][1] != 0) {
+          LCD_Bitmap(carriles[0][1], ypos2J2, 40, 40, bcar);
+        }
+        break;
+      case 3:
+        if (carriles[0][1] != 0) {
+          LCD_Bitmap(carriles[0][1], ypos2J2, 40, 40, rcar);
+        }
+        break;
+    }
+    if (carriles[0][1] != 0) {
+      FillRect(carriles[0][1], ypos2J2 - (speed + 2), 40, speed, 0x9492);
+    }
+    if (ypos2J2 == 240) {
+      carriles[0][1] = 0;
+      ypos2J2 = 0;
+    }
+    if (appear % (1000 - speed) / speed == 0) {
+      if (carriles[0][1] != 0) {
+        ypos2J2++;
+      }
+    }
+  }
+  if (appear % 5000 == 0) {
+    if (speed < 60) {
+      speed++;
+    }
+  }
+  appear++;
+}
+
 void movimiento_un_jugador (void) {
   if (digitalRead(PUSHC1) == 0) {
     FLAGC1 = 1;
@@ -1122,58 +1297,56 @@ void movimientoJ2_2jugadores (void) {
 }
 
 void perder2 (void) {
-  for (int i = 0; i < 2; i++) {
-    int temp = xpos + 15;
-    if (carriles[0][i] == temp) {
-      switch (i) {
-        case 0:
-          if (240 > (ypos1 + 39) && (ypos1 + 39) > 201 ) {
-            J1 = 1;
-            for (int j = 0; j < 7; j++) {
-              LCD_Sprite(xpos + 15, ypos1 + 20, 32, 32, explosion, 8, 0, j, 0);
-            }
-            delay(300);
-          }
-          break;
-        case 1:
-          if (240 > (ypos2 + 39) && (ypos2 + 39) > 201) {
-            J1 = 1;
-            for (int j = 0; j < 7; j++) {
-              LCD_Sprite(xpos + 15, ypos2 + 20, 32, 32, explosion, 8, 0, j, 0);
-            }
-            delay(300);
-          }
-          break;
+  int temp = xpos + 15;
+  if (carriles[0][0] == temp) {
+    if (240 > (ypos1J1 + 39) && (ypos1J1 + 39) > 201 ) {
+      J1 = 1;
+      for (int j = 0; j < 7; j++) {
+        LCD_Sprite(xpos + 15, ypos1J1 + 20, 32, 32, explosion, 8, 0, j, 0);
       }
+      delay(300);
     }
   }
-  for (int k = 0; k < 2; k++) {
-    int temp1 = xpos2 + 15;
-    if (carriles[0][k] == temp1) {
-      for (int j = 0; j < 2; j++) {
-        switch (j) {
-          case 0:
-            if (240 > (ypos1 + 39) && (ypos1 + 39) > 201 ) {
-              J2 = 1;
-              for (int i = 0; i < 7; i++) {
-                LCD_Sprite(xpos2 + 15, ypos1 + 20, 32, 32, explosion, 8, 0, i, 0);
+  int temp1 = xpos2 + 15;
+  if (carriles[0][1] == temp1) {
+    if (240 > (ypos2J2 + 39) && (ypos2J2 + 39) > 201 ) {
+      J2 = 1;
+      for (int j = 0; j < 7; j++) {
+        LCD_Sprite(xpos2 + 15, ypos2J2 + 20, 32, 32, explosion, 8, 0, j, 0);
+      }
+      delay(300);
+    }
+  }
+
+  /*
+    for (int k = 0; k < 2; k++) {
+      int temp1 = xpos2 + 15;
+      if (carriles[0][k] == temp1) {
+        for (int j = 0; j < 2; j++) {
+          switch (j) {
+            case 0:
+              if (240 > (ypos1 + 39) && (ypos1 + 39) > 201 ) {
+                J2 = 1;
+                for (int i = 0; i < 7; i++) {
+                  LCD_Sprite(xpos2 + 15, ypos1 + 20, 32, 32, explosion, 8, 0, i, 0);
+                }
+                delay(300);
               }
-              delay(300);
-            }
-            break;
-          case 1:
-            if (240 > (ypos2 + 39) && (ypos2 + 39) > 201) {
-              J2 = 1;
-              for (int i = 0; i < 7; i++) {
-                LCD_Sprite(xpos2 + 15, ypos2 + 20, 32, 32, explosion, 8, 0, i, 0);
+              break;
+            case 1:
+              if (240 > (ypos2 + 39) && (ypos2 + 39) > 201) {
+                J2 = 1;
+                for (int i = 0; i < 7; i++) {
+                  LCD_Sprite(xpos2 + 15, ypos2 + 20, 32, 32, explosion, 8, 0, i, 0);
+                }
+                delay(300);
               }
-              delay(300);
-            }
-            break;
+              break;
+          }
         }
       }
     }
-  }
+  */
 }
 //****************************************************************************************************************************************
 // Función para inicializar LCD
