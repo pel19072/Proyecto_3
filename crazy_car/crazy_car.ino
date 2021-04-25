@@ -81,7 +81,7 @@ uint8_t listo1, listo2 = 0;
 uint8_t J1, J2, J3 = 0;
 uint8_t bloqueo, bloqueo2 = 0;
 uint8_t alto1 = 0;
-uint8_t alto2 =0;
+uint8_t alto2 = 0;
 uint8_t alto3 = 0;
 uint8_t alto4 = 0;
 uint8_t alto5 = 0;
@@ -235,7 +235,7 @@ void loop() {
     Generar_Carretera();
     eleccion (player, 15, 201, 0, 0, 0);
     while (choque == 0) {
-
+      bloquear_carriles();
       perder();
       if (choque == 0) {
         generador_de_obstaculos();
@@ -809,7 +809,7 @@ void J2gameover (void) {
 
 void generador_de_obstaculos(void) {
   obstacle = random(0, 7);
-  if (appear % (60000 - speed) == 0) {
+  if (appear % (6000 - speed) == 0) {
     switch (obstacle) {
       case 0:
         break;
@@ -869,7 +869,7 @@ void generador_de_obstaculos(void) {
         break;
     }
     if (carriles[0][0] != 0) {
-      FillRect(carriles[0][0], ypos1 - (speed + 2), 40, speed, 0x9492);
+      FillRect(carriles[0][0], ypos1 - (10 + 2), 40, 10, 0x9492);
     }
     if (ypos1 == 240) {
       carriles[0][0] = 0;
@@ -898,13 +898,13 @@ void generador_de_obstaculos(void) {
         break;
     }
     if (carriles[0][1] != 0) {
-      FillRect(carriles[0][1], ypos2 - (speed + 2), 40, speed, 0x9492);
+      FillRect(carriles[0][1], ypos2 - (10 + 2), 40, 10, 0x9492);
     }
     if (ypos2 == 240) {
       carriles[0][1] = 0;
       ypos2 = 0;
     }
-    if (appear % (1000 - speed) / speed == 0) {
+    if (appear % ((1000 - speed) / 10) == 0) {
       if (carriles[0][0] != 0) {
         ypos1++;
       }
@@ -916,8 +916,8 @@ void generador_de_obstaculos(void) {
   if (appear % 25000 == 0) {
     Score1++;
   }
-  if (appear % 5000 == 0) {
-    if (speed < 60) {
+  if (appear % 250 == 0) {
+    if (speed < 800) {
       speed++;
     }
   }
@@ -926,7 +926,7 @@ void generador_de_obstaculos(void) {
 
 void generador_de_obstaculosJ1(void) {
   obstacle = random(0, 4);
-  if (appear % (60000 - speed) == 0) {
+  if (appear % (6000 - speed) == 0) {
     switch (obstacle) {
       case 0:
         break;
@@ -971,13 +971,13 @@ void generador_de_obstaculosJ1(void) {
         break;
     }
     if (carriles[0][0] != 0) {
-      FillRect(carriles[0][0], ypos1J1 - (speed + 2), 40, speed, 0x9492);
+      FillRect(carriles[0][0], ypos1J1 - (10 + 2), 40, 10, 0x9492);
     }
     if (ypos1J1 == 240) {
       carriles[0][0] = 0;
       ypos1J1 = 0;
     }
-    if (appear % (1000 - speed) / speed == 0) {
+    if (appear % (1000 - speed) / 10 == 0) {
       if (carriles[0][0] != 0) {
         ypos1J1++;
       }
@@ -987,7 +987,7 @@ void generador_de_obstaculosJ1(void) {
 
 void generador_de_obstaculosJ2(void) {
   obstacle = random(0, 4);
-  if (appear % (60000 - speed) == 0) {
+  if (appear % (6000 - speed) == 0) {
     switch (obstacle) {
       case 0:
         break;
@@ -1032,20 +1032,20 @@ void generador_de_obstaculosJ2(void) {
         break;
     }
     if (carriles[0][1] != 0) {
-      FillRect(carriles[0][1], ypos2J2 - (speed + 2), 40, speed, 0x9492);
+      FillRect(carriles[0][1], ypos2J2 - (10 + 2), 40, 10, 0x9492);
     }
     if (ypos2J2 == 240) {
       carriles[0][1] = 0;
       ypos2J2 = 0;
     }
-    if (appear % (1000 - speed) / speed == 0) {
+    if (appear % (1000 - speed) / 10 == 0) {
       if (carriles[0][1] != 0) {
         ypos2J2++;
       }
     }
   }
-  if (appear % 5000 == 0) {
-    if (speed < 60) {
+  if (appear % 250 == 0) {
+    if (speed < 800) {
       speed++;
     }
   }
@@ -1428,24 +1428,24 @@ void bloquear_carrilesJ1 (void) {
         bloqueo = random(0, 3);
         switch (bloqueo) {
           case 0:
-              if (carriles[0][0] != 15) {
-                LCD_Bitmap(15, 200, 40, 33, signo);
-                alto1 = 1;
-                var++;
+            if (carriles[0][0] != 15) {
+              LCD_Bitmap(15, 200, 40, 33, signo);
+              alto1 = 1;
+              var++;
             }
             break;
           case 1:
-              if (carriles[0][0] != 65) {
-                LCD_Bitmap(65, 200, 40, 33, signo);
-                alto2 = 1;
-                var++;
-              }
+            if (carriles[0][0] != 65) {
+              LCD_Bitmap(65, 200, 40, 33, signo);
+              alto2 = 1;
+              var++;
+            }
             break;
           case 2:
-              if (carriles[0][0] != 115) {
-                LCD_Bitmap(115, 200, 40, 33, signo);
-                alto3 = 1;
-                var++;
+            if (carriles[0][0] != 115) {
+              LCD_Bitmap(115, 200, 40, 33, signo);
+              alto3 = 1;
+              var++;
             }
             break;
         }
@@ -1461,24 +1461,24 @@ void bloquear_carrilesJ2 (void) {
         bloqueo2 = random(0, 3);
         switch (bloqueo2) {
           case 0:
-              if (carriles[0][1] != 165) {
-                LCD_Bitmap(165, 200, 40, 33, signo);
-                alto4 = 1;
-                var2++;
+            if (carriles[0][1] != 165) {
+              LCD_Bitmap(165, 200, 40, 33, signo);
+              alto4 = 1;
+              var2++;
             }
             break;
           case 1:
-              if (carriles[0][1] != 215) {
-                LCD_Bitmap(215, 200, 40, 33, signo);
-                alto5 = 1;
-                var2++;
+            if (carriles[0][1] != 215) {
+              LCD_Bitmap(215, 200, 40, 33, signo);
+              alto5 = 1;
+              var2++;
             }
             break;
           case 2:
-              if (carriles[0][1] != 265) {
-                LCD_Bitmap(265, 200, 40, 33, signo);
-                alto6 = 1;
-                var2++;
+            if (carriles[0][1] != 265) {
+              LCD_Bitmap(265, 200, 40, 33, signo);
+              alto6 = 1;
+              var2++;
             }
             break;
         }
