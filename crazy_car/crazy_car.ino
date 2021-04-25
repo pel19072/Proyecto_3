@@ -230,12 +230,10 @@ void loop() {
             switch (bloqueo) {
               case 0:
                 LCD_Bitmap(15, 200, 40, 40, gcar);
-                //x en carril 1
                 alto1 = 1;
                 var++;
                 break;
               case 1:
-                //x en carril 1
                 LCD_Bitmap(65, 200, 40, 40, gcar);
                 alto2 = 1;
                 var++;
@@ -559,11 +557,7 @@ void perder (void) {
   if (alto1 == 1) {
     if (xpos == 0) {
       for (int j = 0; j < 7; j++) {
-<<<<<<< Updated upstream
-        LCD_Sprite(xpos + 15, ypos1 + 20, 32, 32, explosion, 8, 0, j, 0);
-=======
         LCD_Sprite(xpos + 15, 220, 32, 32, explosion, 8, 0, j, 0);
->>>>>>> Stashed changes
       }
       choque = 1;
     }
@@ -571,11 +565,7 @@ void perder (void) {
   if (alto2 == 1) {
     if (xpos == 50) {
       for (int j = 0; j < 7; j++) {
-<<<<<<< Updated upstream
-        LCD_Sprite(xpos + 15, ypos1 + 20, 32, 32, explosion, 8, 0, j, 0);
-=======
         LCD_Sprite(xpos + 15, 220, 32, 32, explosion, 8, 0, j, 0);
->>>>>>> Stashed changes
       }
       choque = 1;
     }
@@ -584,11 +574,7 @@ void perder (void) {
   if (alto3 == 1) {
     if (xpos == 100) {
       for (int j = 0; j < 7; j++) {
-<<<<<<< Updated upstream
-        LCD_Sprite(xpos + 15, ypos1 + 20, 32, 32, explosion, 8, 0, j, 0);
-=======
         LCD_Sprite(xpos + 15, 220, 32, 32, explosion, 8, 0, j, 0);
->>>>>>> Stashed changes
       }
       choque = 1;
     }
@@ -597,11 +583,7 @@ void perder (void) {
   if (alto4 == 1) {
     if (xpos == 150) {
       for (int j = 0; j < 7; j++) {
-<<<<<<< Updated upstream
-        LCD_Sprite(xpos + 15, ypos1 + 20, 32, 32, explosion, 8, 0, j, 0);
-=======
         LCD_Sprite(xpos + 15, 220, 32, 32, explosion, 8, 0, j, 0);
->>>>>>> Stashed changes
       }
       choque = 1;
     }
@@ -610,11 +592,7 @@ void perder (void) {
   if (alto5 == 1) {
     if (xpos == 200) {
       for (int j = 0; j < 7; j++) {
-<<<<<<< Updated upstream
-        LCD_Sprite(xpos + 15, ypos1 + 20, 32, 32, explosion, 8, 0, j, 0);
-=======
         LCD_Sprite(xpos + 15, 220, 32, 32, explosion, 8, 0, j, 0);
->>>>>>> Stashed changes
       }
       choque = 1;
     }
@@ -623,11 +601,7 @@ void perder (void) {
   if (alto6 == 1) {
     if (xpos == 250) {
       for (int j = 0; j < 7; j++) {
-<<<<<<< Updated upstream
-        LCD_Sprite(xpos + 15, ypos1 + 20, 32, 32, explosion, 8, 0, j, 0);
-=======
         LCD_Sprite(xpos + 15, 220, 32, 32, explosion, 8, 0, j, 0);
->>>>>>> Stashed changes
       }
       choque = 1;
     }
@@ -656,6 +630,7 @@ void perder (void) {
     }
   }
 }
+
 void J1gameover (void) {
   switch (jump) {
     case 0:
