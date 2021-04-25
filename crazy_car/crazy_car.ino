@@ -83,6 +83,8 @@ uint8_t valpos[] = {15, 65, 115, 165, 215, 265};
 uint8_t ylist[] = {ypos1, ypos2};
 int Score1 = 0;
 String Score1_Conversion;
+uint8_t saved = 0;
+uint8_t saved1 = 0;
 
 //***************************************************************************************************************************************
 // Functions Prototypes
@@ -118,8 +120,10 @@ void movimientoJ2_2jugadores (void);
 void perder2 (void);
 
 void printDirectory(File dir, int numTabs);
-void SD_Write(String High_Score);
-void SD_Read(void);
+void SD_Write_Scores(String Data);
+void SD_Read_Scores(void);
+void SD_Write_1v1(String Data);
+void SD_Read_1v1(void);
 
 extern uint8_t cover[];
 extern uint8_t flecha[];
@@ -154,6 +158,9 @@ void setup() {
     return;
   }
   Serial.println("initialization done.");
+  root = SD.open("/");
+  printDirectory(root, 0);
+  root.close();
 
   SysCtlClockSet(SYSCTL_SYSDIV_2_5 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN | SYSCTL_XTAL_16MHZ);
   Serial.begin(9600);
@@ -492,9 +499,6 @@ void J1gameover (void) {
       FillRect(0, 0, 320, 240, 0x0000);
       LCD_Print("GAME OVER", 90, 110, 2, 0xffff, 0x0000);
       delay(1000);
-      Score1_Conversion = String(Score1);
-      SD_Write(Score1_Conversion);
-      SD_Read();
       FillRect(0, 0, 320, 240, 0xdf5f);
       LCD_Print("Score obtenido:", 20, 20, 2, 0x018a, 0xdf5f);
       LCD_Print(Score1_Conversion, 260, 20, 2, 0x018a, 0xdf5f);
@@ -557,9 +561,13 @@ void J1gameover (void) {
         jump = 0;
         confirmation = 0;
       }
-      else if (arrow_x == 50) {
+      else if (arrow_x == 50 && saved == 0) {
         //rutina SD
+        Score1_Conversion = String(Score1);
+        SD_Write_Scores(Score1_Conversion);
+        SD_Read_Scores();
         LCD_Print("Listo", 105, 190, 2, 0x018a, 0xdf5f);
+        saved = 1;
       }
     }
   }
@@ -649,8 +657,17 @@ void J2gameover (void) {
       else if (arrow_x == 150) {
         jump = 0;
         confirmation = 0;
-      } else {
+      } else if (saved1 == 0){
+        if (J1 == 0) {
+          SD_Write_1v1("Jugador 1 Gana");
+          SD_Read_1v1();
+        }
+        else {
+          SD_Write_1v1("Jugador 2 Gana");
+          SD_Read_1v1();
+        }
         LCD_Print("Listo", 105, 200, 2, 0x018a, 0xdf5f);
+        saved1 = 1;
       }
     }
   }
@@ -658,7 +675,7 @@ void J2gameover (void) {
 
 void generador_de_obstaculos(void) {
   obstacle = rand() % 7;
-  if (appear % (60000-speed) == 0) {
+  if (appear % (60000 - speed) == 0) {
     switch (obstacle) {
       case 0:
         break;
@@ -682,7 +699,7 @@ void generador_de_obstaculos(void) {
         break;
     }
   }
-  if (appear % (1000-speed) == 0) {
+  if (appear % (1000 - speed) == 0) {
     switch (carriles[1][0]) {
       case 0:
         if (carriles[0][0] != 0) {
@@ -741,7 +758,7 @@ void generador_de_obstaculos(void) {
       carriles[0][1] = 0;
       ypos2 = 0;
     }
-    if (appear % (1000-speed)/speed == 0) {
+    if (appear % (1000 - speed) / speed == 0) {
       if (carriles[0][0] != 0) {
         ypos1++;
       }
@@ -1416,11 +1433,12 @@ void printDirectory(File dir, int numTabs) {
   }
 }
 
-void SD_Write(String High_Score) {
-  root = SD.open("yoshi.txt", FILE_WRITE);
+void SD_Write_Scores(String Data) {
+  root = SD.open("High.txt", FILE_WRITE);
   if (root) {
     Serial.print("Writing to High_Scores.txt...");
-    root.println(High_Score);
+    root.print("Score Saved: ");
+    root.println(Data);
     // close the file:
     root.close();
     Serial.println("done.");
@@ -1430,11 +1448,44 @@ void SD_Write(String High_Score) {
   }
 }
 
-void SD_Read() {
+void SD_Read_Scores(void) {
   // re-open the file for reading:
-  root = SD.open("yoshi.txt");
+  root = SD.open("High.txt");
   if (root) {
-    Serial.println("High_Scores.txt:");
+    Serial.println("High.txt:");
+
+    // read from the file until there's nothing else in it:
+    while (root.available()) {
+      Serial.write(root.read());
+    }
+    // close the file:
+    root.close();
+  } else {
+    // if the file didn't open, print an error:
+    Serial.println("error opening High_Scores.txt");
+  }
+}
+
+void SD_Write_1v1(String Data) {
+  root = SD.open("1v1.txt", FILE_WRITE);
+  if (root) {
+    Serial.print("Writing to 1v1.txt...");
+    root.print("1v1 Record: ");
+    root.println(Data);
+    // close the file:
+    root.close();
+    Serial.println("done.");
+  } else {
+    // if the file didn't open, print an error:
+    Serial.println("error opening 1v1.txt");
+  }
+}
+
+void SD_Read_1v1(void) {
+  // re-open the file for reading:
+  root = SD.open("1v1.txt");
+  if (root) {
+    Serial.println("1v1.txt:");
 
     // read from the file until there's nothing else in it:
     while (root.available()) {
