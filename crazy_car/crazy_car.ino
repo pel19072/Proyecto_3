@@ -51,6 +51,8 @@ String text3_3 = "1    2";
 String text4 = "Comenzar!!";
 
 int DPINS[] = {PB_0, PB_1, PB_2, PB_3, PB_4, PB_5, PB_6, PB_7};
+int obstacle = 0;
+int color_obs = 0;
 uint8_t arrow_x = 50;
 uint8_t arrow_y = 55;
 uint8_t FLAGC = 0;
@@ -70,7 +72,7 @@ uint8_t choque2 = 0;
 uint8_t xpos = 0;
 uint8_t xpos2 = 150;
 uint32_t appear = 0;
-uint32_t speed = 0;
+uint32_t speed = 5;
 uint8_t ypos1 = 0;
 uint8_t ypos2 = 0;
 uint8_t conf = 0;
@@ -416,10 +418,10 @@ void Generar_Carretera(void) {
 }
 
 void Generar_Color(int x) {
-  int color_obs = rand() % 3;
+  color_obs = rand() % 4;
   for (int i = 0; i < 2; i++)
   {
-    if (carriles[0][i] == 0) {
+    if ((carriles[0][i] == 0) && (carriles[0][0] != x) && (carriles[0][1] != x)) {
       carriles[0][i] = x;
       switch (color_obs) {
         case 0:
@@ -485,7 +487,8 @@ void J1gameover (void) {
       ypos1 = 0;
       ypos2 = 0;
       xpos = 0;
-      speed = 0;
+      speed = 5;
+      appear = 0;
       FillRect(0, 0, 320, 240, 0x0000);
       LCD_Print("GAME OVER", 90, 110, 2, 0xffff, 0x0000);
       delay(1000);
@@ -576,7 +579,8 @@ void J2gameover (void) {
       xpos = 0;
       J1 = 0;
       J2 = 0;
-      speed = 0;
+      speed = 5;
+      appear = 0;
       FillRect(0, 0, 320, 240, 0x0000);
       LCD_Print("GAME OVER", 90, 110, 2, 0xffff, 0x0000);
       delay(1000);
@@ -653,8 +657,8 @@ void J2gameover (void) {
 }
 
 void generador_de_obstaculos(void) {
-  int obstacle = rand() % 7;
-  if (appear % 800000 == 0) {
+  obstacle = rand() % 7;
+  if (appear % (60000-speed) == 0) {
     switch (obstacle) {
       case 0:
         break;
@@ -678,7 +682,7 @@ void generador_de_obstaculos(void) {
         break;
     }
   }
-  if (appear % (50000 - speed) == 0) {
+  if (appear % (1000-speed) == 0) {
     switch (carriles[1][0]) {
       case 0:
         if (carriles[0][0] != 0) {
@@ -702,7 +706,7 @@ void generador_de_obstaculos(void) {
         break;
     }
     if (carriles[0][0] != 0) {
-      FillRect(carriles[0][0], ypos1 - 20, 40, 20, 0x9492);
+      FillRect(carriles[0][0], ypos1 - speed, 40, speed, 0x9492);
     }
     if (ypos1 == 240) {
       carriles[0][0] = 0;
@@ -731,26 +735,26 @@ void generador_de_obstaculos(void) {
         break;
     }
     if (carriles[0][1] != 0) {
-      FillRect(carriles[0][1], ypos2 - 20, 40, 20, 0x9492);
+      FillRect(carriles[0][1], ypos2 - speed, 40, speed, 0x9492);
     }
     if (ypos2 == 240) {
       carriles[0][1] = 0;
       ypos2 = 0;
     }
-  }
-  if (appear % ((50000 - speed) / 10) == 0) {
-    if (carriles[0][0] != 0) {
-      ypos1++;
-    }
-    if (carriles[0][1] != 0) {
-      ypos2++;
+    if (appear % (1000-speed)/speed == 0) {
+      if (carriles[0][0] != 0) {
+        ypos1++;
+      }
+      if (carriles[0][1] != 0) {
+        ypos2++;
+      }
     }
   }
   if (appear % 25000 == 0) {
     Score1++;
   }
-  if (appear % 50000 == 0) {
-    if ((appear - speed) > 10000) {
+  if (appear % 5000 == 0) {
+    if (speed < 60) {
       speed++;
     }
   }
