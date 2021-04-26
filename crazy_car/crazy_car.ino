@@ -252,6 +252,8 @@ void loop() {
     FillRect(0, 0, 320, 240, 0xdf5f);
     LCD_Print("comienza el juego", 20, 120, 2, 0x018a, 0xdf5f);
     delay(1000);
+    digitalWrite(PF_4, HIGH);
+    digitalWrite(PF_2, LOW);
     Generar_Carretera();
     eleccion (player, 15, 201, 0, 0, 0);
     eleccion (player2, 165, 201, 0, 0, 0);
