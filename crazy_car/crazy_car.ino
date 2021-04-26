@@ -612,10 +612,15 @@ void J1gameover (void) {
       digitalWrite(PF_4, LOW);
       delay(800);
       player = 0;
+      player2 = 0;
       choque = 0;
+      choque2 = 0;
       ypos1 = 0;
       ypos2 = 0;
       xpos = 0;
+      xpos2 = 0;
+      ypos1J1 = 0;
+      ypos2J2 = 0;
       speed = 5;
       appear = 0;
       alto1 = 0;
@@ -625,6 +630,7 @@ void J1gameover (void) {
       alto5 = 0;
       alto6 = 0;
       var = 0;
+      var2 = 0;
       Score1_Conversion = String(Score1);
       FillRect(0, 0, 320, 240, 0x0000);
       LCD_Print("GAME OVER", 90, 110, 2, 0xffff, 0x0000);
@@ -707,6 +713,8 @@ void J2gameover (void) {
   digitalWrite(PF_4, LOW);
   switch (jump) {
     case 0:
+      ypos1J1 = 0;
+      ypos2J2 = 0;
       player = 0;
       player2 = 0;
       choque = 0;
@@ -1427,7 +1435,7 @@ void bloquear_carrilesJ1 (void) {
     if (appear != 0) {
       if (appear % 500000 == 0) {
         appear1 = 1;
-        bloqueo = random(0, 3);
+        bloqueo = random(0, 2);
         switch (bloqueo) {
           case 0:
             if (carriles[0][0] != 15) {
@@ -1460,7 +1468,7 @@ void bloquear_carrilesJ2 (void) {
   if (var2 < 1) {
     if (appear1 != 0) {
       if (appear1 == 1) {
-        bloqueo2 = random(0, 3);
+        bloqueo2 = random(0, 2);
         switch (bloqueo2) {
           case 0:
             if (carriles[0][1] != 165) {
