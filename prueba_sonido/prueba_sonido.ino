@@ -89,187 +89,188 @@
 #define NOTE_D8  4699
 #define NOTE_DS8 4978
 #define REST 0
-
+#define buzzer 4
 
 // change this to make the song slower or faster
-int tempo1=144; 
-int tempo = 70;
+
+
 // change this to whichever pin you want to use
-int buzzer = 4;
 
 // notes of the moledy followed by the duration.
 // a 4 means a quarter note, 8 an eighteenth , 16 sixteenth, so on
 // !!negative numbers are used to represent dotted notes,
 // so -4 means a dotted quarter note, that is, a quarter plus an eighteenth!!
 int melody1[] = {
-  
-  // Greensleeves 
+
+  // Greensleeves
   // Score available at https://musescore.com/user/168402/scores/1396946
   // Alexander Trompoukis
-  
-  NOTE_G4,8,//1
-  NOTE_AS4,4, NOTE_C5,8, NOTE_D5,-8, NOTE_DS5,16, NOTE_D5,8,
-  NOTE_C5,4, NOTE_A4,8, NOTE_F4,-8, NOTE_G4,16, NOTE_A4,8,
-  NOTE_AS4,4, NOTE_G4,8, NOTE_G4,-8, NOTE_FS4,16, NOTE_G4,8,
-  NOTE_A4,4, NOTE_FS4,8, NOTE_D4,4, NOTE_G4,8,
-  
-  NOTE_AS4,4, NOTE_C5,8, NOTE_D5,-8, NOTE_DS5,16, NOTE_D5,8,//6
-  NOTE_C5,4, NOTE_A4,8, NOTE_F4,-8, NOTE_G4,16, NOTE_A4,8,
-  NOTE_AS4,-8, NOTE_A4,16, NOTE_G4,8, NOTE_FS4,-8, NOTE_E4,16, NOTE_FS4,8, 
-  NOTE_G4,-2,
-  NOTE_F5,2, NOTE_E5,16, NOTE_D5,8,
 
-  NOTE_C5,4, NOTE_A4,8, NOTE_F4,-8, NOTE_G4,16, NOTE_A4,8,//11
-  NOTE_AS4,4, NOTE_G4,8, NOTE_G4,-8, NOTE_FS4,16, NOTE_G4,8,
-  NOTE_A4,4, NOTE_FS4,8, NOTE_D4,04,
-  NOTE_F5,2, NOTE_E5,16, NOTE_D5,8,
-  NOTE_C5,4, NOTE_A4,8, NOTE_F4,-8, NOTE_G4,16, NOTE_A4,8,
+  NOTE_G4, 8, //1
+  NOTE_AS4, 4, NOTE_C5, 8, NOTE_D5, -8, NOTE_DS5, 16, NOTE_D5, 8,
+  NOTE_C5, 4, NOTE_A4, 8, NOTE_F4, -8, NOTE_G4, 16, NOTE_A4, 8,
+  NOTE_AS4, 4, NOTE_G4, 8, NOTE_G4, -8, NOTE_FS4, 16, NOTE_G4, 8,
+  NOTE_A4, 4, NOTE_FS4, 8, NOTE_D4, 4, NOTE_G4, 8,
 
-  NOTE_AS4,-8, NOTE_A4,16, NOTE_G4,8, NOTE_FS4,-8, NOTE_E4,16, NOTE_FS4,8,//16
-  NOTE_G4,-2,
+  NOTE_AS4, 4, NOTE_C5, 8, NOTE_D5, -8, NOTE_DS5, 16, NOTE_D5, 8, //6
+  NOTE_C5, 4, NOTE_A4, 8, NOTE_F4, -8, NOTE_G4, 16, NOTE_A4, 8,
+  NOTE_AS4, -8, NOTE_A4, 16, NOTE_G4, 8, NOTE_FS4, -8, NOTE_E4, 16, NOTE_FS4, 8,
+  NOTE_G4, -2,
+  NOTE_F5, 2, NOTE_E5, 16, NOTE_D5, 8,
+
+  NOTE_C5, 4, NOTE_A4, 8, NOTE_F4, -8, NOTE_G4, 16, NOTE_A4, 8, //11
+  NOTE_AS4, 4, NOTE_G4, 8, NOTE_G4, -8, NOTE_FS4, 16, NOTE_G4, 8,
+  NOTE_A4, 4, NOTE_FS4, 8, NOTE_D4, 04,
+  NOTE_F5, 2, NOTE_E5, 16, NOTE_D5, 8,
+  NOTE_C5, 4, NOTE_A4, 8, NOTE_F4, -8, NOTE_G4, 16, NOTE_A4, 8,
+
+  NOTE_AS4, -8, NOTE_A4, 16, NOTE_G4, 8, NOTE_FS4, -8, NOTE_E4, 16, NOTE_FS4, 8, //16
+  NOTE_G4, -2,
 
   //repeats from the beginning
 
-  NOTE_G4,8,//1
-  NOTE_AS4,4, NOTE_C5,8, NOTE_D5,-8, NOTE_DS5,16, NOTE_D5,8,
-  NOTE_C5,4, NOTE_A4,8, NOTE_F4,-8, NOTE_G4,16, NOTE_A4,8,
-  NOTE_AS4,4, NOTE_G4,8, NOTE_G4,-8, NOTE_FS4,16, NOTE_G4,8,
-  NOTE_A4,4, NOTE_FS4,8, NOTE_D4,4, NOTE_G4,8,
-  
-  NOTE_AS4,4, NOTE_C5,8, NOTE_D5,-8, NOTE_DS5,16, NOTE_D5,8,//6
-  NOTE_C5,4, NOTE_A4,8, NOTE_F4,-8, NOTE_G4,16, NOTE_A4,8,
-  NOTE_AS4,-8, NOTE_A4,16, NOTE_G4,8, NOTE_FS4,-8, NOTE_E4,16, NOTE_FS4,8, 
-  NOTE_G4,-2,
-  NOTE_F5,2, NOTE_E5,16, NOTE_D5,8,
+  NOTE_G4, 8, //1
+  NOTE_AS4, 4, NOTE_C5, 8, NOTE_D5, -8, NOTE_DS5, 16, NOTE_D5, 8,
+  NOTE_C5, 4, NOTE_A4, 8, NOTE_F4, -8, NOTE_G4, 16, NOTE_A4, 8,
+  NOTE_AS4, 4, NOTE_G4, 8, NOTE_G4, -8, NOTE_FS4, 16, NOTE_G4, 8,
+  NOTE_A4, 4, NOTE_FS4, 8, NOTE_D4, 4, NOTE_G4, 8,
 
-  NOTE_C5,4, NOTE_A4,8, NOTE_F4,-8, NOTE_G4,16, NOTE_A4,8,//11
-  NOTE_AS4,4, NOTE_G4,8, NOTE_G4,-8, NOTE_FS4,16, NOTE_G4,8,
-  NOTE_A4,4, NOTE_FS4,8, NOTE_D4,04,
-  NOTE_F5,2, NOTE_E5,16, NOTE_D5,8,
-  NOTE_C5,4, NOTE_A4,8, NOTE_F4,-8, NOTE_G4,16, NOTE_A4,8,
+  NOTE_AS4, 4, NOTE_C5, 8, NOTE_D5, -8, NOTE_DS5, 16, NOTE_D5, 8, //6
+  NOTE_C5, 4, NOTE_A4, 8, NOTE_F4, -8, NOTE_G4, 16, NOTE_A4, 8,
+  NOTE_AS4, -8, NOTE_A4, 16, NOTE_G4, 8, NOTE_FS4, -8, NOTE_E4, 16, NOTE_FS4, 8,
+  NOTE_G4, -2,
+  NOTE_F5, 2, NOTE_E5, 16, NOTE_D5, 8,
 
-  NOTE_AS4,-8, NOTE_A4,16, NOTE_G4,8, NOTE_FS4,-8, NOTE_E4,16, NOTE_FS4,8,//16
-  NOTE_G4,-2
-  
-  
+  NOTE_C5, 4, NOTE_A4, 8, NOTE_F4, -8, NOTE_G4, 16, NOTE_A4, 8, //11
+  NOTE_AS4, 4, NOTE_G4, 8, NOTE_G4, -8, NOTE_FS4, 16, NOTE_G4, 8,
+  NOTE_A4, 4, NOTE_FS4, 8, NOTE_D4, 04,
+  NOTE_F5, 2, NOTE_E5, 16, NOTE_D5, 8,
+  NOTE_C5, 4, NOTE_A4, 8, NOTE_F4, -8, NOTE_G4, 16, NOTE_A4, 8,
+
+  NOTE_AS4, -8, NOTE_A4, 16, NOTE_G4, 8, NOTE_FS4, -8, NOTE_E4, 16, NOTE_FS4, 8, //16
+  NOTE_G4, -2
+
+
 };
 int melody[] = {
 
   //Based on the arrangement at https://www.flutetunes.com/tunes.php?id=192
-  
-  NOTE_E5, 4,  NOTE_B4,8,  NOTE_C5,8,  NOTE_D5,4,  NOTE_C5,8,  NOTE_B4,8,
-  NOTE_A4, 4,  NOTE_A4,8,  NOTE_C5,8,  NOTE_E5,4,  NOTE_D5,8,  NOTE_C5,8,
-  NOTE_B4, -4,  NOTE_C5,8,  NOTE_D5,4,  NOTE_E5,4,
-  NOTE_C5, 4,  NOTE_A4,4,  NOTE_A4,8,  NOTE_A4,4,  NOTE_B4,8,  NOTE_C5,8,
 
-  NOTE_D5, -4,  NOTE_F5,8,  NOTE_A5,4,  NOTE_G5,8,  NOTE_F5,8,
-  NOTE_E5, -4,  NOTE_C5,8,  NOTE_E5,4,  NOTE_D5,8,  NOTE_C5,8,
-  NOTE_B4, 4,  NOTE_B4,8,  NOTE_C5,8,  NOTE_D5,4,  NOTE_E5,4,
-  NOTE_C5, 4,  NOTE_A4,4,  NOTE_A4,4, REST, 4,
+  NOTE_E5, 4,  NOTE_B4, 8,  NOTE_C5, 8,  NOTE_D5, 4,  NOTE_C5, 8,  NOTE_B4, 8,
+  NOTE_A4, 4,  NOTE_A4, 8,  NOTE_C5, 8,  NOTE_E5, 4,  NOTE_D5, 8,  NOTE_C5, 8,
+  NOTE_B4, -4,  NOTE_C5, 8,  NOTE_D5, 4,  NOTE_E5, 4,
+  NOTE_C5, 4,  NOTE_A4, 4,  NOTE_A4, 8,  NOTE_A4, 4,  NOTE_B4, 8,  NOTE_C5, 8,
 
-  NOTE_E5, 4,  NOTE_B4,8,  NOTE_C5,8,  NOTE_D5,4,  NOTE_C5,8,  NOTE_B4,8,
-  NOTE_A4, 4,  NOTE_A4,8,  NOTE_C5,8,  NOTE_E5,4,  NOTE_D5,8,  NOTE_C5,8,
-  NOTE_B4, -4,  NOTE_C5,8,  NOTE_D5,4,  NOTE_E5,4,
-  NOTE_C5, 4,  NOTE_A4,4,  NOTE_A4,8,  NOTE_A4,4,  NOTE_B4,8,  NOTE_C5,8,
+  NOTE_D5, -4,  NOTE_F5, 8,  NOTE_A5, 4,  NOTE_G5, 8,  NOTE_F5, 8,
+  NOTE_E5, -4,  NOTE_C5, 8,  NOTE_E5, 4,  NOTE_D5, 8,  NOTE_C5, 8,
+  NOTE_B4, 4,  NOTE_B4, 8,  NOTE_C5, 8,  NOTE_D5, 4,  NOTE_E5, 4,
+  NOTE_C5, 4,  NOTE_A4, 4,  NOTE_A4, 4, REST, 4,
 
-  NOTE_D5, -4,  NOTE_F5,8,  NOTE_A5,4,  NOTE_G5,8,  NOTE_F5,8,
-  NOTE_E5, -4,  NOTE_C5,8,  NOTE_E5,4,  NOTE_D5,8,  NOTE_C5,8,
-  NOTE_B4, 4,  NOTE_B4,8,  NOTE_C5,8,  NOTE_D5,4,  NOTE_E5,4,
-  NOTE_C5, 4,  NOTE_A4,4,  NOTE_A4,4, REST, 4,
-  
+  NOTE_E5, 4,  NOTE_B4, 8,  NOTE_C5, 8,  NOTE_D5, 4,  NOTE_C5, 8,  NOTE_B4, 8,
+  NOTE_A4, 4,  NOTE_A4, 8,  NOTE_C5, 8,  NOTE_E5, 4,  NOTE_D5, 8,  NOTE_C5, 8,
+  NOTE_B4, -4,  NOTE_C5, 8,  NOTE_D5, 4,  NOTE_E5, 4,
+  NOTE_C5, 4,  NOTE_A4, 4,  NOTE_A4, 8,  NOTE_A4, 4,  NOTE_B4, 8,  NOTE_C5, 8,
 
-  NOTE_E5,2,  NOTE_C5,2,
-  NOTE_D5,2,   NOTE_B4,2,
-  NOTE_C5,2,   NOTE_A4,2,
-  NOTE_GS4,2,  NOTE_B4,4,  REST,8, 
-  NOTE_E5,2,   NOTE_C5,2,
-  NOTE_D5,2,   NOTE_B4,2,
-  NOTE_C5,4,   NOTE_E5,4,  NOTE_A5,2,
-  NOTE_GS5,2,
+  NOTE_D5, -4,  NOTE_F5, 8,  NOTE_A5, 4,  NOTE_G5, 8,  NOTE_F5, 8,
+  NOTE_E5, -4,  NOTE_C5, 8,  NOTE_E5, 4,  NOTE_D5, 8,  NOTE_C5, 8,
+  NOTE_B4, 4,  NOTE_B4, 8,  NOTE_C5, 8,  NOTE_D5, 4,  NOTE_E5, 4,
+  NOTE_C5, 4,  NOTE_A4, 4,  NOTE_A4, 4, REST, 4,
+
+
+  NOTE_E5, 2,  NOTE_C5, 2,
+  NOTE_D5, 2,   NOTE_B4, 2,
+  NOTE_C5, 2,   NOTE_A4, 2,
+  NOTE_GS4, 2,  NOTE_B4, 4,  REST, 8,
+  NOTE_E5, 2,   NOTE_C5, 2,
+  NOTE_D5, 2,   NOTE_B4, 2,
+  NOTE_C5, 4,   NOTE_E5, 4,  NOTE_A5, 2,
+  NOTE_GS5, 2,
 
 };
 
 // sizeof gives the number of bytes, each int value is composed of two bytes (16 bits)
 // there are two values per note (pitch and duration), so for each note there are four bytes
-int notes=sizeof(melody)/sizeof(melody[0])/2; 
-
-// this calculates the duration of a whole note in ms (60s/tempo)*4 beats
-int wholenote = (60000 * 4) / tempo1;
-
-int divider = 0, noteDuration = 0;
 int var = 0;
 int var1 = 0;
+ int divider = 0, noteDuration = 0;
 void setup() {
   pinMode(15, INPUT);
   pinMode(23, INPUT);
   pinMode(2, OUTPUT);
   Serial.begin(9600);
-  // iterate over the notes of the melody. 
+  // iterate over the notes of the melody.
   // Remember, the array is twice the number of notes (notes + durations)
-  
+
 }
 
 void loop() {
-  if (digitalRead(15)==HIGH && digitalRead(23)==LOW){
-    digitalWrite(2,LOW);
-    pinMode(4,OUTPUT);
+  if (digitalRead(15) == LOW && digitalRead(23) == HIGH) {
+    Serial.println("jugador1");
+    int tempo = 144;
+    int notes = sizeof(melody) / sizeof(melody[0]) / 2;
+    // this calculates the duration of a whole note in ms (60s/tempo)*4 beats
+    int wholenote = (60000 * 4) / tempo;
+    digitalWrite(2, LOW);
+    pinMode(4, OUTPUT);
     for (int thisNote = 0; thisNote < notes * 2; thisNote = thisNote + 2) {
-      if (digitalRead(15)==LOW && digitalRead(23)==HIGH){
+      if ((digitalRead(15) == HIGH && digitalRead(23) == LOW) || (digitalRead(15) == LOW && digitalRead(23) == LOW)) {
         break;
       }
-    // calculates the duration of each note
-    divider = melody[thisNote + 1];
-    if (divider > 0) {
-      // regular note, just proceed
-      noteDuration = (wholenote) / divider;
-    } else if (divider < 0) {
-      // dotted notes are represented with negative durations!!
-      noteDuration = (wholenote) / abs(divider);
-      noteDuration *= 1.5; // increases the duration in half for dotted notes
-    }
+      // calculates the duration of each note
+      divider = melody[thisNote + 1];
+      if (divider > 0) {
+        // regular note, just proceed
+        noteDuration = (wholenote) / divider;
+      } else if (divider < 0) {
+        // dotted notes are represented with negative durations!!
+        noteDuration = (wholenote) / abs(divider);
+        noteDuration *= 1.5; // increases the duration in half for dotted notes
+      }
 
-    // we only play the note for 90% of the duration, leaving 10% as a pause
-    tone(buzzer, melody[thisNote], noteDuration*0.9);
+      // we only play the note for 90% of the duration, leaving 10% as a pause
+      tone(buzzer, melody[thisNote], noteDuration * 0.9);
 
-    // Wait for the specief duration before playing the next note.
-    //delay(noteDuration);
-    
-    // stop the waveform generation before the next note.
-    noTone(buzzer);
+      // Wait for the specief duration before playing the next note.
+      //delay(noteDuration);
+
+      // stop the waveform generation before the next note.
+      noTone(buzzer);
     }
-  /*}else{
-    digitalWrite(2,HIGH);
-    pinMode(4,INPUT);
-    noTone(buzzer);*/
-  }else if (digitalRead(15)==LOW && digitalRead(23)==HIGH){
-    digitalWrite(2,LOW);
-    pinMode(4,OUTPUT);
+  } else if (digitalRead(15) == HIGH && digitalRead(23) == LOW) {
+    Serial.println("perder");
+    int tempo1 = 70;
+    int notes = sizeof(melody1) / sizeof(melody1[0]) / 2;
+    // this calculates the duration of a whole note in ms (60s/tempo)*4 beats
+    int wholenote = (60000 * 4) / tempo1;
+    digitalWrite(2, LOW);
+    pinMode(4, OUTPUT);
     for (int thisNote = 0; thisNote < notes * 2; thisNote = thisNote + 2) {
-    if (digitalRead(15)==HIGH && digitalRead(23)==LOW){
+      if ((digitalRead(15) == LOW && digitalRead(23) == HIGH) || (digitalRead(15) == LOW && digitalRead(23) == LOW)) {
         break;
       }
-    // calculates the duration of each note
-    divider = melody1[thisNote + 1];
-    if (divider > 0) {
-      // regular note, just proceed
-      noteDuration = (wholenote) / divider;
-    } else if (divider < 0) {
-      // dotted notes are represented with negative durations!!
-      noteDuration = (wholenote) / abs(divider);
-      noteDuration *= 1.5; // increases the duration in half for dotted notes
+      // calculates the duration of each note
+      divider = melody1[thisNote + 1];
+      if (divider > 0) {
+        // regular note, just proceed
+        noteDuration = (wholenote) / divider;
+      } else if (divider < 0) {
+        // dotted notes are represented with negative durations!!
+        noteDuration = (wholenote) / abs(divider);
+        noteDuration *= 1.5; // increases the duration in half for dotted notes
+      }
+
+      // we only play the note for 90% of the duration, leaving 10% as a pause
+      tone(buzzer, melody1[thisNote], noteDuration * 0.9);
+
+      // Wait for the specief duration before playing the next note.
+
+      // stop the waveform generation before the next note.
+      noTone(buzzer);
     }
-
-    // we only play the note for 90% of the duration, leaving 10% as a pause
-    tone(buzzer, melody1[thisNote], noteDuration*0.9);
-
-    // Wait for the specief duration before playing the next note.
-    
-    // stop the waveform generation before the next note.
-    noTone(buzzer);
-  }
-  }else if ((digitalRead(15)==LOW && digitalRead(23)==LOW)){
-    digitalWrite(2,HIGH);
-    pinMode(4,INPUT);
+  } else if ((digitalRead(15) == LOW && digitalRead(23) == LOW)) {
+    Serial.println("nada");
+    digitalWrite(2, HIGH);
+    pinMode(4, INPUT);
     noTone(buzzer);
   }
 }
