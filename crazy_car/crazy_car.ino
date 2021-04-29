@@ -9,6 +9,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <TM4C123GH6PM.h>
+//PARA COMUNICAR CON LA SD
 #include <SPI.h>
 #include <SD.h>
 #include <stdint.h>
@@ -28,20 +29,23 @@ File root;
 #include "bitmaps.h"
 #include "font.h"
 #include "lcd_registers.h"
-
+//CONTROL DE LA LCD
 #define LCD_RST PD_0
 #define LCD_CS PD_1
 #define LCD_RS PD_2
 #define LCD_WR PD_3
 #define LCD_RD PE_1
-
+//BOTONES PARA EL JUEGO
+  //SELECCION
 #define PUSHS PE_3
 #define PUSHC PF_1
+  //JUGADOR 1
 #define PUSHJ1 PE_5
 #define PUSHC1 PA_6
+  //JUGADOR 2
 #define PUSHJ2 PA_7
 #define PUSHC2 PE_2
-
+//MENSAJES
 String text1 = "Bienvenido a";
 String text2 = "Crazy Cars!";
 String text3 = "Seleccione la";
@@ -49,36 +53,46 @@ String text3_1 = "Cantidad de";
 String text3_2 = "Jugadores:";
 String text3_3 = "1    2";
 String text4 = "Comenzar!!";
-
+//PUERTO DE DATA DE LA LCD
 int DPINS[] = {PB_0, PB_1, PB_2, PB_3, PB_4, PB_5, PB_6, PB_7};
+//GENERADORES ALEATORIOS
 int obstacle = 0;
 int color_obs = 0;
+//FLECHA
 uint8_t arrow_x = 50;
 uint8_t arrow_y = 55;
+//FLAGS ANTIREBOTE
 uint8_t FLAGC = 0;
 uint8_t FLAGC1 = 0;
 uint8_t FLAGC2 = 0;
 uint8_t FLAG = 0;
 uint8_t FLAGJ1 = 0;
 uint8_t FLAGJ2 = 0;
+//FLAGS SWITCHES
 uint8_t arrow = 0;
-uint8_t confirmation = 0;
 uint8_t jump = 0;
 uint8_t jump1 = 0;
+//CAMBIO DE PANTALLAS
+uint8_t confirmation = 0;
+//CAMBIO DE VEHÍCULO
 uint8_t player = 0;
 uint8_t player2 = 0;
+//CHOQUES
 uint8_t choque = 0;
 uint8_t choque2 = 0;
+uint8_t J1, J2, J3 = 0;
+//POSICIONES Y VELOCIDADES
 uint8_t xpos = 0;
 uint8_t xpos2 = 150;
-uint32_t appear = 0;
-uint32_t appear1 = 0;
 uint32_t speed = 5;
 uint8_t ypos1, ypos2 = 0;
 uint8_t ypos1J1, ypos2J2 = 0;
 uint8_t conf = 0;
 uint8_t listo1, listo2 = 0;
-uint8_t J1, J2, J3 = 0;
+//CCONTROL DE TIEMPO
+uint32_t appear = 0;
+uint32_t appear1 = 0;
+//BLOQUEOS
 uint8_t bloqueo, bloqueo2 = 0;
 uint8_t alto1 = 0;
 uint8_t alto2 = 0;
@@ -88,20 +102,22 @@ uint8_t alto5 = 0;
 uint8_t alto6 = 0;
 uint8_t var = 0;
 uint8_t var2 = 0;
+//MATRIZ DE OBSTÁCULOS
 int carriles[2][2] = {{0, 0}, {0, 0}};
 uint8_t valpos[] = {15, 65, 115, 165, 215, 265};
 uint8_t ylist[] = {ypos1, ypos2};
+//PUNTAJE
 int Score1 = 0;
 String Score1_Conversion;
+//GUARDADO EN SD
 uint8_t saved = 0;
 uint8_t saved1 = 0;
 
-//***************************************************************************************************************************************
-// Functions Prototypes
-//***************************************************************************************************************************************
+//****************************************************************LCD********************************************************************
 void LCD_Init(void);
 void LCD_CMD(uint8_t cmd);
 void LCD_DATA(uint8_t data);
+//**************************************************************GRÁFICOS*****************************************************************
 void SetWindows(unsigned int x1, unsigned int y1, unsigned int x2, unsigned int y2);
 void LCD_Clear(unsigned int c);
 void H_line(unsigned int x, unsigned int y, unsigned int l, unsigned int c);
@@ -109,10 +125,9 @@ void V_line(unsigned int x, unsigned int y, unsigned int l, unsigned int c);
 void Rect(unsigned int x, unsigned int y, unsigned int w, unsigned int h, unsigned int c);
 void FillRect(unsigned int x, unsigned int y, unsigned int w, unsigned int h, unsigned int c);
 void LCD_Print(String text, int x, int y, int fontSize, int color, int background);
-
 void LCD_Bitmap(unsigned int x, unsigned int y, unsigned int width, unsigned int height, unsigned char bitmap[]);
 void LCD_Sprite(int x, int y, int width, int height, unsigned char bitmap[], int columns, int index, char flip, char offset);
-
+//**********************************************************FUNCIONAMIENTO***************************************************************
 void Limpieza_Unitaria(void);
 void Seleccion_de_Jugadores(void);
 void Pantalla_de_Inicio(void);
@@ -135,13 +150,13 @@ void perder2 (void);
 void bloquear_carriles (void);
 void bloquear_carrilesJ1 (void);
 void bloquear_carrilesJ2 (void);
-
+//*****************************************************************SD********************************************************************
 void printDirectory(File dir, int numTabs);
 void SD_Write_Scores(String Data);
 void SD_Read_Scores(void);
 void SD_Write_1v1(String Data);
 void SD_Read_1v1(void);
-
+//*****************************************VARIABLES DE GRÁFICOS DESDE BITMAPS.H Y GRAFICOS.C********************************************
 extern uint8_t cover[];
 extern uint8_t flecha[];
 extern uint8_t player1L[];
@@ -158,19 +173,20 @@ extern uint8_t signo[];
 //***************************************************************************************************************************************
 void setup() {
   Serial.begin(9600);
+  //BOTONES CON PULL UP
   pinMode(PUSHS, INPUT_PULLUP);
   pinMode(PUSHC, INPUT_PULLUP);
   pinMode(PUSHJ1, INPUT_PULLUP);
   pinMode(PUSHC1, INPUT_PULLUP);
   pinMode(PUSHJ2, INPUT_PULLUP);
   pinMode(PUSHC2, INPUT_PULLUP);
+  //CONTROL DE SONIDO CON COMUNICACIÓN PARALELA
   pinMode(PF_4, OUTPUT);
   pinMode(PF_2, OUTPUT);
-
+  //INICIALIZACIÓN DE LA SD
   SPI.setModule(0); //Utiliza al PA_3 como CS
   Serial.print("Initializing SD card...");
   pinMode(PA_3, OUTPUT);
-
   if (!SD.begin(PA_3)) {
     Serial.println("initialization failed");
     return;
@@ -179,11 +195,11 @@ void setup() {
   root = SD.open("/");
   printDirectory(root, 0);
   root.close();
-
+  //PREPARACIÓN PARA USO DE LA LCD
   SysCtlClockSet(SYSCTL_SYSDIV_2_5 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN | SYSCTL_XTAL_16MHZ);
-  Serial.begin(9600);
   GPIOPadConfigSet(GPIO_PORTB_BASE, 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7, GPIO_STRENGTH_8MA, GPIO_PIN_TYPE_STD_WPU);
   Serial.println("Inicio");
+  //INICIALIZACIÓN DE LA LCD
   LCD_Init();
   LCD_Clear(0x00);
 }
@@ -191,16 +207,26 @@ void setup() {
 // Loop Infinito
 //***************************************************************************************************************************************
 void loop() {
+//CADA IF REPRESENTA UNA PANTALLA DISTINTA EN EL JUEGO
+  //PATNALLA DE INICIO
   if (confirmation == 0) {
     Pantalla_de_Inicio();
   }
+  //SELECCIÓN DE CANTIDAD DE DJUGADORES
   else if (confirmation == 1) {
+    //J1 Y J2 INDICAN QUÉ CARRO SE CHOQUÓ EN LA ÚLTIMA PARTIDA DE DOS JUGADORES
+    //SE INICIALIZAN PARA QUE PUEDA VOLVERSE A JUGAR DE DOS
     J1 = 0;
     J2 = 0;
+    //SE PINTA EL COVER
     LCD_Bitmap(0, 120, 320, 120, cover);
     Seleccion_de_Jugadores();
   }
+  //SELECCIÓN DE CARRO PARA UN JUGADOR
   else if (confirmation == 2) {
+    //SWITCH-CASE DE ESTE TIPO SON USADOS VARIAS VECES
+    //LA VARIABLE ANALIZADA NO SE REINICIA EN EL SWITCH
+    //POR ESTO HACE LA PRIMERA ACCIÓN UNA VEZ (ACCIONES UNITARIAS)
     switch (jump) {
       case 0:
         Generar_Carretera();
@@ -209,10 +235,14 @@ void loop() {
       case 1:
         break;
     }
+    //SE REINICIA EL PUNTAJE PARA QUE ESTE NO SE ACUMULE ENTRE PARTIDAS
     Score1 = 0;
     seleccion_de_carro();
   }
+  //SELECCIÓN DE CARRO PARA DOS JUGADORES
   else if (confirmation == 3) {
+    //SE GENERA LA CARRETERA UNA VEZ CON UN SWITCH-CASE DE ACCIÓN UNITARIA
+    //PERO SE DEJA SELECCIONAR CARRO EN TODO MOMENTO HASTA CONFIRMAR
     switch (jump1) {
       case 0:
         Generar_Carretera();
@@ -226,32 +256,44 @@ void loop() {
         break;
     }
   }
+  //JUEGO PARA UN JUGADOR
   else if (confirmation == 4) {
     FillRect(0, 0, 320, 240, 0xdf5f);
     LCD_Print("comienza el juego", 20, 120, 2, 0x018a, 0xdf5f);
+    //CONDICIONES PARA QUE LA CANCIÓN DE JUEGO COMIENCE
+    //A SONAR CON EL ESP POR COMUNICACIÓN PARALELA
     digitalWrite(PF_4, HIGH);
     digitalWrite(PF_2, LOW);
     delay(1000);
     Generar_Carretera();
     eleccion (player, 15, 201, 0, 0, 0);
+    //ESTE WHILE HACE QUE TODO LO DE ARRIBA SOLO
+    //SE REALICE UNA VEZ
     while (choque == 0) {
       bloquear_carriles();
       perder();
+      //SE GENERAN CARROS Y DEJA MOVER AL JUGADOR
+      //SÍ Y SOLO SÍ NO HA CHOCADO EL JUGADOR
       if (choque == 0) {
         generador_de_obstaculos();
         movimiento_un_jugador();
       }
+      //CUANDO CHOCA REDIRIGE A LA PNATLLA
+      //POST PARTIDA DE UN JUGADOR
       confirmation = 5;
     }
   }
+  //PATNALLA POST PARTIDA DE UN JUGADOR
   else if (confirmation == 5) {
     J1gameover();
   }
+  //JUEGO PARA DOS JUGADORES
   else if (confirmation == 6) {
     delay(500);
     FillRect(0, 0, 320, 240, 0xdf5f);
     LCD_Print("comienza el juego", 20, 120, 2, 0x018a, 0xdf5f);
     delay(1000);
+    //MISMA LÓGICA QUE CON UN JUGADOR
     digitalWrite(PF_4, HIGH);
     digitalWrite(PF_2, LOW);
     Generar_Carretera();
@@ -262,11 +304,14 @@ void loop() {
     carriles[1][0] = 0;
     carriles[1][1] = 0;
     while (choque2 == 0) {
+      //REVISA QUE NINGÚN JUGADOR HAYA CHOCADO
       bloquear_carrilesJ1();
       bloquear_carrilesJ2();
+      //REVISA QUÉ JUGADOR CHOCÓ SI ES QUE ALGUNO LO HIZO
       perder2();
       generador_de_obstaculosJ1();
       generador_de_obstaculosJ2();
+      //SE MUEVE SÍ Y SOLO SÍ NADIE HA CHOCADO
       if (choque2 == 0) {
         if (J1 == 0) {
           movimientoJ1_2jugadores();
@@ -274,13 +319,17 @@ void loop() {
         if (J2 == 0) {
           movimientoJ2_2jugadores();
         }
+        //SI ALGUNO DE LOS DOS CHOCÓ, SE REGISTRA EL CHOQUE
         if ((J1 == 1) || (J2 == 1)) {
           choque2 = 1;
         }
       }
+      //AL CHOCAR, SE REDIRIJE A LA PANTALLA
+      //POST PARTIDA DE DOS JUGADORES
       confirmation = 7;
     }
   }
+  //PATNALLA POST PARTIDA DE DOS JUGADORES
   else if (confirmation == 7) {
     J2gameover();
   }
@@ -290,6 +339,7 @@ void loop() {
 // Funciones de Juego
 //***************************************************************************************************************************************
 void Limpieza_Unitaria(void) {
+  //UTILIZA UN SWITCH-CASE UNITARIO PARA LIMPIAR LA PANTALLA
   switch (jump) {
     case 0:
       FillRect(0, 0, 320, 240, 0xdf5f);
@@ -301,12 +351,13 @@ void Limpieza_Unitaria(void) {
 }
 
 void Pantalla_de_Inicio(void) {
+  //COMUNICACIÓN PARALELA PARA QUE NO SUENE MÚSICA
   digitalWrite(PF_4, LOW);
   digitalWrite(PF_2, LOW);
+  //SWITCH-CASE UNITARIO PARA PINTAR EL COVER
   switch (jump1) {
     case 0:
       FillRect(0, 0, 319, 206, 0xdf5f);
-      //LCD_Bitmap(unsigned int x, unsigned int y, unsigned int width, unsigned int height, unsigned char bitmap[]);
       LCD_Bitmap(0, 120, 320, 120, cover);
       LCD_Print(text1, 60, 0, 2, 0x018a, 0xdf5f);
       LCD_Print(text2, 70, 20, 2, 0x018a, 0xdf5f);
@@ -314,6 +365,8 @@ void Pantalla_de_Inicio(void) {
       jump1++;
       break;
     case 1:
+    //USO DE LOS BOTONES
+      //ESTRUCTURA PARA LOS ANTIREBOTES
       if (digitalRead(PUSHC) == 1) {
         FLAGC = 1;
         delay(50);
@@ -321,10 +374,15 @@ void Pantalla_de_Inicio(void) {
       else {
         if (FLAGC == 1) {
           FLAGC = 0;
+          //AL PRESIONARSE Y SOLTARSE EL BOTÓN DE CONFIRMACIÓN
+          //SE AUMENTA EL VALOR DE LA VARIABLE DE CONFIRMACIÓN
+          //PARA CAMBIAR DE PANTALLA
           confirmation = 1;
           jump1 = 0;
         }
       }
+      //FELCHA TITILANTE:
+      //SE PINTA Y SE BORRA CADA 150ms
       LCD_Bitmap(40, 90, 40, 30, flecha);
       delay(150);
       FillRect(40, 90, 40, 30, 0xdf5f);
@@ -334,8 +392,10 @@ void Pantalla_de_Inicio(void) {
 }
 
 void Seleccion_de_Jugadores(void) {
+  //SIN MÚSICA
   digitalWrite(PF_4, LOW);
   digitalWrite(PF_2, LOW);
+  //SWITCH-CASE UNITARIO PARA PINTAR OPCIONES
   switch (jump) {
     case 0:
       arrow_x = 50;
@@ -350,7 +410,8 @@ void Seleccion_de_Jugadores(void) {
     case 1:
       break;
   }
-  //ANTIREBOTE DEL BOTON DE INICIO
+  //ANTIREBOTE DEL BOTON DE SELECCIÓN
+  //AL PRESIONAR SE MUEVE LA FLECHA DE LUGAR
   if (digitalRead(PUSHS) == 0) {
     FLAG = 1;
     delay(50);
@@ -381,6 +442,8 @@ void Seleccion_de_Jugadores(void) {
     FLAGC = 1;
     delay(50);
   }
+  //SEGÚN LA COORDENADA EN LA QUE ESTÁ LA FLECHA
+  //SE REDIRIGE A LA PANTALLA DESEADA
   else {
     if (FLAGC == 1) {
       FLAGC = 0;
@@ -399,11 +462,13 @@ void seleccion_de_carro(void) {
   LCD_Print("Escoja su vehiculo", 15, 20, 2, 0xffff, 0x9492);
   if (player == 0) {
     LCD_Sprite(115, 110, 41, 39, player1L, 5, 0, 0, 0);
+    //ANTIREBOTE PARA CAMBIO DE VEHÍCULO A USAR
     if (digitalRead(PUSHJ1) == 0) {
       FLAGJ1 = 1;
     } else {
       if (FLAGJ1 == 1) {
         FLAGJ1 = 0;
+        //ESTA VARIABLE DETERMINA EL JUGADOR A USAR
         player = 1;
       }
     }
@@ -414,6 +479,7 @@ void seleccion_de_carro(void) {
         FLAGC1 = 0;
         jump = 0;
         player = 2;
+        //REDIRIGE A LA PANTALLA DE JUEGO
         confirmation = 4;
       }
     }
@@ -441,6 +507,8 @@ void seleccion_de_carro(void) {
 }
 
 void Generar_Carretera(void) {
+  //UTILIZA UN PEQUEÑO FRAGMENTO DE GRAMA Y CARRETERA
+  //Y LA USA PARA PINTAR TODO LO NECESARIO CON CICLOS FOR
   for (int x = 0; x < 240 / 10; x++) {
     LCD_Bitmap(0, x * 10, 10, 10, grama);
     LCD_Bitmap(310, x * 10, 10, 10, grama);
@@ -453,9 +521,15 @@ void Generar_Carretera(void) {
 }
 
 void Generar_Color(int x) {
+  //UTILIZA UN RANDOM PARA GENERAR UN COLOR PARA EL CARRO OBSTÁCULO 
+  //EN ESPECÍFICO Y GUARDARLO EN SU POSICIÓN DE LA MATRIZ DE OBSTÁCULOS
   color_obs = random(0, 4);
+  //EL CICLO FOR HACE QUE SE REVISEN TODAS 
+  //LAS COORDENADAS EN X DISPONIBLES EN LA MATRIZ
   for (int i = 0; i < 2; i++)
   {
+    //SE ASIGNA UN COLOR Y UNA COORDENADA SI HAY ALGÚN ESPACIO 
+    //VACÍO EN LA MATRIZ Y SI NO HAY UN CARRO EN ESE CARRIL YA
     if ((carriles[0][i] == 0) && (carriles[0][0] != x) && (carriles[0][1] != x)) {
       carriles[0][i] = x;
       switch (color_obs) {
@@ -472,11 +546,16 @@ void Generar_Color(int x) {
           carriles[1][i] = 3;
           break;
       }
+      //ESTE BREAK SIRVE PARA QUE SOLO DIBUJE UN CARRO
+      //POR ITERACIÓN. ES DECIR, SOLO DIBUJA EL OBSTÁCULO
+      //EN EL PRIMER ESPACIO QUE ENCUENTRE.
       break;
     }
   }
 }
-
+//MISMA LÓGICA QUE LA FUNCIÓN ANTERIOR PARA LAS SIGUIENTES DOS FUNCIONES,
+//PERO SIN PASAR POR TODAS LAS POSICIONES POSIBLES, SINO SOLO LAS 
+//SIGNIFICATIVAS PARA CADA JUGADOR
 void Generar_ColorJ1(int x) {
   color_obs = random(0, 4);
   if (carriles[0][0] == 0) {
@@ -520,6 +599,8 @@ void Generar_ColorJ2(int x) {
 }
 
 void eleccion (uint8_t pl, int x2, int y2, int index1, char flip1, char offset1) {
+  //CAMBIAR EL CARRO DIBUJADO EN EL 
+  //MENÚ DE SELECCIÓN DE VEHÍCULOS
   if (pl == 2) {
     LCD_Sprite(x2, y2, 41, 39, player1L, 5, index1, flip1, offset1);
   } else if (pl == 3) {
@@ -528,6 +609,8 @@ void eleccion (uint8_t pl, int x2, int y2, int index1, char flip1, char offset1)
 }
 
 void perder (void) {
+  //SI SE TOCA ALGÚN CARRIL BLOQUEADO O UN OBSTÁCULO, SE LEVANTA LA 
+  //BANDERA DE PERDER Y SE REALIZA LA ANIMACIÓN DE LA EXPLOSIÓN
   if (alto1 == 1) {
     if (xpos == 0) {
       for (int j = 0; j < 7; j++) {
@@ -607,10 +690,14 @@ void perder (void) {
 
 void J1gameover (void) {
   switch (jump) {
+    //SWITCH-CASE UNITARIO PARA MOSTRAR LA INFORMACIÓN DEL GAME OVER
     case 0:
+      //COMUNICACIÓN PARALELA PARA MÚSICA TRISTE POR HABER PERDIDO
       digitalWrite(PF_2, HIGH);
       digitalWrite(PF_4, LOW);
       delay(800);
+      //REINICIO TODAS LAS VARIABLES PARA
+      //GARANTIZAR QUE SE PUEDE JUGAR OTRA VEZ
       player = 0;
       player2 = 0;
       choque = 0;
@@ -636,6 +723,7 @@ void J1gameover (void) {
       LCD_Print("GAME OVER", 90, 110, 2, 0xffff, 0x0000);
       delay(1000);
       FillRect(0, 0, 320, 240, 0xdf5f);
+      //MUESTRO LOS DATOS Y LAS OPCIONES
       LCD_Print("Score obtenido:", 20, 20, 2, 0x018a, 0xdf5f);
       LCD_Print(Score1_Conversion, 260, 20, 2, 0x018a, 0xdf5f);
       LCD_Print("Desea volver", 60, 50, 2, 0x018a, 0xdf5f);
@@ -650,7 +738,7 @@ void J1gameover (void) {
     case 1:
       break;
   }
-  //ANTIREBOTE DEL BOTON DE INICIO
+  //ANTIREBOTE DEL BOTON DE SELECCIÓN
   if (digitalRead(PUSHS) == 0) {
     FLAG = 1;
     delay(50);
@@ -691,17 +779,21 @@ void J1gameover (void) {
       FLAGC = 0;
       if (arrow_x == 45) {
         jump = 0;
+        //SI DECIDO VOLVER A JUGAR REGRESO A LA SELECCIÓN DE MODO
         confirmation = 1;
       }
       else if (arrow_x == 145) {
         jump = 0;
+        //SI DECIDO NO VOLVER A JUGAR REGRESO A LA PANTALLA DE INICIO
         confirmation = 0;
       }
       else if (arrow_x == 50 && saved == 0) {
-        //rutina SD
+        //SI DECIDO GUARDAR LA INFORMACIÓN
+        //ESCRIBO EL PUNTAJE EN LA SD
         SD_Write_Scores(Score1_Conversion);
         SD_Read_Scores();
         LCD_Print("Listo", 105, 190, 2, 0x018a, 0xdf5f);
+        //BANDERA PARA QUE SOLO SE PUEDA GUARDAR UNA VEZ
         saved = 1;
       }
     }
@@ -709,6 +801,8 @@ void J1gameover (void) {
 }
 
 void J2gameover (void) {
+  //MISMA LÓGICA QUE EL J1GAMEOVER PERO LA 
+  //INFORMACIÓN QUE PUEDE GUARDAR ES QUIÉN GANÓ
   digitalWrite(PF_2, HIGH);
   digitalWrite(PF_4, LOW);
   switch (jump) {
@@ -818,7 +912,15 @@ void J2gameover (void) {
 }
 
 void generador_de_obstaculos(void) {
+  //GENERO UN NÚMERO ALEATORIO DE 0 A 6
+  //0 INDICA QUE NO SE GENERA CARRO,
+  //DEL 1 AL 6 INDICA EN QUÉ CARRIL 
+  //SE ENCONTRARÁ EL OBSTÁCULO
   obstacle = random(0, 7);
+  //SE UTILIZAN RESIDUOS PARA CONTROLAR LA VELOCIDAD
+  //EN ESTE CASO, COMIENZA CON UNA REPETICIÓN DE UNA VEZ CADA 6000 CICLOS
+  //ESTE NÚMERO VA REDUCIENDO CON EL TIEMPO GRACIAS A LA VARIABLE speed,
+  //ES DECIR, SE HACE MÁS RÁPIDO CON EL TIEMPO
   if (appear % (6000 - speed) == 0) {
     switch (obstacle) {
       case 0:
@@ -855,6 +957,7 @@ void generador_de_obstaculos(void) {
         break;
     }
   }
+  //AQUÍ SE DIBUJGAN LOS CARROS QUE YA TIENEN ASIGNADO UNA COORDENADA Y UN COLOR
   if (appear % (1000 - speed) == 0) {
     switch (carriles[1][0]) {
       case 0:
@@ -878,13 +981,16 @@ void generador_de_obstaculos(void) {
         }
         break;
     }
+    //BORRAN EL RASTRO QUE DEJAN
     if (carriles[0][0] != 0) {
       FillRect(carriles[0][0], ypos1 - (10 + 2), 40, 10, 0x9492);
     }
+    //SI LLEGA AL TOPE, SE BORRA EL CARRO Y HABILITA PARA UN NUEVO OBSTÁCULO
     if (ypos1 == 240) {
       carriles[0][0] = 0;
       ypos1 = 0;
     }
+    //MISMA LÓGICA QUE CON EL OBSTÁCULO 1
     switch (carriles[1][1]) {
       case 0:
         if (carriles[0][1] != 0) {
@@ -923,9 +1029,11 @@ void generador_de_obstaculos(void) {
       }
     }
   }
+  //AUMENTO EL SCORE CON EL TIEMPO
   if (appear % 25000 == 0) {
     Score1++;
   }
+  //AUMENTO LA VELOCIDAD, MAS TENGO UN LÍMITE PARA EVITAR RESIDUOS CON NÚMEROS NEGATIVOS
   if (appear % 250 == 0) {
     if (speed < 800) {
       speed++;
@@ -933,7 +1041,9 @@ void generador_de_obstaculos(void) {
   }
   appear++;
 }
-
+//LÓGICA DE LA FUNCIÓN ANTERIOR APLICA PARA LAS SIGUIENTES DOS
+//PERO ESTAS SOLO RECORREN EL PEDAZO DE LA MATRIZ DE OBSTÁCULOS
+//QUE LES INTERESA
 void generador_de_obstaculosJ1(void) {
   obstacle = random(0, 4);
   if (appear % (6000 - speed) == 0) {
@@ -1063,6 +1173,8 @@ void generador_de_obstaculosJ2(void) {
 }
 
 void movimiento_un_jugador (void) {
+  //ANTIREBOTE PARA EL BOTÓN DE MOVER
+  //HACIA LA DERECHA DEL JUGADOR 1
   if (digitalRead(PUSHC1) == 0) {
     FLAGC1 = 1;
   } else {
@@ -1070,6 +1182,7 @@ void movimiento_un_jugador (void) {
       //choque = 1;
       FLAGC1 = 0;
       if (xpos <= 200) {
+        //SI NO HA LLEGADO AL EXTREMO, SE MUEVE A LA DERECHA
         for (int x = 0; x < 5; x++) {
           eleccion (player, 15 + xpos, 201, x, 0, 0);
         }
@@ -1077,12 +1190,16 @@ void movimiento_un_jugador (void) {
         xpos = xpos + 50;
         eleccion (player, 15 + xpos, 201, 0, 0, 0);
       } else {
-        FillRect(15 + xpos, 201, 41, 39,    0x9492);
+        //SI YA LLEGÓ AL EXTREMO, SE VA AL LADO CONTRARIO
+        FillRect(15 + xpos, 201, 41, 39, 0x9492);
         xpos = 0;
         eleccion (player, 15, 201, 0, 0, 0);
       }
     }
   }
+  //ANTIREBOTE PARA EL BOTÓN DE MOVER
+  //HACIA LA IZQUIERDA DEL JUGADOR 1
+  //(MISMA LÓGICA QUE MOVERSE HACIA LA DERECHA)
   if (digitalRead(PUSHJ1) == 0) {
     FLAGJ1 = 1;
   } else {
@@ -1092,11 +1209,11 @@ void movimiento_un_jugador (void) {
         for (int x = 0; x < 5; x++) {
           eleccion (player, 15 + xpos, 201, x, 1, 0);
         }
-        FillRect(15 + xpos, 201, 41, 39,    0x9492);
+        FillRect(15 + xpos, 201, 41, 39, 0x9492);
         xpos = xpos - 50;
         eleccion (player, 15 + xpos, 201, 0, 0, 0);
       } else {
-        FillRect(15, 201, 41, 39,    0x9492);
+        FillRect(15, 201, 41, 39, 0x9492);
         xpos = 250;
         eleccion (player, 265, 201, 0, 0, 0);
       }
@@ -1104,6 +1221,9 @@ void movimiento_un_jugador (void) {
   }
 }
 
+//MISMA LÓGICA QUE LA SELECCIÓN DE UN JUGADOR
+//PERO CON DOS JUGADORES Y UN MENSAJE DE "LISTO"
+//CUANDO CADA JUGADOR SELECCIONA SU CARRO
 void seleccion_carro_2jugadores(void) {
   if (player == 0) {
     LCD_Sprite(65, 110, 41, 39, player1L, 5, 0, 0, 0);
@@ -1205,6 +1325,8 @@ void seleccion_carro_2jugadores(void) {
   }
 }
 
+//MISMA LÓGICA QUE EL MOVIMIENTO DE 1
+//JUGADOR PERO CON 2 JUGADORES PARA EL J1
 void movimientoJ1_2jugadores (void) {
   if (digitalRead(PUSHC1) == 0) {
     FLAGC1 = 1;
@@ -1219,7 +1341,7 @@ void movimientoJ1_2jugadores (void) {
         xpos = xpos + 50;
         eleccion (player, 15 + xpos, 201, 0, 0, 0);
       } else {
-        FillRect(15 + xpos, 201, 41, 39,    0x9492);
+        FillRect(15 + xpos, 201, 41, 39, 0x9492);
         xpos = 0;
         eleccion (player, 15, 201, 0, 0, 0);
       }
@@ -1246,7 +1368,8 @@ void movimientoJ1_2jugadores (void) {
   }
 
 }
-
+//MISMA LÓGICA QUE EL MOVIMIENTO DE 1
+//JUGADOR PERO CON 2 JUGADORES PARA EL J2
 void movimientoJ2_2jugadores (void) {
   if (digitalRead(PUSHC2) == 0) {
     FLAGC2 = 1;
@@ -1287,7 +1410,8 @@ void movimientoJ2_2jugadores (void) {
     }
   }
 }
-
+//MISMA LÓGICA QUE LA FUNCIÓN PARA PERDER DE 1 JUGADOR
+//PERO REVISA PARA LOS DOS JUGADORES E INDICA QUIÉN CHOCÓ
 void perder2 (void) {
   if (alto1 == 1) {
     if (xpos == 0) {
@@ -1365,9 +1489,14 @@ void perder2 (void) {
 }
 
 void bloquear_carriles (void) {
-  if (var <= 4) {
+  //IF LIMITA LA CANTIDAD MÁXIMA DE CARRILES BLOQUEADOS 
+  //A 3 PARA QUE SE PUEDE SEGUIR JUGANDO
+  if (var < 4) {
+    //ESTE IF EVITA QUE SE BLOQUEE UN CARRIL AL INICIO
     if (appear != 0) {
       if (appear % 500000 == 0) {
+        //CADA CIERTO TIEMPO SE GENERA UN NÚMERO RANDO DE 0 A 5
+        //EL CUAL INDICA QUÉ CARRIL SE BLOQUEAREÁ
         bloqueo = random(0, 6);
         switch (bloqueo) {
           case 0:
@@ -1430,6 +1559,8 @@ void bloquear_carriles (void) {
   }
 }
 
+//MISMA LÓGICA QUE EL BLOQUEO DE CARRILES DE UN JUGADOR PERO CON 
+//MENOS OPCIONES DISPONIBLES (SOLO LOS PRIMEROS TRES CARRILES)
 void bloquear_carrilesJ1 (void) {
   if (var < 1) {
     if (appear != 0) {
@@ -1464,6 +1595,8 @@ void bloquear_carrilesJ1 (void) {
   }
 }
 
+//MISMA LÓGICA QUE EL BLOQUEO DE CARRILES DE UN JUGADOR PERO CON 
+//MENOS OPCIONES DISPONIBLES (SOLO LOS ÚLTIMOS TRES CARRILES)
 void bloquear_carrilesJ2 (void) {
   if (var2 < 1) {
     if (appear1 != 0) {
@@ -1698,17 +1831,6 @@ void Rect(unsigned int x, unsigned int y, unsigned int w, unsigned int h, unsign
   V_line(x  , y  , h, c);
   V_line(x + w, y  , h, c);
 }
-//***************************************************************************************************************************************
-// Función para dibujar un rectángulo relleno - parámetros ( coordenada x, cordenada y, ancho, alto, color)
-//***************************************************************************************************************************************
-/*void FillRect(unsigned int x, unsigned int y, unsigned int w, unsigned int h, unsigned int c) {
-  unsigned int i;
-  for (i = 0; i < h; i++) {
-    H_line(x  , y  , w, c);
-    H_line(x  , y+i, w, c);
-  }
-  }
-*/
 
 void FillRect(unsigned int x, unsigned int y, unsigned int w, unsigned int h, unsigned int c) {
   LCD_CMD(0x02c); // write_memory_start
@@ -1846,7 +1968,7 @@ void LCD_Sprite(int x, int y, int width, int height, unsigned char bitmap[], int
   }
   digitalWrite(LCD_CS, HIGH);
 }
-//*********************************SD*****************************************
+//*************************************************************SD*******************************************************************
 void printDirectory(File dir, int numTabs) {
   while (true) {
 
@@ -1872,6 +1994,7 @@ void printDirectory(File dir, int numTabs) {
 }
 
 void SD_Write_Scores(String Data) {
+  //ESCRIBE EL PUNTAJE EN HIGH.TXT
   root = SD.open("High.txt", FILE_WRITE);
   if (root) {
     Serial.print("Writing to High_Scores.txt...");
@@ -1887,7 +2010,7 @@ void SD_Write_Scores(String Data) {
 }
 
 void SD_Read_Scores(void) {
-  // re-open the file for reading:
+  //LEE LOS PUNTAJES REGISTRADOS EN HIGH.TXT
   root = SD.open("High.txt");
   if (root) {
     Serial.println("High.txt:");
@@ -1905,6 +2028,7 @@ void SD_Read_Scores(void) {
 }
 
 void SD_Write_1v1(String Data) {
+  //ESCRIBE QUIÉN GANÓ EN 1V1.TXT
   root = SD.open("1v1.txt", FILE_WRITE);
   if (root) {
     Serial.print("Writing to 1v1.txt...");
@@ -1920,6 +2044,7 @@ void SD_Write_1v1(String Data) {
 }
 
 void SD_Read_1v1(void) {
+  //LEE QUIÉNES HAN GANADO EN 1V1.TXT
   // re-open the file for reading:
   root = SD.open("1v1.txt");
   if (root) {
