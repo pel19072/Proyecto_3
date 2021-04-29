@@ -1500,57 +1500,45 @@ void bloquear_carriles (void) {
         bloqueo = random(0, 6);
         switch (bloqueo) {
           case 0:
-            for (int i = 0; i < 2; i++) {
-              if (carriles[0][i] != 15) {
-                LCD_Bitmap(15, 200, 40, 33, signo);
-                alto1 = 1;
-                var++;
-              }
+            if ((carriles[0][0] != 15) && (carriles[0][1] != 15)) {
+              LCD_Bitmap(15, 200, 40, 33, signo);
+              alto1 = 1;
+              var++;
             }
             break;
           case 1:
-            for (int i = 0; i < 2; i++) {
-              if (carriles[0][i] != 65) {
-                LCD_Bitmap(65, 200, 40, 33, signo);
-                alto2 = 1;
-                var++;
-              }
+            if ((carriles[0][0] != 65) && (carriles[0][1] != 65)) {
+              LCD_Bitmap(65, 200, 40, 33, signo);
+              alto2 = 1;
+              var++;
             }
             break;
           case 2:
-            for (int i = 0; i < 2; i++) {
-              if (carriles[0][i] != 115) {
-                LCD_Bitmap(115, 200, 40, 33, signo);
-                alto3 = 1;
-                var++;
-              }
+            if ((carriles[0][0] != 115) && (carriles[0][1] != 115)) {
+              LCD_Bitmap(115, 200, 40, 33, signo);
+              alto3 = 1;
+              var++;
             }
             break;
           case 3:
-            for (int i = 0; i < 2; i++) {
-              if (carriles[0][i] != 165) {
-                LCD_Bitmap(165, 200, 40, 33, signo);
-                alto4 = 1;
-                var++;
-              }
+            if ((carriles[0][0] != 165) && (carriles[0][1] != 165)) {
+              LCD_Bitmap(165, 200, 40, 33, signo);
+              alto4 = 1;
+              var++;
             }
             break;
           case 4:
-            for (int i = 0; i < 2; i++) {
-              if (carriles[0][i] != 215) {
-                LCD_Bitmap(215, 200, 40, 33, signo);
-                alto5 = 1;
-                var++;
-              }
+            if ((carriles[0][0] != 215) && (carriles[0][1] != 215)) {
+              LCD_Bitmap(215, 200, 40, 33, signo);
+              alto5 = 1;
+              var++;
             }
             break;
           case 5:
-            for (int i = 0; i < 2; i++) {
-              if (carriles[0][i] != 265) {
-                LCD_Bitmap(265, 200, 40, 33, signo);
-                alto6 = 1;
-                var++;
-              }
+            if ((carriles[0][0] != 265) && (carriles[0][1] != 265)) {
+              LCD_Bitmap(265, 200, 40, 33, signo);
+              alto6 = 1;
+              var++;
             }
             break;
         }
